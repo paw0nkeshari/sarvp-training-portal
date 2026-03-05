@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SARVP Training Portal (Cloud + Session)</title>
+  <title>SARVP RM Training Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -330,12 +330,53 @@
     }
     .welcome-section h2 { color: var(--primary); }
     .welcome-section p { color: var(--text-secondary); line-height: 1.6; max-width: 800px; margin: 0 auto; }
+
+    /* Tabs for employee section */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.6rem 1.5rem;
+      background: rgba(26,26,26,0.6);
+      border: 1px solid var(--primary);
+      border-radius: 30px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: var(--dark);
+    }
+    .tab-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #666;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
     .video-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
     }
     .video-card {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); border-radius: 16px; overflow: hidden;
-      cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.4s, box-shadow 0.4s;
+      background: rgba(26,26,26,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: transform 0.4s, box-shadow 0.4s;
       position: relative;
     }
     .video-card:hover {
@@ -356,6 +397,139 @@
     .video-card-content { padding: 1.2rem; position: relative; z-index: 2; }
     .video-card h2 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary); }
     .video-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+    /* Resource cards */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .resource-card {
+      background: rgba(26,26,26,0.8);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0,255,213,0.2);
+      text-align: center;
+    }
+    .resource-card i {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .resource-card h3 {
+      margin-bottom: 0.5rem;
+    }
+    .resource-card a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      border-radius: 6px;
+      color: white;
+    }
+
+    /* Quiz card */
+    .quiz-card {
+      background: rgba(26,26,26,0.8);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quiz-info h3 {
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+    .quiz-score {
+      font-size: 1.2rem;
+      color: var(--secondary);
+    }
+    .quiz-btn {
+      padding: 0.5rem 1.2rem;
+      background: var(--secondary);
+      border: none;
+      border-radius: 6px;
+      color: var(--dark);
+      cursor: pointer;
+    }
+
+    /* Feedback form */
+    .feedback-card {
+      background: rgba(26,26,26,0.8);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    .feedback-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .rating {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .rating i {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #aaa;
+    }
+    .rating i.selected {
+      color: gold;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      background: rgba(18,18,18,0.8);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .submit-feedback {
+      background: var(--primary);
+      color: var(--dark);
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Leaderboard */
+    .leaderboard-table {
+      width: 100%;
+      background: rgba(26,26,26,0.8);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .leaderboard-table th {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--dark);
+    }
+
+    /* Certificate section */
+    .certificate-section {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .certificate-btn {
+      background: linear-gradient(135deg, #6a0dad, #ff8c00);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(106,13,173,0.4);
+    }
+
     .watched-log {
       background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 16px;
       border: 1px solid rgba(0,255,213,0.2);
@@ -387,16 +561,53 @@
     .stat-value { font-size: 2rem; font-weight: 700; color: var(--text); }
     .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
 
+    /* Admin tabs */
+    .admin-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .admin-tab-btn {
+      padding: 0.6rem 1.5rem;
+      background: rgba(26,26,26,0.6);
+      border: 1px solid var(--primary);
+      border-radius: 30px;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .admin-tab-btn.active {
+      background: var(--primary);
+      color: var(--dark);
+    }
+    .admin-tab-content {
+      display: none;
+    }
+    .admin-tab-content.active {
+      display: block;
+    }
+
     /* Employee management card */
     .admin-card {
       background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
       border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
     }
     .admin-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .admin-card input {
-      width: calc(50% - 0.5rem); padding: 0.6rem; margin-right: 0.5rem; margin-bottom: 1rem;
+    .admin-card input, .admin-card select {
+      width: calc(33% - 0.5rem); padding: 0.6rem; margin-right: 0.5rem; margin-bottom: 1rem;
       border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
       background: rgba(18,18,18,0.8); color: var(--text);
+    }
+    .permissions-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .permissions-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
     .admin-card button {
       padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -408,6 +619,7 @@
     .employee-item {
       display: flex; justify-content: space-between; align-items: center;
       background: rgba(18,18,18,0.6); padding: 0.8rem; border-radius: 6px; margin-bottom: 0.5rem;
+      flex-wrap: wrap;
     }
     .employee-item button {
       padding: 0.3rem 0.8rem; background: var(--accent); border: none; border-radius: 4px;
@@ -525,12 +737,13 @@
     #admin-dashboard button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,255,213,0.3); }
     .delete-btn { background: linear-gradient(135deg, #ff4d4d, #ff1a1a) !important; }
     .delete-btn:hover { box-shadow: 0 4px 10px rgba(255,77,77,0.3) !important; }
-    .export-btn {
+    .export-btn, .report-btn {
       margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--accent), #0095ff);
       color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
-      display: block; margin-left: auto; margin-right: auto;
+      display: inline-block; margin-right: 1rem;
     }
-    .export-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,168,255,0.4); }
+    .report-btn { background: linear-gradient(135deg, #6a0dad, #ff8c00); }
+    .export-btn:hover, .report-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,168,255,0.4); }
 
     /* ===== VIDEO MODAL ===== */
     .modal {
@@ -553,6 +766,56 @@
       border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
     }
     .video-complete-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,255,127,0.4); }
+
+    /* ===== QUIZ MODAL ===== */
+    .quiz-modal {
+      display: none;
+      position: fixed;
+      z-index: 4000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      align-items: center;
+      justify-content: center;
+    }
+    .quiz-modal-content {
+      width: 80%;
+      max-width: 600px;
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      border: 1px solid var(--primary);
+    }
+    .quiz-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 2rem;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .quiz-question {
+      margin-bottom: 1.5rem;
+    }
+    .quiz-options {
+      list-style: none;
+    }
+    .quiz-options li {
+      margin-bottom: 0.8rem;
+    }
+    .quiz-options input {
+      margin-right: 0.8rem;
+    }
+    .quiz-submit {
+      background: var(--secondary);
+      color: var(--dark);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
 
     /* ===== FOOTER ===== */
     footer {
@@ -583,7 +846,7 @@
 <header>
   <div class="logo-container">
     <div class="logo">S</div>
-    <h1>SARVP Training Portal</h1>
+    <h1>SARVP RM Training Portal</h1>
   </div>
   <div class="header-buttons">
     <div id="login-choice">
@@ -685,23 +948,63 @@
     </div>
   </div>
 
-  <!-- Main content -->
+  <!-- Main content with tabs -->
   <div class="main">
     <div class="welcome-section">
-      <h2 id="welcome-msg">Welcome to SARVP Training Portal</h2>
-      <p>Complete all modules to enhance your skills. Each module includes a video and a "Mark as Completed" button.</p>
-    </div>
-    
-    <div class="video-grid" id="videoGrid">
-      <!-- Modules will be injected by JavaScript -->
+      <h2 id="welcome-msg">Welcome to SARVP RM Training Portal</h2>
+      <p>Complete modules, take quizzes, access resources, and track your performance.</p>
     </div>
 
-    <div class="watched-log">
-      <h3><i class="fas fa-history"></i> Your Progress Log</h3>
-      <div class="watched-list" id="watched-list"></div>
+    <div class="tabs" id="employeeTabs">
+      <!-- Tabs will be populated by JS based on permissions -->
     </div>
 
-    <!-- Certificate button removed -->
+    <!-- Videos Tab -->
+    <div id="videos-tab" class="tab-content">
+      <div class="video-grid" id="videoGrid">
+        <!-- Modules will be injected by JavaScript -->
+      </div>
+      <div class="watched-log" style="margin-top: 2rem;">
+        <h3><i class="fas fa-history"></i> Your Progress Log</h3>
+        <div class="watched-list" id="watched-list"></div>
+      </div>
+    </div>
+
+    <!-- Resources Tab -->
+    <div id="resources-tab" class="tab-content">
+      <div class="resource-grid" id="resourceGrid">
+        <!-- Resources will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Quizzes Tab -->
+    <div id="quizzes-tab" class="tab-content">
+      <div id="quizList"></div>
+    </div>
+
+    <!-- Feedback Tab -->
+    <div id="feedback-tab" class="tab-content">
+      <div id="feedbackList"></div>
+    </div>
+
+    <!-- Leaderboard Tab -->
+    <div id="leaderboard-tab" class="tab-content">
+      <table class="leaderboard-table">
+        <thead>
+          <tr><th>Rank</th><th>Employee</th><th>Avg Quiz Score</th><th>Videos Completed</th><th>Points</th></tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Certificate Tab -->
+    <div id="certificate-tab" class="tab-content">
+      <div class="certificate-section">
+        <h3>Congratulations!</h3>
+        <p>You have completed all training modules. You can now download your certificate.</p>
+        <button class="certificate-btn" onclick="generateCertificate()"><i class="fas fa-certificate"></i> Download Certificate</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -709,71 +1012,117 @@
 <div id="admin-dashboard">
   <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
   
-  <!-- Employee Management Card -->
-  <div class="admin-card">
-    <h3><i class="fas fa-user-plus"></i> Manage Employees</h3>
-    <input type="text" id="newEmpName" placeholder="Employee Name">
-    <input type="text" id="newEmpPass" placeholder="Password">
-    <button onclick="addEmployee()">Add Employee</button>
-    <div class="employee-list" id="employee-list">
-      <!-- List of employees with actions will appear here -->
+  <div class="admin-tabs">
+    <button class="admin-tab-btn active" onclick="showAdminTab('employees')">Employees</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('resources')">Resources</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('quizzes')">Quizzes</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('feedback')">Feedback</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('reports')">Reports</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('insights')">Insights</button>
+    <button class="admin-tab-btn" onclick="showAdminTab('settings')">Settings</button>
+  </div>
+
+  <!-- Employees Tab -->
+  <div id="admin-employees" class="admin-tab-content active">
+    <div class="admin-card">
+      <h3><i class="fas fa-user-plus"></i> Add/Edit Employee</h3>
+      <input type="text" id="empName" placeholder="Employee Name">
+      <input type="password" id="empPass" placeholder="Password">
+      <select id="empRole">
+        <option value="RM">RM</option>
+        <option value="TeamLead">Team Lead</option>
+        <option value="Manager">Manager</option>
+      </select>
+      <div class="permissions-group" id="permissionsCheckboxes">
+        <label><input type="checkbox" value="videos" checked> Videos</label>
+        <label><input type="checkbox" value="resources" checked> Resources</label>
+        <label><input type="checkbox" value="quizzes" checked> Quizzes</label>
+        <label><input type="checkbox" value="feedback" checked> Feedback</label>
+        <label><input type="checkbox" value="leaderboard" checked> Leaderboard</label>
+        <label><input type="checkbox" value="certificate" checked> Certificate</label>
+      </div>
+      <button onclick="addOrUpdateEmployee()">Save Employee</button>
+    </div>
+    <div class="employee-list" id="employee-list"></div>
+    <table>
+      <thead><tr><th>Employee</th><th>Role</th><th>Watched</th><th>Progress</th><th>Last Activity</th><th>Actions</th></tr></thead>
+      <tbody id="admin-table-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Resources Tab -->
+  <div id="admin-resources" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>Add Resource</h3>
+      <input type="text" id="resTitle" placeholder="Title">
+      <input type="text" id="resLink" placeholder="Link (URL)">
+      <select id="resType">
+        <option value="PDF">PDF</option>
+        <option value="Video">Video</option>
+        <option value="Article">Article</option>
+      </select>
+      <button onclick="addResource()">Add Resource</button>
+    </div>
+    <div id="resourceAdminList"></div>
+  </div>
+
+  <!-- Quizzes Tab -->
+  <div id="admin-quizzes" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>Add Quiz Question</h3>
+      <select id="quizModule">
+        <!-- options will be populated by JS -->
+      </select>
+      <input type="text" id="quizQuestion" placeholder="Question">
+      <input type="text" id="quizOpt1" placeholder="Option 1">
+      <input type="text" id="quizOpt2" placeholder="Option 2">
+      <input type="text" id="quizOpt3" placeholder="Option 3">
+      <input type="text" id="quizOpt4" placeholder="Option 4">
+      <input type="number" id="quizCorrect" placeholder="Correct option (1-4)" min="1" max="4">
+      <button onclick="addQuizQuestion()">Add Question</button>
+    </div>
+    <div id="quizAdminList"></div>
+  </div>
+
+  <!-- Feedback Tab -->
+  <div id="admin-feedback" class="admin-tab-content">
+    <div id="feedbackAdminList"></div>
+  </div>
+
+  <!-- Reports Tab -->
+  <div id="admin-reports" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>Generate Reports</h3>
+      <button class="report-btn" onclick="generatePDFReport('summary')">Summary Report (PDF)</button>
+      <button class="report-btn" onclick="generatePDFReport('detailed')">Detailed Report (PDF)</button>
+      <button class="export-btn" onclick="exportCSV()">Export CSV</button>
     </div>
   </div>
 
-  <!-- Module Completion Insights -->
-  <div class="insights-card">
-    <h3><i class="fas fa-chart-pie"></i> Module Completion Overview</h3>
-    <div class="module-stats" id="moduleStats">
-      <!-- Filled by JavaScript -->
+  <!-- Insights Tab -->
+  <div id="admin-insights" class="admin-tab-content">
+    <div class="insights-card">
+      <h3>Module Completion Overview</h3>
+      <div class="module-stats" id="moduleStats"></div>
+    </div>
+    <div class="distribution-card">
+      <h3>Progress Distribution</h3>
+      <div id="distContainer"></div>
+    </div>
+    <div class="active-card">
+      <h3>Recently Active</h3>
+      <ul class="active-list" id="recentActive"></ul>
     </div>
   </div>
 
-  <!-- Progress Distribution -->
-  <div class="distribution-card">
-    <h3><i class="fas fa-chart-bar"></i> Progress Distribution</h3>
-    <div id="distContainer">
-      <!-- Will be filled by JS -->
+  <!-- Settings Tab -->
+  <div id="admin-settings" class="admin-tab-content">
+    <div class="admin-card">
+      <h3>Certificate Settings</h3>
+      <input type="text" id="authName" placeholder="Authorized Signatory Name" value="Authorised Signatory">
+      <button onclick="saveSettings()">Save</button>
     </div>
   </div>
-
-  <!-- Recently Active Employees -->
-  <div class="active-card">
-    <h3><i class="fas fa-clock"></i> Recently Active (Last 7 Days)</h3>
-    <ul class="active-list" id="recentActive">
-      <!-- Filled by JS -->
-    </ul>
-  </div>
-
-  <div class="admin-stats">
-    <div class="stat-card">
-      <h3>Total Employees</h3>
-      <div class="stat-value" id="total-employees">0</div>
-      <div class="stat-label">Registered Users</div>
-    </div>
-    <div class="stat-card">
-      <h3>Avg. Progress</h3>
-      <div class="stat-value" id="avg-progress">0%</div>
-      <div class="stat-label">Across All Users</div>
-    </div>
-    <div class="stat-card">
-      <h3>Completed Videos</h3>
-      <div class="stat-value" id="total-completed">0</div>
-      <div class="stat-label">Across All Users</div>
-    </div>
-    <div class="stat-card">
-      <h3>Top Performer</h3>
-      <div class="stat-value" id="top-performer">-</div>
-      <div class="stat-label">Highest Progress</div>
-    </div>
-  </div>
-  
-  <table>
-    <thead>
-      <tr><th>Employee</th><th>Watched Videos</th><th>Progress</th><th>Last Activity</th><th>Actions</th></tr>
-    </thead>
-    <tbody id="admin-table-body"></tbody>
-  </table>
-  <button class="export-btn" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV Report</button>
 </div>
 
 <!-- ===== VIDEO MODAL (YouTube) ===== -->
@@ -785,6 +1134,16 @@
       <p id="modal-title"></p>
       <button id="mark-complete-btn" class="video-complete-btn"><i class="fas fa-check"></i> Mark as Completed</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ MODAL ===== -->
+<div id="quiz-modal" class="quiz-modal">
+  <div class="quiz-modal-content">
+    <span class="quiz-close">&times;</span>
+    <h2 id="quizModalTitle" style="color: var(--primary); margin-bottom: 1rem;"></h2>
+    <div id="quizQuestions"></div>
+    <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
   </div>
 </div>
 
@@ -822,29 +1181,10 @@
   };
   // ============================================
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // ===== CONFIGURATION =====
-  const YOUTUBE_IDS = {
-    video1: 'dQw4w9WgXcQ',   // Replace with your actual YouTube video IDs
-    video2: '3JZ_D3ELwOQ',
-    video3: 'LXb3EKWsInQ',
-    video4: 'e-ORhEE9VVg',
-    video5: '0fYi8SGA20k',
-    video6: '5qap5aO4i9A',
-    video7: 'kJQP7kiw5Fk',
-    video8: 'tgbNymZ7vqY',
-    video9: 'RgKAFK5djSk',
-    video10: 'W_0AMPfmuaI',
-    video11: 'J---aiyznGQ',
-    video12: 'C0DPdy98e4c',
-    video13: 'e-ORhEE9VVg',
-    video14: 'LXb3EKWsInQ',
-    video15: '3JZ_D3ELwOQ',
-    video16: 'dQw4w9WgXcQ'
-  };
+  // ===== CONSTANTS =====
   const MODULE_TITLES = [
     "Ext.Co-applicant or Guarantor",
     "Application Information Update",
@@ -864,126 +1204,106 @@
     "Risk Management"
   ];
 
+  const YOUTUBE_IDS = {
+    video1: 'dQw4w9WgXcQ',   // Replace with your actual YouTube video IDs
+    video2: '3JZ_D3ELwOQ',
+    video3: 'LXb3EKWsInQ',
+    video4: 'e-ORhEE9VVg',
+    video5: '0fYi8SGA20k',
+    video6: '5qap5aO4i9A',
+    video7: 'kJQP7kiw5Fk',
+    video8: 'tgbNymZ7vqY',
+    video9: 'RgKAFK5djSk',
+    video10: 'W_0AMPfmuaI',
+    video11: 'J---aiyznGQ',
+    video12: 'C0DPdy98e4c',
+    video13: 'e-ORhEE9VVg',
+    video14: 'LXb3EKWsInQ',
+    video15: '3JZ_D3ELwOQ',
+    video16: 'dQw4w9WgXcQ'
+  };
+
   // ===== GLOBALS =====
   let currentUser = null;
-  let currentSession = { user: null, type: null };
-  let watchedData = {};        // for current employee
-  let employeeCredentials = {}; // only used by admin
+  let currentUserRole = null;
+  let currentUserPermissions = [];
+  let watchedData = {}; // current user's watched data
+  let allEmployeesData = {}; // for admin: map of username -> { watched, lastActivity, role, permissions, password }
   let inactivityTimer = null;
-  const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes
 
-  // ===== TOAST FUNCTION =====
-  function showToast(message, isSuccess = true) {
+  // ===== TOAST =====
+  function showToast(msg, isSuccess = true) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
+    toast.textContent = msg;
     toast.style.borderLeftColor = isSuccess ? '#00cc66' : '#ff4d4d';
     toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2500);
+    setTimeout(() => toast.classList.remove('show'), 2500);
   }
 
   // ===== SESSION MANAGEMENT =====
   function saveSession(user, type) {
-    const session = {
-      user: user,
-      type: type,
-      lastActivity: Date.now()
-    };
-    localStorage.setItem('session', JSON.stringify(session));
+    localStorage.setItem('session', JSON.stringify({ user, type, lastActivity: Date.now() }));
   }
-
-  function clearSession() {
-    localStorage.removeItem('session');
-  }
-
+  function clearSession() { localStorage.removeItem('session'); }
   function updateActivity() {
-    const session = JSON.parse(localStorage.getItem('session'));
-    if (session) {
-      session.lastActivity = Date.now();
-      localStorage.setItem('session', JSON.stringify(session));
-    }
+    const s = JSON.parse(localStorage.getItem('session'));
+    if (s) { s.lastActivity = Date.now(); localStorage.setItem('session', JSON.stringify(s)); }
   }
-
-  // Activity event listeners
   function startActivityTracking() {
-    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window.addEventListener(event, updateActivity);
-    });
+    ['mousemove','keydown','scroll','click'].forEach(e => window.addEventListener(e, updateActivity));
   }
-
   function stopActivityTracking() {
-    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window.removeEventListener(event, updateActivity);
-    });
+    ['mousemove','keydown','scroll','click'].forEach(e => window.removeEventListener(e, updateActivity));
   }
-
-  // Inactivity checker
   function startInactivityTimer() {
     if (inactivityTimer) clearInterval(inactivityTimer);
     inactivityTimer = setInterval(() => {
-      const session = JSON.parse(localStorage.getItem('session'));
-      if (session && (Date.now() - session.lastActivity > INACTIVITY_LIMIT)) {
-        // Auto logout due to inactivity
+      const s = JSON.parse(localStorage.getItem('session'));
+      if (s && Date.now() - s.lastActivity > INACTIVITY_LIMIT) {
         showToast('Session expired due to inactivity', false);
         signOut();
       }
-    }, 10000); // check every 10 seconds
+    }, 10000);
   }
 
-  // Restore session on page load
+  // ===== RESTORE SESSION ON PAGE LOAD =====
   async function restoreSession() {
-    const session = JSON.parse(localStorage.getItem('session'));
-    if (!session) return false;
-
-    // Check if session is not expired
-    if (Date.now() - session.lastActivity > INACTIVITY_LIMIT) {
+    const s = JSON.parse(localStorage.getItem('session'));
+    if (!s) return false;
+    if (Date.now() - s.lastActivity > INACTIVITY_LIMIT) {
       clearSession();
       return false;
     }
-
-    // Attempt to restore based on type
-    if (session.type === 'employee') {
+    if (s.type === 'employee') {
       try {
-        const docRef = db.collection('employees').doc(session.user);
-        const docSnap = await docRef.get();
-        if (!docSnap.exists) {
-          clearSession();
-          return false;
-        }
-        currentUser = session.user;
-        watchedData = { watched: docSnap.data().watched || {}, lastActivity: docSnap.data().lastActivity || new Date().toLocaleDateString() };
-        currentSession = { user: session.user, type: 'employee' };
+        const doc = await db.collection('employees').doc(s.user).get();
+        if (!doc.exists) { clearSession(); return false; }
+        const data = doc.data();
+        currentUser = s.user;
+        currentUserRole = data.role || 'RM';
+        currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+        watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
         showEmployeeView();
         renderModules();
         updateProgress();
         populateWatchedLog();
+        loadResources();
+        loadQuizList();
+        loadFeedbackForms();
+        loadLeaderboard();
+        renderTabs();
         document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
         startActivityTracking();
         startInactivityTimer();
         return true;
-      } catch (error) {
-        console.error('Session restore error:', error);
-        clearSession();
-        return false;
-      }
-    } else if (session.type === 'admin') {
+      } catch(e) { clearSession(); return false; }
+    } else if (s.type === 'admin') {
       try {
         const configDoc = await db.collection('admin').doc('config').get();
-        if (!configDoc.exists) {
-          clearSession();
-          return false;
-        }
-        // Load all employees
-        const employeesSnapshot = await db.collection('employees').get();
-        employeeCredentials = {};
-        watchedData = {};
-        employeesSnapshot.forEach(doc => {
-          const emp = doc.data();
-          employeeCredentials[doc.id] = emp.password;
-          watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
-        });
-        currentSession = { user: 'Admin', type: 'admin' };
+        if (!configDoc.exists) { clearSession(); return false; }
+        await loadAllEmployeesData();
+        currentUser = 'Admin';
         showAdminView();
         loadAdminData();
         renderEmployeeList();
@@ -993,60 +1313,19 @@
         startActivityTracking();
         startInactivityTimer();
         return true;
-      } catch (error) {
-        console.error('Admin session restore error:', error);
-        clearSession();
-        return false;
-      }
+      } catch(e) { clearSession(); return false; }
     }
     return false;
   }
 
-  // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', async function() {
-    // Try to restore session first
-    const restored = await restoreSession();
-    if (!restored) {
-      // No valid session, show company section
-      document.querySelector('.company-section').style.display = 'block';
-      document.getElementById('login-choice').style.display = 'flex';
-    }
-
-    // Attach event listeners
-    document.getElementById('employeeBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('employee-login').style.display = 'block';
+  // ===== LOAD ALL EMPLOYEES DATA (for admin) =====
+  async function loadAllEmployeesData() {
+    const snapshot = await db.collection('employees').get();
+    allEmployeesData = {};
+    snapshot.forEach(doc => {
+      allEmployeesData[doc.id] = doc.data();
     });
-    document.getElementById('companyEmployeeBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('employee-login').style.display = 'block';
-    });
-    document.getElementById('adminBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('admin-box').style.display = 'block';
-    });
-    document.getElementById('signOutBtn').addEventListener('click', signOut);
-
-    document.getElementById('searchBox')?.addEventListener('input', filterModules);
-
-    // Setup modal close
-    const modal = document.getElementById('video-modal');
-    const closeBtn = document.querySelector('.close');
-    closeBtn.onclick = () => {
-      modal.style.display = 'none';
-      document.getElementById('youtube-frame').src = '';
-    };
-    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-    document.getElementById('mark-complete-btn').addEventListener('click', () => {
-      const videoId = modal.dataset.currentVideo;
-      if (videoId) {
-        markVideoCompleted(videoId);
-        modal.style.display = 'none';
-        document.getElementById('youtube-frame').src = '';
-      }
-    });
-  });
+  }
 
   // ===== UI HELPERS =====
   function hideAllSections() {
@@ -1057,13 +1336,11 @@
     document.querySelector('.container').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'none';
   }
-
   function showEmployeeView() {
     hideAllSections();
     document.querySelector('.container').style.display = 'flex';
     document.getElementById('signOutBtn').style.display = 'block';
   }
-
   function showAdminView() {
     hideAllSections();
     document.getElementById('admin-dashboard').style.display = 'block';
@@ -1073,43 +1350,32 @@
   // ===== EMPLOYEE LOGIN =====
   window.employeeLogin = async function() {
     const name = document.getElementById('emp-name').value.trim();
-    const password = document.getElementById('emp-password').value;
-    if (!name || !password) {
-      showToast('Please enter both name and password', false);
-      return;
-    }
+    const pass = document.getElementById('emp-password').value;
+    if (!name || !pass) { showToast('Please enter both', false); return; }
     try {
-      const docRef = db.collection('employees').doc(name);
-      const docSnap = await docRef.get();
-      if (!docSnap.exists) {
-        showToast('Employee not found', false);
-        return;
-      }
-      const empData = docSnap.data();
-      if (empData.password !== password) {
-        showToast('Incorrect password', false);
-        return;
-      }
-      // Login successful
+      const doc = await db.collection('employees').doc(name).get();
+      if (!doc.exists) { showToast('Employee not found', false); return; }
+      const data = doc.data();
+      if (data.password !== pass) { showToast('Incorrect password', false); return; }
       currentUser = name;
-      watchedData = { watched: empData.watched || {}, lastActivity: empData.lastActivity || new Date().toLocaleDateString() };
-      currentSession = { user: name, type: 'employee' };
+      currentUserRole = data.role || 'RM';
+      currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+      watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
       showEmployeeView();
       renderModules();
       updateProgress();
       populateWatchedLog();
+      loadResources();
+      loadQuizList();
+      loadFeedbackForms();
+      loadLeaderboard();
+      renderTabs();
       document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
-      
-      // Save session and start tracking
       saveSession(name, 'employee');
       startActivityTracking();
       startInactivityTimer();
-      
       showToast(`Welcome, ${currentUser}!`);
-    } catch (error) {
-      console.error('Login error:', error);
-      showToast('Error connecting to database', false);
-    }
+    } catch(e) { showToast('Error connecting', false); }
   };
 
   // ===== ADMIN LOGIN =====
@@ -1117,216 +1383,146 @@
     const pass = document.getElementById('admin-password').value;
     try {
       const configDoc = await db.collection('admin').doc('config').get();
-      if (!configDoc.exists) {
-        showToast('Admin not configured', false);
-        return;
-      }
-      const adminPassword = configDoc.data().adminPassword;
-      if (pass !== adminPassword) {
-        showToast('Incorrect admin password', false);
-        return;
-      }
-      // Load all employees
-      const employeesSnapshot = await db.collection('employees').get();
-      employeeCredentials = {};
-      watchedData = {}; // We'll rebuild watchedData from employees
-      employeesSnapshot.forEach(doc => {
-        const emp = doc.data();
-        employeeCredentials[doc.id] = emp.password;
-        watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
-      });
-      currentSession = { user: 'Admin', type: 'admin' };
+      if (!configDoc.exists) { showToast('Admin not configured', false); return; }
+      if (pass !== configDoc.data().adminPassword) { showToast('Incorrect password', false); return; }
+      await loadAllEmployeesData();
       showAdminView();
       loadAdminData();
       renderEmployeeList();
       renderModuleInsights();
       renderDistribution();
       renderRecentActive();
-      
-      // Save session and start tracking
       saveSession('Admin', 'admin');
       startActivityTracking();
       startInactivityTimer();
-      
       showToast('Admin logged in');
-    } catch (error) {
-      console.error('Admin login error:', error);
-      showToast('Error connecting to database', false);
-    }
+    } catch(e) { showToast('Error connecting', false); }
   };
 
-  // ===== SIGN OUT =====
   function signOut() {
-    if (confirm('Are you sure you want to sign out?')) {
+    if (confirm('Sign out?')) {
       currentUser = null;
-      currentSession = { user: null, type: null };
-      
-      // Clear session and stop tracking
+      currentUserRole = null;
+      currentUserPermissions = [];
+      watchedData = {};
+      allEmployeesData = {};
       clearSession();
       stopActivityTracking();
-      if (inactivityTimer) {
-        clearInterval(inactivityTimer);
-        inactivityTimer = null;
-      }
-      
+      if (inactivityTimer) clearInterval(inactivityTimer);
       hideAllSections();
       document.querySelector('.company-section').style.display = 'block';
       document.getElementById('login-choice').style.display = 'flex';
       document.getElementById('signOutBtn').style.display = 'none';
-      // Reset input fields
       document.getElementById('emp-name').value = '';
       document.getElementById('emp-password').value = '';
       document.getElementById('admin-password').value = '';
     }
   }
 
-  // ===== ADMIN EMPLOYEE MANAGEMENT =====
-  async function renderEmployeeList() {
-    const listDiv = document.getElementById('employee-list');
-    listDiv.innerHTML = '';
-    const snapshot = await db.collection('employees').get();
-    snapshot.forEach(doc => {
-      const emp = doc.data();
-      const item = document.createElement('div');
-      item.className = 'employee-item';
-      item.innerHTML = `
-        <span><strong>${doc.id}</strong> (password: ${emp.password})</span>
-        <div>
-          <button onclick="resetEmployeePassword('${doc.id}')">Reset Pass</button>
-          <button class="delete-btn" onclick="deleteEmployee('${doc.id}')">Delete</button>
-        </div>
-      `;
-      listDiv.appendChild(item);
+  // ===== RENDER TABS BASED ON PERMISSIONS =====
+  function renderTabs() {
+    const tabsContainer = document.getElementById('employeeTabs');
+    const perms = currentUserPermissions;
+    const tabMap = {
+      videos: 'Videos',
+      resources: 'Resources',
+      quizzes: 'Quizzes',
+      feedback: 'Feedback',
+      leaderboard: 'Leaderboard',
+      certificate: 'Certificate'
+    };
+    let html = '';
+    perms.forEach(p => {
+      if (tabMap[p]) html += `<button class="tab-btn" onclick="showTab('${p}')">${tabMap[p]}</button>`;
     });
-    if (snapshot.empty) {
-      listDiv.innerHTML = '<p>No employees added yet.</p>';
-    }
+    tabsContainer.innerHTML = html;
+    if (perms.length > 0) showTab(perms[0]);
   }
 
-  window.addEmployee = async function() {
-    const name = document.getElementById('newEmpName').value.trim();
-    const pass = document.getElementById('newEmpPass').value.trim();
-    if (!name || !pass) {
-      showToast('Please enter both name and password', false);
-      return;
+  window.showTab = function(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`${tab}-tab`).classList.add('active');
+    // find clicked button and make active
+    const btns = document.querySelectorAll('.tab-btn');
+    for (let btn of btns) {
+      if (btn.innerText.toLowerCase() === tab) btn.classList.add('active');
     }
-    try {
-      const docRef = db.collection('employees').doc(name);
-      const docSnap = await docRef.get();
-      if (docSnap.exists) {
-        showToast('Employee already exists', false);
-        return;
-      }
-      await docRef.set({
-        password: pass,
-        watched: {},
-        lastActivity: new Date().toLocaleDateString()
-      });
-      // Refresh lists
-      renderEmployeeList();
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      document.getElementById('newEmpName').value = '';
-      document.getElementById('newEmpPass').value = '';
-      showToast(`Employee ${name} added`);
-    } catch (error) {
-      console.error('Add error:', error);
-      showToast('Error adding employee', false);
-    }
+    if (tab === 'resources') loadResources();
+    if (tab === 'quizzes') loadQuizList();
+    if (tab === 'feedback') loadFeedbackForms();
+    if (tab === 'leaderboard') loadLeaderboard();
+    if (tab === 'certificate') checkCertificate();
   };
 
-  window.resetEmployeePassword = async function(name) {
-    const newPass = prompt(`Enter new password for ${name}:`);
-    if (newPass && newPass.trim() !== '') {
-      await db.collection('employees').doc(name).update({ password: newPass.trim() });
-      renderEmployeeList();
-      showToast(`Password updated for ${name}`);
-    }
-  };
-
-  window.deleteEmployee = async function(name) {
-    if (confirm(`Delete employee ${name}? This will also delete all their progress.`)) {
-      await db.collection('employees').doc(name).delete();
-      renderEmployeeList();
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      showToast(`Employee ${name} deleted`);
-    }
-  };
-
-  // ===== MODULES RENDERING =====
+  // ===== VIDEO MODULES =====
   function renderModules() {
     const grid = document.getElementById('videoGrid');
-    if (!grid) return;
     grid.innerHTML = '';
-    MODULE_TITLES.forEach((title, index) => {
-      const videoId = `video${index+1}`;
-      const progress = watchedData.watched?.[videoId] || 0;
-      const watchedClass = progress >= 90 ? 'watched' : '';
+    MODULE_TITLES.forEach((title, i) => {
+      const vid = `video${i+1}`;
+      const prog = watchedData.watched?.[vid] || 0;
+      const watchedClass = prog >= 90 ? 'watched' : '';
       const card = document.createElement('div');
       card.className = `video-card ${watchedClass}`;
-      card.setAttribute('data-id', videoId);
+      card.dataset.id = vid;
       card.innerHTML = `
-        <img src="https://via.placeholder.com/400x200/00ffd5/121212?text=${encodeURIComponent(title)}" alt="${title}">
+        <img src="https://via.placeholder.com/400x200/00ffd5/121212?text=${encodeURIComponent(title)}">
         <div class="watch-indicator"><i class="fas fa-check"></i></div>
-        <div class="video-progress"><div class="video-progress-fill" id="progress-${videoId}" style="width:${progress}%;"></div></div>
-        <div class="video-card-content">
-          <h2>${title}</h2>
-          <p>Click to watch and learn.</p>
-        </div>
+        <div class="video-progress"><div class="video-progress-fill" id="progress-${vid}" style="width:${prog}%;"></div></div>
+        <div class="video-card-content"><h2>${title}</h2><p>Click to watch</p></div>
       `;
-      card.addEventListener('click', () => openVideo(videoId, title));
+      card.addEventListener('click', () => openVideo(vid, title));
       grid.appendChild(card);
     });
   }
 
-  let currentVideoId = null;
-  function openVideo(videoId, title) {
-    currentVideoId = videoId;
+  function openVideo(vid, title) {
     const modal = document.getElementById('video-modal');
-    const iframe = document.getElementById('youtube-frame');
-    iframe.src = `https://www.youtube.com/embed/${YOUTUBE_IDS[videoId]}?autoplay=1`;
+    document.getElementById('youtube-frame').src = `https://www.youtube.com/embed/${YOUTUBE_IDS[vid]}?autoplay=1`;
     document.getElementById('modal-title').innerText = title;
     modal.style.display = 'flex';
-    modal.dataset.currentVideo = videoId;
+    modal.dataset.currentVideo = vid;
   }
 
-  async function markVideoCompleted(videoId) {
+  window.markVideoCompleted = async function(vid) {
     if (!currentUser) return;
     if (!watchedData.watched) watchedData.watched = {};
-    watchedData.watched[videoId] = 100;
-    if (watchedData.lastPosition) delete watchedData.lastPosition[videoId];
+    watchedData.watched[vid] = 100;
     watchedData.lastActivity = new Date().toLocaleDateString();
-    // Update Firestore
     await db.collection('employees').doc(currentUser).update({
-      [`watched.${videoId}`]: 100,
+      [`watched.${vid}`]: 100,
       lastActivity: watchedData.lastActivity
     });
     updateProgress();
     populateWatchedLog();
-    const card = document.querySelector(`[data-id="${videoId}"]`);
+    const card = document.querySelector(`[data-id="${vid}"]`);
     if (card) card.classList.add('watched');
-    const progressFill = document.getElementById(`progress-${videoId}`);
-    if (progressFill) progressFill.style.width = '100%';
-    showToast('✅ Video marked as completed!');
-  }
+    const fill = document.getElementById(`progress-${vid}`);
+    if (fill) fill.style.width = '100%';
+    showToast('✅ Marked completed');
+    checkCertificate();
+  };
 
-  // ===== PROGRESS TRACKING =====
-  function updateProgress() {
-    if (!currentUser) return;
-    const total = MODULE_TITLES.length;
-    let totalProgress = 0;
-    let completed = 0;
-    for (let i = 1; i <= total; i++) {
-      const prog = watchedData.watched?.[`video${i}`] || 0;
-      totalProgress += prog;
-      if (prog >= 90) completed++;
+  // close modal and mark complete button
+  document.getElementById('mark-complete-btn').addEventListener('click', function() {
+    const vid = document.getElementById('video-modal').dataset.currentVideo;
+    if (vid) {
+      markVideoCompleted(vid);
+      document.getElementById('video-modal').style.display = 'none';
+      document.getElementById('youtube-frame').src = '';
     }
-    const avg = totalProgress / total;
+  });
+
+  function updateProgress() {
+    const total = MODULE_TITLES.length;
+    let sum = 0, completed = 0;
+    for (let i=1; i<=total; i++) {
+      const p = watchedData.watched?.[`video${i}`] || 0;
+      sum += p;
+      if (p >= 90) completed++;
+    }
+    const avg = sum / total;
     document.getElementById('progress-fill').style.width = avg + '%';
     document.getElementById('progress-text').innerText = Math.round(avg) + '% Completed';
     document.getElementById('enhanced-progress-fill').style.width = avg + '%';
@@ -1337,246 +1533,615 @@
   }
 
   function populateWatchedLog() {
-    if (!currentUser) return;
     const log = document.getElementById('watched-list');
     log.innerHTML = '';
-    let hasAny = false;
-    for (let i = 1; i <= MODULE_TITLES.length; i++) {
-      const prog = watchedData.watched?.[`video${i}`] || 0;
-      if (prog > 5) {
-        hasAny = true;
+    let has = false;
+    for (let i=1; i<=MODULE_TITLES.length; i++) {
+      const p = watchedData.watched?.[`video${i}`] || 0;
+      if (p > 5) {
+        has = true;
         const title = MODULE_TITLES[i-1];
         const badge = document.createElement('div');
-        if (prog >= 90) {
-          badge.className = 'watched-badge';
-          badge.innerHTML = `<i class="fas fa-check"></i> ${title} (Completed)`;
-        } else {
-          badge.className = 'progress-badge';
-          badge.innerHTML = `<i class="fas fa-play-circle"></i> ${title} (${Math.round(prog)}%)`;
-        }
+        badge.className = p>=90 ? 'watched-badge' : 'progress-badge';
+        badge.innerHTML = p>=90 ? `<i class="fas fa-check"></i> ${title} (Completed)` : `<i class="fas fa-play-circle"></i> ${title} (${Math.round(p)}%)`;
         log.appendChild(badge);
       }
     }
-    if (!hasAny) log.innerHTML = '<p>You haven’t started any videos yet.</p>';
+    if (!has) log.innerHTML = '<p>No progress yet</p>';
   }
 
-  function filterModules() {
+  window.filterModules = function() {
     const val = document.getElementById('searchBox').value.toLowerCase();
-    document.querySelectorAll('.video-card').forEach(card => {
-      const title = card.querySelector('h2').innerText.toLowerCase();
-      card.style.display = title.includes(val) ? 'block' : 'none';
+    document.querySelectorAll('.video-card').forEach(c => {
+      c.style.display = c.querySelector('h2').innerText.toLowerCase().includes(val) ? 'block' : 'none';
     });
-  }
-
-  // ===== ADMIN INSIGHTS =====
-  function renderModuleInsights() {
-    const container = document.getElementById('moduleStats');
-    if (!container) return;
-    const totalEmployees = Object.keys(employeeCredentials).length;
-    let html = '';
-    MODULE_TITLES.forEach((title, index) => {
-      const videoId = `video${index+1}`;
-      let completedCount = 0;
-      for (let user in watchedData) {
-        if (!employeeCredentials[user]) continue;
-        if ((watchedData[user]?.watched?.[videoId] || 0) >= 90) completedCount++;
-      }
-      const percent = totalEmployees ? Math.round((completedCount / totalEmployees) * 100) : 0;
-      html += `
-        <div class="module-row">
-          <span class="module-name">${title}</span>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: ${percent}%;"></div>
-          </div>
-          <span class="module-percent">${percent}% (${completedCount}/${totalEmployees})</span>
-        </div>
-      `;
-    });
-    container.innerHTML = html || '<p>No employees yet.</p>';
-  }
-
-  function renderDistribution() {
-    const container = document.getElementById('distContainer');
-    if (!container) return;
-    const totalEmployees = Object.keys(employeeCredentials).length;
-    if (totalEmployees === 0) {
-      container.innerHTML = '<p>No employees yet.</p>';
-      return;
-    }
-    const ranges = [
-      { min: 0, max: 25, label: '0-25%' },
-      { min: 26, max: 50, label: '26-50%' },
-      { min: 51, max: 75, label: '51-75%' },
-      { min: 76, max: 100, label: '76-100%' }
-    ];
-    const counts = [0, 0, 0, 0];
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      const totalVideos = MODULE_TITLES.length;
-      let totalProgress = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        totalProgress += watchedData[user]?.watched?.[`video${i}`] || 0;
-      }
-      const percent = totalVideos ? Math.round(totalProgress / totalVideos) : 0;
-      if (percent <= 25) counts[0]++;
-      else if (percent <= 50) counts[1]++;
-      else if (percent <= 75) counts[2]++;
-      else counts[3]++;
-    }
-    let html = '';
-    ranges.forEach((range, idx) => {
-      const percentOfTotal = totalEmployees ? Math.round((counts[idx] / totalEmployees) * 100) : 0;
-      html += `
-        <div class="dist-row">
-          <span class="dist-label">${range.label}</span>
-          <div class="dist-bar-bg">
-            <div class="dist-bar-fill" style="width: ${percentOfTotal}%;"></div>
-          </div>
-          <span class="dist-count">${counts[idx]}</span>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  }
-
-  function renderRecentActive() {
-    const list = document.getElementById('recentActive');
-    if (!list) return;
-    const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 7);
-    const active = [];
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      const last = watchedData[user]?.lastActivity;
-      if (!last) continue;
-      const parts = last.split('/');
-      if (parts.length === 3) {
-        const lastDate = new Date(parts[2], parts[1]-1, parts[0]);
-        if (lastDate >= sevenDaysAgo) {
-          active.push({ name: user, last: last });
-        }
-      }
-    }
-    if (active.length === 0) {
-      list.innerHTML = '<li>No recent activity</li>';
-    } else {
-      list.innerHTML = active.map(a => `<li><span>${a.name}</span><span>${a.last}</span></li>`).join('');
-    }
-  }
-
-  // ===== ADMIN DASHBOARD (stats and table) =====
-  function loadAdminData() {
-    const tbody = document.getElementById('admin-table-body');
-    tbody.innerHTML = '';
-    const totalVideos = MODULE_TITLES.length;
-    let totalEmployees = 0;
-    let totalProgressSum = 0;
-    let totalCompletedAll = 0;
-    let topPerformer = { name: '', progress: 0 };
-
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      totalEmployees++;
-      let userProgressSum = 0;
-      let completed = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
-        userProgressSum += p;
-        if (p >= 90) completed++;
-      }
-      const percent = totalVideos ? Math.round(userProgressSum / totalVideos) : 0;
-      totalProgressSum += percent;
-      totalCompletedAll += completed;
-      if (percent > topPerformer.progress) {
-        topPerformer = { name: user, progress: percent };
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${user}</td>
-        <td>${completed}/${totalVideos} videos</td>
-        <td>${percent}%</td>
-        <td>${watchedData[user]?.lastActivity || 'N/A'}</td>
-        <td>
-          <button onclick="resetUser('${user}')">Reset</button>
-          <button class="delete-btn" onclick="deleteUser('${user}')">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    }
-
-    document.getElementById('total-employees').innerText = totalEmployees;
-    document.getElementById('avg-progress').innerText = totalEmployees ? Math.round(totalProgressSum / totalEmployees) + '%' : '0%';
-    document.getElementById('total-completed').innerText = totalCompletedAll;
-    document.getElementById('top-performer').innerText = topPerformer.name || '-';
-
-    if (totalEmployees === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No employee data available</td></tr>';
-    }
-  }
-
-  window.resetUser = async function(user) {
-    if (confirm(`Reset progress for ${user}?`)) {
-      await db.collection('employees').doc(user).update({
-        watched: {},
-        lastActivity: new Date().toLocaleDateString()
-      });
-      // Update local copy
-      if (watchedData[user]) watchedData[user].watched = {};
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      if (currentUser === user) {
-        watchedData = { watched: {} };
-        renderModules();
-        updateProgress();
-        populateWatchedLog();
-      }
-      showToast(`Progress reset for ${user}`);
-    }
   };
 
-  window.deleteUser = async function(user) {
-    if (confirm(`Delete employee ${user}? This will also remove them from credentials and delete all progress.`)) {
-      await db.collection('employees').doc(user).delete();
-      delete employeeCredentials[user];
-      delete watchedData[user];
+  // ===== RESOURCES =====
+  async function loadResources() {
+    const snap = await db.collection('resources').get();
+    const grid = document.getElementById('resourceGrid');
+    grid.innerHTML = '';
+    snap.forEach(doc => {
+      const r = doc.data();
+      grid.innerHTML += `
+        <div class="resource-card">
+          <i class="fas fa-${r.type==='PDF'?'file-pdf':r.type==='Video'?'video':'file-alt'}"></i>
+          <h3>${r.title}</h3>
+          <a href="${r.link}" target="_blank">Open</a>
+        </div>
+      `;
+    });
+  }
+
+  // ===== QUIZZES =====
+  let currentQuizModule = null;
+  let currentQuizQuestions = [];
+
+  async function loadQuizList() {
+    const list = document.getElementById('quizList');
+    list.innerHTML = '';
+    for (let i=1; i<=MODULE_TITLES.length; i++) {
+      const moduleName = MODULE_TITLES[i-1];
+      const quizSnap = await db.collection('quizzes').doc(`module${i}`).collection('questions').get();
+      const qCount = quizSnap.size;
+      const resultSnap = await db.collection('quizResults').where('employee','==',currentUser).where('module','==',`module${i}`).get();
+      let score = null;
+      if (!resultSnap.empty) score = resultSnap.docs[0].data().score;
+      list.innerHTML += `
+        <div class="quiz-card">
+          <div class="quiz-info">
+            <h3>${moduleName}</h3>
+            <p>${qCount} questions</p>
+            ${score !== null ? `<p class="quiz-score">Score: ${score}/${qCount}</p>` : ''}
+          </div>
+          <button class="quiz-btn" onclick="startQuiz('module${i}')">${score !== null ? 'Retake' : 'Start'}</button>
+        </div>
+      `;
+    }
+  }
+
+  window.startQuiz = async function(moduleId) {
+    const snap = await db.collection('quizzes').doc(moduleId).collection('questions').get();
+    if (snap.empty) { showToast('No questions yet', false); return; }
+    currentQuizModule = moduleId;
+    currentQuizQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const modal = document.getElementById('quiz-modal');
+    document.getElementById('quizModalTitle').innerText = 'Quiz: ' + MODULE_TITLES[parseInt(moduleId.replace('module',''))-1];
+    let html = '';
+    currentQuizQuestions.forEach((q, idx) => {
+      html += `<div class="quiz-question"><p>${idx+1}. ${q.question}</p><ul class="quiz-options">`;
+      for (let i=1; i<=4; i++) {
+        html += `<li><input type="radio" name="q${idx}" value="${i}"> ${q[`opt${i}`]}</li>`;
+      }
+      html += `</ul></div>`;
+    });
+    document.getElementById('quizQuestions').innerHTML = html;
+    modal.style.display = 'flex';
+  };
+
+  window.submitQuiz = async function() {
+    let correct = 0;
+    currentQuizQuestions.forEach((q, idx) => {
+      const sel = document.querySelector(`input[name="q${idx}"]:checked`);
+      if (sel && parseInt(sel.value) === q.correct) correct++;
+    });
+    const total = currentQuizQuestions.length;
+    const existing = await db.collection('quizResults').where('employee','==',currentUser).where('module','==',currentQuizModule).get();
+    if (!existing.empty) {
+      await existing.docs[0].ref.update({ score: correct, date: new Date().toISOString() });
+    } else {
+      await db.collection('quizResults').add({ employee: currentUser, module: currentQuizModule, score: correct, total, date: new Date().toISOString() });
+    }
+    showToast(`Quiz submitted! Score: ${correct}/${total}`);
+    document.getElementById('quiz-modal').style.display = 'none';
+    loadQuizList();
+    loadLeaderboard();
+  };
+
+  // ===== FEEDBACK =====
+  async function loadFeedbackForms() {
+    const cont = document.getElementById('feedbackList');
+    cont.innerHTML = '';
+    for (let i=1; i<=MODULE_TITLES.length; i++) {
+      const moduleName = MODULE_TITLES[i-1];
+      const existing = await db.collection('feedback').where('employee','==',currentUser).where('module','==',`module${i}`).get();
+      const hasFeedback = !existing.empty;
+      cont.innerHTML += `
+        <div class="feedback-card" id="feedback-${i}">
+          <h3>${moduleName}</h3>
+          ${hasFeedback ? '<p><i class="fas fa-check-circle" style="color: var(--secondary);"></i> Feedback submitted</p>' : `
+            <div class="rating" id="rating-${i}">
+              <i class="far fa-star" data-val="1"></i><i class="far fa-star" data-val="2"></i><i class="far fa-star" data-val="3"></i><i class="far fa-star" data-val="4"></i><i class="far fa-star" data-val="5"></i>
+            </div>
+            <textarea id="comment-${i}" placeholder="Your comments..."></textarea>
+            <button class="submit-feedback" onclick="submitFeedback('${i}')">Submit</button>
+          `}
+        </div>
+      `;
+      if (!hasFeedback) {
+        const stars = document.querySelectorAll(`#rating-${i} i`);
+        stars.forEach(s => s.addEventListener('click', function() {
+          const val = this.dataset.val;
+          stars.forEach(ss => ss.classList.remove('selected','fas'));
+          for (let j=0; j<val; j++) stars[j].classList.add('selected','fas');
+          for (let j=val; j<5; j++) stars[j].classList.remove('selected','fas');
+        }));
+      }
+    }
+  }
+
+  window.submitFeedback = async function(moduleIndex) {
+    const rating = document.querySelectorAll(`#rating-${moduleIndex} i.selected`).length;
+    if (rating === 0) { showToast('Please give a rating', false); return; }
+    const comment = document.getElementById(`comment-${moduleIndex}`).value;
+    await db.collection('feedback').add({
+      employee: currentUser,
+      module: `module${moduleIndex}`,
+      rating,
+      comment,
+      date: new Date().toISOString()
+    });
+    showToast('Feedback submitted');
+    loadFeedbackForms();
+  };
+
+  // ===== LEADERBOARD =====
+  async function loadLeaderboard() {
+    const users = await db.collection('employees').get();
+    const leaderboard = [];
+    for (let u of users.docs) {
+      const emp = u.id;
+      const data = u.data();
+      const watched = data.watched || {};
+      const videosCompleted = Object.values(watched).filter(p => p >= 90).length;
+      const quizResults = await db.collection('quizResults').where('employee','==',emp).get();
+      let totalScore = 0, totalQ = 0;
+      quizResults.forEach(r => { totalScore += r.data().score; totalQ += r.data().total; });
+      const avgScore = totalQ ? Math.round((totalScore/totalQ)*100) : 0;
+      const points = videosCompleted * 10 + avgScore * 2;
+      leaderboard.push({ emp, videosCompleted, avgScore, points });
+    }
+    leaderboard.sort((a,b) => b.points - a.points);
+    document.getElementById('leaderboard-body').innerHTML = leaderboard.map((l,idx) => `
+      <tr><td>${idx+1}</td><td>${l.emp}</td><td>${l.avgScore}%</td><td>${l.videosCompleted}/${MODULE_TITLES.length}</td><td>${l.points}</td></tr>
+    `).join('');
+  }
+
+  // ===== CERTIFICATE =====
+  function checkCertificate() {
+    const total = MODULE_TITLES.length;
+    let completed = 0;
+    for (let i=1; i<=total; i++) {
+      if ((watchedData.watched?.[`video${i}`] || 0) >= 90) completed++;
+    }
+    const certSection = document.querySelector('#certificate-tab .certificate-section');
+    if (!certSection) return;
+    if (completed === total) {
+      certSection.style.display = 'block';
+    } else {
+      certSection.style.display = 'none';
+    }
+  }
+
+  window.generateCertificate = function() {
+    const name = currentUser;
+    const date = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+    const signatory = document.getElementById('authName') ? document.getElementById('authName').value : 'Authorised Signatory';
+    const win = window.open('', '_blank');
+    if (!win) { showToast('Popup blocked! Please allow popups.', false); return; }
+    win.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head><title>Certificate of Completion</title>
+      <style>
+        body { margin:0; background:#fff; font-family:Arial; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+        .cert { width:21cm; min-height:29.7cm; background:white; box-shadow:0 0 10px #aaa; position:relative; overflow:hidden; }
+        .stripe-top { height:15px; background:linear-gradient(90deg,#6a0dad,#ff8c00); }
+        .stripe-bottom { height:15px; background:linear-gradient(90deg,#ff8c00,#6a0dad); position:absolute; bottom:0; width:100%; }
+        .content { padding:2cm; text-align:center; }
+        .logo { font-size:3rem; font-weight:700; background:linear-gradient(135deg,#6a0dad,#ff8c00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        h1 { color:#6a0dad; }
+        .subtitle { color:#ff8c00; border-bottom:2px solid #6a0dad; display:inline-block; padding-bottom:0.5rem; margin-bottom:2rem; }
+        .employee-name { font-size:3rem; color:#6a0dad; border-bottom:3px solid #ff8c00; display:inline-block; padding-bottom:0.5rem; margin:1rem 0; }
+        .date { margin-top:2rem; color:#6a0dad; }
+        .signature { margin-top:3rem; display:flex; justify-content:space-around; }
+        .signature .line { width:200px; border-bottom:2px solid #ff8c00; margin-bottom:0.3rem; }
+      </style>
+      </head>
+      <body>
+        <div class="cert">
+          <div class="stripe-top"></div>
+          <div class="content">
+            <div class="logo">SARVP</div>
+            <h1>Financial Services</h1>
+            <div class="subtitle">TRAINING COMPLETION CERTIFICATE</div>
+            <p>This is proudly presented to</p>
+            <div class="employee-name">${name}</div>
+            <p>for successfully completing all training modules.</p>
+            <div class="date">Date: ${date}</div>
+            <div class="signature">
+              <div><div class="line"></div><p>${signatory}</p><p>Authorised Signatory</p></div>
+              <div><div class="line"></div><p>Training Coordinator</p></div>
+            </div>
+          </div>
+          <div class="stripe-bottom"></div>
+        </div>
+        <script>window.onload=()=>window.print();</script>
+      </body></html>
+    `);
+    win.document.close();
+    showToast('🎉 Certificate generated!');
+  };
+
+  // ===== ADMIN FUNCTIONS =====
+  async function renderEmployeeList() {
+    const list = document.getElementById('employee-list');
+    list.innerHTML = '';
+    for (let name in allEmployeesData) {
+      const data = allEmployeesData[name];
+      list.innerHTML += `
+        <div class="employee-item">
+          <span><strong>${name}</strong> (${data.role||'RM'}) - pass: ${data.password}</span>
+          <div><button onclick="editEmployee('${name}')">Edit</button><button class="delete-btn" onclick="deleteEmployee('${name}')">Delete</button></div>
+        </div>
+      `;
+    }
+    if (Object.keys(allEmployeesData).length === 0) list.innerHTML = '<p>No employees</p>';
+  }
+
+  window.editEmployee = async function(name) {
+    const data = allEmployeesData[name];
+    document.getElementById('empName').value = name;
+    document.getElementById('empPass').value = data.password;
+    document.getElementById('empRole').value = data.role || 'RM';
+    const perms = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+    document.querySelectorAll('#permissionsCheckboxes input').forEach(cb => cb.checked = perms.includes(cb.value));
+  };
+
+  window.addOrUpdateEmployee = async function() {
+    const name = document.getElementById('empName').value.trim();
+    const pass = document.getElementById('empPass').value.trim();
+    const role = document.getElementById('empRole').value;
+    const perms = Array.from(document.querySelectorAll('#permissionsCheckboxes input:checked')).map(cb => cb.value);
+    if (!name || !pass) { showToast('Enter name and password', false); return; }
+    await db.collection('employees').doc(name).set({
+      password: pass,
+      role,
+      permissions: perms,
+      watched: allEmployeesData[name]?.watched || {},
+      lastActivity: allEmployeesData[name]?.lastActivity || new Date().toLocaleDateString()
+    });
+    await loadAllEmployeesData();
+    renderEmployeeList();
+    loadAdminData();
+    renderModuleInsights();
+    renderDistribution();
+    renderRecentActive();
+    document.getElementById('empName').value = '';
+    document.getElementById('empPass').value = '';
+    showToast('Employee saved');
+  };
+
+  window.deleteEmployee = async function(name) {
+    if (confirm(`Delete ${name}?`)) {
+      await db.collection('employees').doc(name).delete();
+      delete allEmployeesData[name];
       renderEmployeeList();
       loadAdminData();
       renderModuleInsights();
       renderDistribution();
       renderRecentActive();
-      if (currentUser === user) signOut();
-      showToast(`User ${user} deleted`);
+      showToast('Deleted');
     }
   };
 
+  // Resources admin
+  window.addResource = async function() {
+    const title = document.getElementById('resTitle').value;
+    const link = document.getElementById('resLink').value;
+    const type = document.getElementById('resType').value;
+    if (!title || !link) { showToast('Enter title and link', false); return; }
+    await db.collection('resources').add({ title, link, type });
+    document.getElementById('resTitle').value = ''; document.getElementById('resLink').value = '';
+    loadResourcesAdmin();
+    if (currentUser) loadResources();
+    showToast('Resource added');
+  };
+
+  async function loadResourcesAdmin() {
+    const snap = await db.collection('resources').get();
+    const list = document.getElementById('resourceAdminList');
+    list.innerHTML = '';
+    snap.forEach(d => {
+      list.innerHTML += `<div class="employee-item"><span>${d.data().title} (${d.data().type})</span><button onclick="deleteResource('${d.id}')">Delete</button></div>`;
+    });
+  }
+
+  window.deleteResource = async function(id) {
+    await db.collection('resources').doc(id).delete();
+    loadResourcesAdmin();
+    if (currentUser) loadResources();
+  };
+
+  // Quiz admin
+  window.addQuizQuestion = async function() {
+    const module = document.getElementById('quizModule').value;
+    const question = document.getElementById('quizQuestion').value;
+    const opt1 = document.getElementById('quizOpt1').value;
+    const opt2 = document.getElementById('quizOpt2').value;
+    const opt3 = document.getElementById('quizOpt3').value;
+    const opt4 = document.getElementById('quizOpt4').value;
+    const correct = parseInt(document.getElementById('quizCorrect').value);
+    if (!question || !opt1 || !opt2 || !opt3 || !opt4 || !correct) { showToast('Fill all', false); return; }
+    await db.collection('quizzes').doc(module).collection('questions').add({ question, opt1, opt2, opt3, opt4, correct });
+    loadQuizAdmin();
+    showToast('Question added');
+  };
+
+  async function loadQuizAdmin() {
+    const select = document.getElementById('quizModule');
+    select.innerHTML = '';
+    for (let i=1; i<=MODULE_TITLES.length; i++) {
+      select.innerHTML += `<option value="module${i}">${MODULE_TITLES[i-1]}</option>`;
+    }
+    const list = document.getElementById('quizAdminList');
+    list.innerHTML = '';
+    for (let i=1; i<=MODULE_TITLES.length; i++) {
+      const qsnap = await db.collection('quizzes').doc(`module${i}`).collection('questions').get();
+      qsnap.forEach(d => {
+        list.innerHTML += `<div class="employee-item"><span>${MODULE_TITLES[i-1]}: ${d.data().question}</span><button onclick="deleteQuestion('module${i}','${d.id}')">Delete</button></div>`;
+      });
+    }
+  }
+
+  window.deleteQuestion = async function(module, id) {
+    await db.collection('quizzes').doc(module).collection('questions').doc(id).delete();
+    loadQuizAdmin();
+  };
+
+  // Feedback admin
+  async function loadFeedbackAdmin() {
+    const list = document.getElementById('feedbackAdminList');
+    list.innerHTML = '';
+    const snap = await db.collection('feedback').get();
+    snap.forEach(d => {
+      const f = d.data();
+      list.innerHTML += `<div class="employee-item"><span>${f.employee} - Module ${f.module} - Rating: ${f.rating} - ${f.comment}</span></div>`;
+    });
+  }
+
+  // Reports
+  window.generatePDFReport = function(type) {
+    const win = window.open('', '_blank');
+    if (!win) { showToast('Popup blocked', false); return; }
+    let content = '';
+    if (type === 'summary') {
+      const total = Object.keys(allEmployeesData).length;
+      const avgProg = document.getElementById('avg-progress').innerText;
+      const topPerf = document.getElementById('top-performer').innerText;
+      content = `
+        <h1>Training Summary Report</h1>
+        <p>Total Employees: ${total}</p>
+        <p>Average Progress: ${avgProg}</p>
+        <p>Top Performer: ${topPerf}</p>
+        <h2>Module Completion</h2>
+        ${document.getElementById('moduleStats').innerHTML}
+      `;
+    } else {
+      content = `
+        <h1>Detailed Employee Report</h1>
+        <table border="1" cellpadding="5" style="border-collapse:collapse; width:100%">
+          <thead><tr><th>Employee</th><th>Role</th><th>Watched</th><th>Progress</th><th>Last Activity</th></tr></thead>
+          <tbody>
+            ${document.getElementById('admin-table-body').innerHTML}
+          </tbody>
+        </table>
+      `;
+    }
+    win.document.write(`
+      <html><head><title>Report</title><style>body{font-family:Arial;padding:20px;}</style></head>
+      <body>${content}</body></html>
+    `);
+    win.document.close();
+    win.print();
+  };
+
   window.exportCSV = function() {
-    let csv = 'Name,Completed Videos,Total Videos,Progress%,Last Activity\n';
-    const totalVideos = MODULE_TITLES.length;
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
+    let csv = 'Name,Role,Completed Videos,Total Videos,Progress%,Last Activity\n';
+    const totalV = MODULE_TITLES.length;
+    for (let u in allEmployeesData) {
+      const data = allEmployeesData[u];
+      const watched = data.watched || {};
+      let comp = 0, sum = 0;
+      for (let i=1; i<=totalV; i++) {
+        const p = watched[`video${i}`] || 0;
+        sum += p;
+        if (p >= 90) comp++;
+      }
+      const perc = totalV ? Math.round(sum/totalV) : 0;
+      csv += `${u},${data.role||'RM'},${comp},${totalV},${perc},${data.lastActivity||'N/A'}\n`;
+    }
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'report.csv'; a.click();
+    showToast('CSV exported');
+  };
+
+  // Settings
+  window.saveSettings = function() {
+    showToast('Settings saved');
+  };
+
+  // Admin insights
+  function renderModuleInsights() {
+    const cont = document.getElementById('moduleStats');
+    if (!cont) return;
+    const total = Object.keys(allEmployeesData).length;
+    let html = '';
+    MODULE_TITLES.forEach((title, i) => {
+      const vid = `video${i+1}`;
       let completed = 0;
-      let progressSum = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
-        progressSum += p;
+      for (let u in allEmployeesData) {
+        const p = allEmployeesData[u].watched?.[vid] || 0;
         if (p >= 90) completed++;
       }
-      const percent = totalVideos ? Math.round(progressSum / totalVideos) : 0;
-      csv += `${user},${completed},${totalVideos},${percent},${watchedData[user]?.lastActivity || 'N/A'}\n`;
-    }
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'SARVP_Training_Report.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exported');
+      const pct = total ? Math.round((completed/total)*100) : 0;
+      html += `<div class="module-row"><span class="module-name">${title}</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%;"></div></div><span class="module-percent">${pct}% (${completed}/${total})</span></div>`;
+    });
+    cont.innerHTML = html || '<p>No employees</p>';
   }
+
+  function renderDistribution() {
+    const cont = document.getElementById('distContainer');
+    if (!cont) return;
+    const total = Object.keys(allEmployeesData).length;
+    if (total === 0) { cont.innerHTML = '<p>No employees</p>'; return; }
+    const counts = [0,0,0,0];
+    for (let u in allEmployeesData) {
+      const data = allEmployeesData[u];
+      let sum = 0;
+      for (let i=1; i<=MODULE_TITLES.length; i++) sum += data.watched?.[`video${i}`] || 0;
+      const p = MODULE_TITLES.length ? Math.round(sum / MODULE_TITLES.length) : 0;
+      if (p <= 25) counts[0]++; else if (p <= 50) counts[1]++; else if (p <= 75) counts[2]++; else counts[3]++;
+    }
+    const labels = ['0-25%','26-50%','51-75%','76-100%'];
+    let html = '';
+    labels.forEach((l, idx) => {
+      const pct = total ? Math.round((counts[idx]/total)*100) : 0;
+      html += `<div class="dist-row"><span class="dist-label">${l}</span><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:${pct}%;"></div></div><span class="dist-count">${counts[idx]}</span></div>`;
+    });
+    cont.innerHTML = html;
+  }
+
+  function renderRecentActive() {
+    const list = document.getElementById('recentActive');
+    if (!list) return;
+    const seven = new Date(); seven.setDate(seven.getDate()-7);
+    const active = [];
+    for (let u in allEmployeesData) {
+      const last = allEmployeesData[u].lastActivity;
+      if (!last) continue;
+      const parts = last.split('/');
+      if (parts.length===3) {
+        const d = new Date(parts[2], parts[1]-1, parts[0]);
+        if (d >= seven) active.push({name:u, last});
+      }
+    }
+    list.innerHTML = active.length ? active.map(a => `<li><span>${a.name}</span><span>${a.last}</span></li>`).join('') : '<li>No recent activity</li>';
+  }
+
+  function loadAdminData() {
+    const tbody = document.getElementById('admin-table-body');
+    tbody.innerHTML = '';
+    const totalV = MODULE_TITLES.length;
+    let tEmp=0, tProg=0, tComp=0, top={name:'', prog:0};
+    for (let u in allEmployeesData) {
+      const data = allEmployeesData[u];
+      tEmp++;
+      let sum=0, comp=0;
+      for (let i=1; i<=totalV; i++) {
+        const p = data.watched?.[`video${i}`] || 0;
+        sum += p;
+        if (p>=90) comp++;
+      }
+      const perc = totalV ? Math.round(sum/totalV) : 0;
+      tProg += perc;
+      tComp += comp;
+      if (perc > top.prog) top = {name:u, prog:perc};
+      tbody.innerHTML += `<tr><td>${u}</td><td>${data.role||'RM'}</td><td>${comp}/${totalV}</td><td>${perc}%</td><td>${data.lastActivity||'N/A'}</td><td><button onclick="resetUser('${u}')">Reset</button><button class="delete-btn" onclick="deleteUser('${u}')">Delete</button></td></tr>`;
+    }
+    document.getElementById('total-employees').innerText = tEmp;
+    document.getElementById('avg-progress').innerText = tEmp ? Math.round(tProg/tEmp)+'%' : '0%';
+    document.getElementById('total-completed').innerText = tComp;
+    document.getElementById('top-performer').innerText = top.name || '-';
+    if (tEmp===0) tbody.innerHTML = '<tr><td colspan="6">No data</td></tr>';
+  }
+
+  window.resetUser = async function(u) {
+    if (confirm(`Reset progress for ${u}?`)) {
+      await db.collection('employees').doc(u).update({ watched: {}, lastActivity: new Date().toLocaleDateString() });
+      allEmployeesData[u].watched = {};
+      allEmployeesData[u].lastActivity = new Date().toLocaleDateString();
+      loadAdminData();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
+      if (currentUser === u) {
+        watchedData.watched = {};
+        renderModules();
+        updateProgress();
+        populateWatchedLog();
+      }
+      showToast('Progress reset');
+    }
+  };
+
+  window.deleteUser = async function(u) {
+    if (confirm(`Delete employee ${u}?`)) {
+      await db.collection('employees').doc(u).delete();
+      delete allEmployeesData[u];
+      renderEmployeeList();
+      loadAdminData();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
+      if (currentUser === u) signOut();
+      showToast('User deleted');
+    }
+  };
+
+  window.showAdminTab = function(tab) {
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(`admin-${tab}`).classList.add('active');
+    event.target.classList.add('active');
+    if (tab === 'resources') loadResourcesAdmin();
+    if (tab === 'quizzes') loadQuizAdmin();
+    if (tab === 'feedback') loadFeedbackAdmin();
+    if (tab === 'insights') { renderModuleInsights(); renderDistribution(); renderRecentActive(); }
+  };
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', async function() {
+    const restored = await restoreSession();
+    if (!restored) {
+      document.querySelector('.company-section').style.display = 'block';
+      document.getElementById('login-choice').style.display = 'flex';
+    }
+    document.getElementById('employeeBtn').addEventListener('click', () => {
+      hideAllSections(); document.getElementById('employee-login').style.display = 'block';
+    });
+    document.getElementById('companyEmployeeBtn').addEventListener('click', () => {
+      hideAllSections(); document.getElementById('employee-login').style.display = 'block';
+    });
+    document.getElementById('adminBtn').addEventListener('click', () => {
+      hideAllSections(); document.getElementById('admin-box').style.display = 'block';
+    });
+    document.getElementById('signOutBtn').addEventListener('click', signOut);
+    document.getElementById('searchBox').addEventListener('input', filterModules);
+
+    // video modal close
+    document.querySelector('.close').addEventListener('click', function() {
+      document.getElementById('video-modal').style.display = 'none';
+      document.getElementById('youtube-frame').src = '';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === document.getElementById('video-modal')) {
+        document.getElementById('video-modal').style.display = 'none';
+        document.getElementById('youtube-frame').src = '';
+      }
+    });
+
+    // quiz modal close
+    document.querySelector('.quiz-close').addEventListener('click', function() {
+      document.getElementById('quiz-modal').style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === document.getElementById('quiz-modal')) {
+        document.getElementById('quiz-modal').style.display = 'none';
+      }
+    });
+  });
 </script>
 </body>
 </html>
