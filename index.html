@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SARVP Training Portal (Admin Managed)</title>
+  <title>SARVP Training Portal (Cloud - No Certificate)</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -415,6 +415,100 @@
     }
     .employee-item .delete-btn { background: #ff4d4d; }
 
+    /* Module completion insights */
+    .insights-card {
+      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
+      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
+    }
+    .insights-card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .module-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .module-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .module-name {
+      width: 250px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6a0dad, #ff8c00);
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .module-percent {
+      min-width: 60px;
+      text-align: right;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Progress distribution */
+    .distribution-card {
+      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
+      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
+    }
+    .distribution-card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .dist-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .dist-label {
+      width: 100px;
+      color: var(--text);
+    }
+    .dist-bar-bg {
+      flex: 1;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .dist-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .dist-count {
+      min-width: 50px;
+      text-align: right;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Recently active */
+    .active-card {
+      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
+      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
+    }
+    .active-card h3 { color: var(--primary); margin-bottom: 1rem; }
+    .active-list {
+      list-style: none;
+    }
+    .active-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+    .active-list li:last-child { border-bottom: none; }
+
     #admin-dashboard table {
       width: 100%; border-collapse: collapse; background: rgba(26,26,26,0.8); border-radius: 12px; overflow: hidden;
       margin-bottom: 1.5rem;
@@ -479,6 +573,7 @@
       header { flex-direction: column; gap: 1rem; }
       .admin-stats { grid-template-columns: repeat(2,1fr); }
       .admin-card input { width: 100%; margin-right: 0; }
+      .module-name { width: 180px; }
     }
   </style>
 </head>
@@ -491,17 +586,15 @@
     <h1>SARVP Training Portal</h1>
   </div>
   <div class="header-buttons">
-    <!-- Login buttons container (hidden after login) -->
     <div id="login-choice">
       <button id="employeeBtn"><i class="fas fa-user"></i> Employee Login</button>
       <button id="adminBtn"><i class="fas fa-cog"></i> Admin Login</button>
     </div>
-    <!-- Sign Out button (hidden by default) -->
     <button class="sign-out-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
   </div>
 </header>
 
-<!-- ===== COMPANY INFO (visible before login) ===== -->
+<!-- ===== COMPANY INFO SECTION ===== -->
 <section class="company-section">
   <h2>SARVP Financial Services</h2>
   <p class="tagline">Your trusted partner for comprehensive financial solutions and growth opportunities</p>
@@ -538,7 +631,7 @@
   </div>
 </section>
 
-<!-- ===== EMPLOYEE LOGIN (new combined form) ===== -->
+<!-- ===== EMPLOYEE LOGIN ===== -->
 <div class="login-section" id="employee-login">
   <h2><i class="fas fa-user-lock"></i> Employee Login</h2>
   <input type="text" id="emp-name" placeholder="Your Name">
@@ -608,10 +701,7 @@
       <div class="watched-list" id="watched-list"></div>
     </div>
 
-    <!-- Certificate button (hidden until all modules done) -->
-    <div id="certificateSection" style="text-align: center; margin-top: 2rem; display: none;">
-      <button class="cta-button" onclick="generateCertificate()"><i class="fas fa-certificate"></i> Generate Certificate of Completion</button>
-    </div>
+    <!-- Certificate button removed -->
   </div>
 </div>
 
@@ -628,6 +718,32 @@
     <div class="employee-list" id="employee-list">
       <!-- List of employees with actions will appear here -->
     </div>
+  </div>
+
+  <!-- Certificate Settings removed -->
+
+  <!-- Module Completion Insights -->
+  <div class="insights-card">
+    <h3><i class="fas fa-chart-pie"></i> Module Completion Overview</h3>
+    <div class="module-stats" id="moduleStats">
+      <!-- Filled by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Progress Distribution -->
+  <div class="distribution-card">
+    <h3><i class="fas fa-chart-bar"></i> Progress Distribution</h3>
+    <div id="distContainer">
+      <!-- Will be filled by JS -->
+    </div>
+  </div>
+
+  <!-- Recently Active Employees -->
+  <div class="active-card">
+    <h3><i class="fas fa-clock"></i> Recently Active (Last 7 Days)</h3>
+    <ul class="active-list" id="recentActive">
+      <!-- Filled by JS -->
+    </ul>
   </div>
 
   <div class="admin-stats">
@@ -691,9 +807,28 @@
   </div>
 </footer>
 
+<!-- Firebase SDK (9.x compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
 <script>
+  // ===== 🔥 YAHAN APNA FIREBASE CONFIG DALO =====
+  const firebaseConfig = {
+  apiKey: "AIzaSyDsHgmdw24P6Q_0S6Bpt_JPVKPQPSAOOQ4",
+  authDomain: "sarvp-tranning-module.firebaseapp.com",
+  projectId: "sarvp-tranning-module",
+  storageBucket: "sarvp-tranning-module.firebasestorage.app",
+  messagingSenderId: "768002857828",
+  appId: "1:768002857828:web:2d01910d2b7998cdf4f871",
+  measurementId: "G-R9W7FBXGPP"
+};
+  // ============================================
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
   // ===== CONFIGURATION =====
-  const ADMIN_PASSWORD = "admin123";              // Change as needed
   const YOUTUBE_IDS = {
     video1: 'dQw4w9WgXcQ',   // Replace with your actual YouTube video IDs
     video2: '3JZ_D3ELwOQ',
@@ -732,11 +867,10 @@
   ];
 
   // ===== GLOBALS =====
-  let currentUser = localStorage.getItem('currentUser');
-  let currentSession = JSON.parse(localStorage.getItem('currentSession')) || null;
-  let watchedData = JSON.parse(localStorage.getItem('watchedData')) || {};
-  // Employee credentials: object { "John Doe": "pass123", ... }
-  let employeeCredentials = JSON.parse(localStorage.getItem('employeeCredentials')) || {};
+  let currentUser = null;
+  let currentSession = { user: null, type: null };
+  let watchedData = {};        // for current employee
+  let employeeCredentials = {}; // only used by admin
 
   // ===== TOAST FUNCTION =====
   function showToast(message, isSuccess = true) {
@@ -751,31 +885,9 @@
 
   // ===== INIT =====
   document.addEventListener('DOMContentLoaded', function() {
-    // If session exists, restore the correct view
-    if (currentSession && currentSession.user) {
-      currentUser = currentSession.user;
-      if (currentSession.type === 'employee') {
-        // Verify the employee still exists in credentials (might have been deleted by admin)
-        if (!employeeCredentials[currentUser]) {
-          // If deleted, sign out
-          signOut();
-          return;
-        }
-        showEmployeeView();
-        renderModules();
-        updateProgress();
-        populateWatchedLog();
-        document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
-      } else if (currentSession.type === 'admin') {
-        showAdminView();
-        loadAdminData();
-        renderEmployeeList(); // Show employee management list
-      }
-    } else {
-      // No session: show company info and login buttons
-      document.querySelector('.company-section').style.display = 'block';
-      document.getElementById('login-choice').style.display = 'flex';
-    }
+    // No persistent session – we rely on Firebase login each time.
+    document.querySelector('.company-section').style.display = 'block';
+    document.getElementById('login-choice').style.display = 'flex';
 
     // Attach event listeners
     document.getElementById('employeeBtn').addEventListener('click', () => {
@@ -835,57 +947,84 @@
     document.getElementById('signOutBtn').style.display = 'block';
   }
 
-  // ===== EMPLOYEE LOGIN (new) =====
-  window.employeeLogin = function() {
+  // ===== EMPLOYEE LOGIN =====
+  window.employeeLogin = async function() {
     const name = document.getElementById('emp-name').value.trim();
     const password = document.getElementById('emp-password').value;
     if (!name || !password) {
       showToast('Please enter both name and password', false);
       return;
     }
-    // Check credentials
-    if (employeeCredentials[name] && employeeCredentials[name] === password) {
-      currentUser = name;
-      if (!watchedData[currentUser]) {
-        watchedData[currentUser] = { watched: {}, lastPosition: {}, lastActivity: new Date().toLocaleDateString() };
-      } else {
-        watchedData[currentUser].lastActivity = new Date().toLocaleDateString();
+    try {
+      const docRef = db.collection('employees').doc(name);
+      const docSnap = await docRef.get();
+      if (!docSnap.exists) {
+        showToast('Employee not found', false);
+        return;
       }
-      localStorage.setItem('watchedData', JSON.stringify(watchedData));
-      currentSession = { user: currentUser, type: 'employee' };
-      localStorage.setItem('currentSession', JSON.stringify(currentSession));
+      const empData = docSnap.data();
+      if (empData.password !== password) {
+        showToast('Incorrect password', false);
+        return;
+      }
+      // Login successful
+      currentUser = name;
+      watchedData = { watched: empData.watched || {}, lastActivity: empData.lastActivity || new Date().toLocaleDateString() };
+      currentSession = { user: name, type: 'employee' };
       showEmployeeView();
       renderModules();
       updateProgress();
       populateWatchedLog();
       document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
       showToast(`Welcome, ${currentUser}!`);
-    } else {
-      showToast('Invalid name or password', false);
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast('Error connecting to database', false);
     }
   };
 
   // ===== ADMIN LOGIN =====
-  window.checkAdmin = function() {
+  window.checkAdmin = async function() {
     const pass = document.getElementById('admin-password').value;
-    if (pass === ADMIN_PASSWORD) {
+    try {
+      const configDoc = await db.collection('admin').doc('config').get();
+      if (!configDoc.exists) {
+        showToast('Admin not configured', false);
+        return;
+      }
+      const adminPassword = configDoc.data().adminPassword;
+      if (pass !== adminPassword) {
+        showToast('Incorrect admin password', false);
+        return;
+      }
+      // Load all employees
+      const employeesSnapshot = await db.collection('employees').get();
+      employeeCredentials = {};
+      watchedData = {}; // We'll rebuild watchedData from employees
+      employeesSnapshot.forEach(doc => {
+        const emp = doc.data();
+        employeeCredentials[doc.id] = emp.password;
+        watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
+      });
       currentSession = { user: 'Admin', type: 'admin' };
-      localStorage.setItem('currentSession', JSON.stringify(currentSession));
       showAdminView();
       loadAdminData();
       renderEmployeeList();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
       showToast('Admin logged in');
-    } else {
-      showToast('Incorrect admin password', false);
+    } catch (error) {
+      console.error('Admin login error:', error);
+      showToast('Error connecting to database', false);
     }
   };
 
   // ===== SIGN OUT =====
   function signOut() {
     if (confirm('Are you sure you want to sign out?')) {
-      currentUser = '';
-      currentSession = null;
-      localStorage.removeItem('currentSession');
+      currentUser = null;
+      currentSession = { user: null, type: null };
       hideAllSections();
       document.querySelector('.company-section').style.display = 'block';
       document.getElementById('login-choice').style.display = 'flex';
@@ -898,75 +1037,80 @@
   }
 
   // ===== ADMIN EMPLOYEE MANAGEMENT =====
-  function renderEmployeeList() {
+  async function renderEmployeeList() {
     const listDiv = document.getElementById('employee-list');
     listDiv.innerHTML = '';
-    for (let name in employeeCredentials) {
+    const snapshot = await db.collection('employees').get();
+    snapshot.forEach(doc => {
+      const emp = doc.data();
       const item = document.createElement('div');
       item.className = 'employee-item';
       item.innerHTML = `
-        <span><strong>${name}</strong> (password: ${employeeCredentials[name]})</span>
+        <span><strong>${doc.id}</strong> (password: ${emp.password})</span>
         <div>
-          <button onclick="resetEmployeePassword('${name}')">Reset Pass</button>
-          <button class="delete-btn" onclick="deleteEmployee('${name}')">Delete</button>
+          <button onclick="resetEmployeePassword('${doc.id}')">Reset Pass</button>
+          <button class="delete-btn" onclick="deleteEmployee('${doc.id}')">Delete</button>
         </div>
       `;
       listDiv.appendChild(item);
-    }
-    if (Object.keys(employeeCredentials).length === 0) {
+    });
+    if (snapshot.empty) {
       listDiv.innerHTML = '<p>No employees added yet.</p>';
     }
   }
 
-  window.addEmployee = function() {
+  window.addEmployee = async function() {
     const name = document.getElementById('newEmpName').value.trim();
     const pass = document.getElementById('newEmpPass').value.trim();
     if (!name || !pass) {
       showToast('Please enter both name and password', false);
       return;
     }
-    if (employeeCredentials[name]) {
-      showToast('Employee already exists', false);
-      return;
+    try {
+      const docRef = db.collection('employees').doc(name);
+      const docSnap = await docRef.get();
+      if (docSnap.exists) {
+        showToast('Employee already exists', false);
+        return;
+      }
+      await docRef.set({
+        password: pass,
+        watched: {},
+        lastActivity: new Date().toLocaleDateString()
+      });
+      // Refresh lists
+      renderEmployeeList();
+      loadAdminData();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
+      document.getElementById('newEmpName').value = '';
+      document.getElementById('newEmpPass').value = '';
+      showToast(`Employee ${name} added`);
+    } catch (error) {
+      console.error('Add error:', error);
+      showToast('Error adding employee', false);
     }
-    employeeCredentials[name] = pass;
-    localStorage.setItem('employeeCredentials', JSON.stringify(employeeCredentials));
-    // Optionally create an empty progress entry
-    if (!watchedData[name]) {
-      watchedData[name] = { watched: {}, lastPosition: {}, lastActivity: new Date().toLocaleDateString() };
-      localStorage.setItem('watchedData', JSON.stringify(watchedData));
-    }
-    renderEmployeeList();
-    loadAdminData(); // refresh stats and table
-    document.getElementById('newEmpName').value = '';
-    document.getElementById('newEmpPass').value = '';
-    showToast(`Employee ${name} added`);
   };
 
-  window.resetEmployeePassword = function(name) {
+  window.resetEmployeePassword = async function(name) {
     const newPass = prompt(`Enter new password for ${name}:`);
-    if (newPass !== null && newPass.trim() !== '') {
-      employeeCredentials[name] = newPass.trim();
-      localStorage.setItem('employeeCredentials', JSON.stringify(employeeCredentials));
+    if (newPass && newPass.trim() !== '') {
+      await db.collection('employees').doc(name).update({ password: newPass.trim() });
       renderEmployeeList();
       showToast(`Password updated for ${name}`);
     }
   };
 
-  window.deleteEmployee = function(name) {
+  window.deleteEmployee = async function(name) {
     if (confirm(`Delete employee ${name}? This will also delete all their progress.`)) {
-      delete employeeCredentials[name];
-      delete watchedData[name]; // remove progress
-      localStorage.setItem('employeeCredentials', JSON.stringify(employeeCredentials));
-      localStorage.setItem('watchedData', JSON.stringify(watchedData));
+      await db.collection('employees').doc(name).delete();
       renderEmployeeList();
       loadAdminData();
-      // If the deleted employee was logged in, sign them out
-      if (currentUser === name) {
-        signOut();
-      } else {
-        showToast(`Employee ${name} deleted`);
-      }
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
+      showToast(`Employee ${name} deleted`);
     }
   };
 
@@ -977,7 +1121,7 @@
     grid.innerHTML = '';
     MODULE_TITLES.forEach((title, index) => {
       const videoId = `video${index+1}`;
-      const progress = watchedData[currentUser]?.watched[videoId] || 0;
+      const progress = watchedData.watched?.[videoId] || 0;
       const watchedClass = progress >= 90 ? 'watched' : '';
       const card = document.createElement('div');
       card.className = `video-card ${watchedClass}`;
@@ -1007,19 +1151,23 @@
     modal.dataset.currentVideo = videoId;
   }
 
-  function markVideoCompleted(videoId) {
+  async function markVideoCompleted(videoId) {
     if (!currentUser) return;
-    watchedData[currentUser].watched[videoId] = 100;
-    if (watchedData[currentUser].lastPosition) delete watchedData[currentUser].lastPosition[videoId];
-    watchedData[currentUser].lastActivity = new Date().toLocaleDateString();
-    localStorage.setItem('watchedData', JSON.stringify(watchedData));
+    if (!watchedData.watched) watchedData.watched = {};
+    watchedData.watched[videoId] = 100;
+    if (watchedData.lastPosition) delete watchedData.lastPosition[videoId];
+    watchedData.lastActivity = new Date().toLocaleDateString();
+    // Update Firestore
+    await db.collection('employees').doc(currentUser).update({
+      [`watched.${videoId}`]: 100,
+      lastActivity: watchedData.lastActivity
+    });
     updateProgress();
     populateWatchedLog();
     const card = document.querySelector(`[data-id="${videoId}"]`);
     if (card) card.classList.add('watched');
     const progressFill = document.getElementById(`progress-${videoId}`);
     if (progressFill) progressFill.style.width = '100%';
-    checkAllCompleted();
     showToast('✅ Video marked as completed!');
   }
 
@@ -1030,7 +1178,7 @@
     let totalProgress = 0;
     let completed = 0;
     for (let i = 1; i <= total; i++) {
-      const prog = watchedData[currentUser].watched[`video${i}`] || 0;
+      const prog = watchedData.watched?.[`video${i}`] || 0;
       totalProgress += prog;
       if (prog >= 90) completed++;
     }
@@ -1042,8 +1190,6 @@
     const circle = document.querySelector('.progress-circle circle:nth-child(2)');
     circle.style.strokeDashoffset = 314 - (314 * (avg / 100));
     document.getElementById('circle-text').innerText = Math.round(avg) + '%';
-    watchedData[currentUser].totalProgress = Math.round(avg);
-    localStorage.setItem('watchedData', JSON.stringify(watchedData));
   }
 
   function populateWatchedLog() {
@@ -1052,7 +1198,7 @@
     log.innerHTML = '';
     let hasAny = false;
     for (let i = 1; i <= MODULE_TITLES.length; i++) {
-      const prog = watchedData[currentUser].watched[`video${i}`] || 0;
+      const prog = watchedData.watched?.[`video${i}`] || 0;
       if (prog > 5) {
         hasAny = true;
         const title = MODULE_TITLES[i-1];
@@ -1078,197 +1224,102 @@
     });
   }
 
-  function checkAllCompleted() {
-    const total = MODULE_TITLES.length;
-    let completedCount = 0;
-    for (let i = 1; i <= total; i++) {
-      if ((watchedData[currentUser]?.watched[`video${i}`] || 0) >= 90) completedCount++;
-    }
-    const certSection = document.getElementById('certificateSection');
-    if (completedCount === total) {
-      certSection.style.display = 'block';
-    } else {
-      certSection.style.display = 'none';
-    }
+  // ===== ADMIN INSIGHTS =====
+  function renderModuleInsights() {
+    const container = document.getElementById('moduleStats');
+    if (!container) return;
+    const totalEmployees = Object.keys(employeeCredentials).length;
+    let html = '';
+    MODULE_TITLES.forEach((title, index) => {
+      const videoId = `video${index+1}`;
+      let completedCount = 0;
+      for (let user in watchedData) {
+        if (!employeeCredentials[user]) continue;
+        if ((watchedData[user]?.watched?.[videoId] || 0) >= 90) completedCount++;
+      }
+      const percent = totalEmployees ? Math.round((completedCount / totalEmployees) * 100) : 0;
+      html += `
+        <div class="module-row">
+          <span class="module-name">${title}</span>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+          </div>
+          <span class="module-percent">${percent}% (${completedCount}/${totalEmployees})</span>
+        </div>
+      `;
+    });
+    container.innerHTML = html || '<p>No employees yet.</p>';
   }
 
-  // ===== CERTIFICATE GENERATION (A4, white background, purple & orange) =====
-  window.generateCertificate = function() {
-    const name = currentUser;
-    const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-    
-    // Create a new window for the certificate
-    const win = window.open('', '_blank');
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Certificate of Completion - SARVP Financial Services</title>
-        <style>
-          /* A4 size styling */
-          body {
-            margin: 0;
-            padding: 0;
-            background: #ffffff;
-            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-          }
-          .certificate {
-            width: 21cm;
-            min-height: 29.7cm;
-            margin: 0 auto;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-          }
-          /* Decorative stripes */
-          .stripe-top {
-            height: 15px;
-            background: linear-gradient(90deg, #6a0dad, #ff8c00);
-          }
-          .stripe-bottom {
-            height: 15px;
-            background: linear-gradient(90deg, #ff8c00, #6a0dad);
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-          }
-          .content {
-            padding: 2cm 2cm;
-            text-align: center;
-            position: relative;
-          }
-          .logo {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #6a0dad, #ff8c00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            margin-bottom: 0.5rem;
-          }
-          h1 {
-            font-size: 2.5rem;
-            color: #6a0dad;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-          }
-          .subtitle {
-            font-size: 1.2rem;
-            color: #ff8c00;
-            letter-spacing: 2px;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #6a0dad;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-          }
-          .cert-text {
-            font-size: 1.2rem;
-            color: #333;
-            margin: 2rem 0 1rem;
-          }
-          .employee-name {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #6a0dad;
-            margin: 1rem 0;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 3px solid #ff8c00;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-          }
-          .details {
-            font-size: 1.2rem;
-            color: #444;
-            margin: 2rem 0;
-            line-height: 1.6;
-          }
-          .date {
-            margin-top: 2rem;
-            font-size: 1.1rem;
-            color: #6a0dad;
-          }
-          .signature {
-            margin-top: 3rem;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-          }
-          .signature div {
-            text-align: center;
-          }
-          .signature p {
-            margin: 0.2rem 0;
-            color: #555;
-          }
-          .signature .line {
-            width: 200px;
-            border-bottom: 2px solid #ff8c00;
-            margin-bottom: 0.3rem;
-          }
-          .footer-note {
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #777;
-            font-style: italic;
-          }
-          /* Print styles */
-          @media print {
-            body { background: white; }
-            .certificate { box-shadow: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="certificate">
-          <div class="stripe-top"></div>
-          <div class="content">
-            <div class="logo">SARVP</div>
-            <h1>Financial Services</h1>
-            <div class="subtitle">TRAINING COMPLETION CERTIFICATE</div>
-            
-            <div class="cert-text">This is proudly presented to</div>
-            <div class="employee-name">${name}</div>
-            
-            <div class="details">
-              for successfully completing all training modules<br>
-              and demonstrating excellence in understanding<br>
-              our financial products, processes, and customer service standards.
-            </div>
-            
-            <div class="date">Date: ${date}</div>
-            
-            <div class="signature">
-              <div>
-                <div class="line"></div>
-                <p>Authorised Signatory</p>
-                <p>SARVP Financial Services</p>
-              </div>
-              <div>
-                <div class="line"></div>
-                <p>Training Coordinator</p>
-              </div>
-            </div>
-            
-            <div class="footer-note">This certificate is electronically generated and does not require a physical signature.</div>
+  function renderDistribution() {
+    const container = document.getElementById('distContainer');
+    if (!container) return;
+    const totalEmployees = Object.keys(employeeCredentials).length;
+    if (totalEmployees === 0) {
+      container.innerHTML = '<p>No employees yet.</p>';
+      return;
+    }
+    const ranges = [
+      { min: 0, max: 25, label: '0-25%' },
+      { min: 26, max: 50, label: '26-50%' },
+      { min: 51, max: 75, label: '51-75%' },
+      { min: 76, max: 100, label: '76-100%' }
+    ];
+    const counts = [0, 0, 0, 0];
+    for (let user in watchedData) {
+      if (!employeeCredentials[user]) continue;
+      const totalVideos = MODULE_TITLES.length;
+      let totalProgress = 0;
+      for (let i = 1; i <= totalVideos; i++) {
+        totalProgress += watchedData[user]?.watched?.[`video${i}`] || 0;
+      }
+      const percent = totalVideos ? Math.round(totalProgress / totalVideos) : 0;
+      if (percent <= 25) counts[0]++;
+      else if (percent <= 50) counts[1]++;
+      else if (percent <= 75) counts[2]++;
+      else counts[3]++;
+    }
+    let html = '';
+    ranges.forEach((range, idx) => {
+      const percentOfTotal = totalEmployees ? Math.round((counts[idx] / totalEmployees) * 100) : 0;
+      html += `
+        <div class="dist-row">
+          <span class="dist-label">${range.label}</span>
+          <div class="dist-bar-bg">
+            <div class="dist-bar-fill" style="width: ${percentOfTotal}%;"></div>
           </div>
-          <div class="stripe-bottom"></div>
+          <span class="dist-count">${counts[idx]}</span>
         </div>
-        <script>
-          // Automatically trigger print dialog for PDF download
-          window.onload = function() { window.print(); };
-        <\/script>
-      </body>
-      </html>
-    `);
-    win.document.close();
-    showToast('🎉 Certificate generated! Print or save as PDF.');
-  };
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  function renderRecentActive() {
+    const list = document.getElementById('recentActive');
+    if (!list) return;
+    const today = new Date();
+    const sevenDaysAgo = new Date(today);
+    sevenDaysAgo.setDate(today.getDate() - 7);
+    const active = [];
+    for (let user in watchedData) {
+      if (!employeeCredentials[user]) continue;
+      const last = watchedData[user]?.lastActivity;
+      if (!last) continue;
+      const parts = last.split('/');
+      if (parts.length === 3) {
+        const lastDate = new Date(parts[2], parts[1]-1, parts[0]);
+        if (lastDate >= sevenDaysAgo) {
+          active.push({ name: user, last: last });
+        }
+      }
+    }
+    if (active.length === 0) {
+      list.innerHTML = '<li>No recent activity</li>';
+    } else {
+      list.innerHTML = active.map(a => `<li><span>${a.name}</span><span>${a.last}</span></li>`).join('');
+    }
+  }
 
   // ===== ADMIN DASHBOARD (stats and table) =====
   function loadAdminData() {
@@ -1281,13 +1332,12 @@
     let topPerformer = { name: '', progress: 0 };
 
     for (let user in watchedData) {
-      // Only show employees that exist in credentials
       if (!employeeCredentials[user]) continue;
       totalEmployees++;
       let userProgressSum = 0;
       let completed = 0;
       for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user].watched[`video${i}`] || 0;
+        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
         userProgressSum += p;
         if (p >= 90) completed++;
       }
@@ -1303,7 +1353,7 @@
         <td>${user}</td>
         <td>${completed}/${totalVideos} videos</td>
         <td>${percent}%</td>
-        <td>${watchedData[user].lastActivity || 'N/A'}</td>
+        <td>${watchedData[user]?.lastActivity || 'N/A'}</td>
         <td>
           <button onclick="resetUser('${user}')">Reset</button>
           <button class="delete-btn" onclick="deleteUser('${user}')">Delete</button>
@@ -1322,13 +1372,20 @@
     }
   }
 
-  // Reset user progress (admin)
-  window.resetUser = function(user) {
+  window.resetUser = async function(user) {
     if (confirm(`Reset progress for ${user}?`)) {
-      watchedData[user] = { watched: {}, lastPosition: {}, lastActivity: new Date().toLocaleDateString() };
-      localStorage.setItem('watchedData', JSON.stringify(watchedData));
+      await db.collection('employees').doc(user).update({
+        watched: {},
+        lastActivity: new Date().toLocaleDateString()
+      });
+      // Update local copy
+      if (watchedData[user]) watchedData[user].watched = {};
       loadAdminData();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
       if (currentUser === user) {
+        watchedData = { watched: {} };
         renderModules();
         updateProgress();
         populateWatchedLog();
@@ -1337,15 +1394,16 @@
     }
   };
 
-  // Delete user (admin) – also remove from credentials
-  window.deleteUser = function(user) {
+  window.deleteUser = async function(user) {
     if (confirm(`Delete employee ${user}? This will also remove them from credentials and delete all progress.`)) {
+      await db.collection('employees').doc(user).delete();
       delete employeeCredentials[user];
       delete watchedData[user];
-      localStorage.setItem('employeeCredentials', JSON.stringify(employeeCredentials));
-      localStorage.setItem('watchedData', JSON.stringify(watchedData));
       renderEmployeeList();
       loadAdminData();
+      renderModuleInsights();
+      renderDistribution();
+      renderRecentActive();
       if (currentUser === user) signOut();
       showToast(`User ${user} deleted`);
     }
@@ -1355,16 +1413,16 @@
     let csv = 'Name,Completed Videos,Total Videos,Progress%,Last Activity\n';
     const totalVideos = MODULE_TITLES.length;
     for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue; // only credentialed employees
+      if (!employeeCredentials[user]) continue;
       let completed = 0;
       let progressSum = 0;
       for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user].watched[`video${i}`] || 0;
+        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
         progressSum += p;
         if (p >= 90) completed++;
       }
       const percent = totalVideos ? Math.round(progressSum / totalVideos) : 0;
-      csv += `${user},${completed},${totalVideos},${percent},${watchedData[user].lastActivity || 'N/A'}\n`;
+      csv += `${user},${completed},${totalVideos},${percent},${watchedData[user]?.lastActivity || 'N/A'}\n`;
     }
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
