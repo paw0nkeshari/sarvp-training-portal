@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SARVP Training Portal (Cloud - No Certificate)</title>
+  <title>SARVP Training Portal (Cloud + Session)</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -720,8 +720,6 @@
     </div>
   </div>
 
-  <!-- Certificate Settings removed -->
-
   <!-- Module Completion Insights -->
   <div class="insights-card">
     <h3><i class="fas fa-chart-pie"></i> Module Completion Overview</h3>
@@ -812,16 +810,16 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // ===== 🔥 YAHAN APNA FIREBASE CONFIG DALO =====
+  // ===== 🔥 APNA FIREBASE CONFIG YAHAN DALO =====
   const firebaseConfig = {
-  apiKey: "AIzaSyDsHgmdw24P6Q_0S6Bpt_JPVKPQPSAOOQ4",
-  authDomain: "sarvp-tranning-module.firebaseapp.com",
-  projectId: "sarvp-tranning-module",
-  storageBucket: "sarvp-tranning-module.firebasestorage.app",
-  messagingSenderId: "768002857828",
-  appId: "1:768002857828:web:2d01910d2b7998cdf4f871",
-  measurementId: "G-R9W7FBXGPP"
-};
+    apiKey: "AIzaSyDsHgmdw24P6Q_0S6Bpt_JPVKPQPSAOOQ4",
+    authDomain: "sarvp-tranning-module.firebaseapp.com",
+    projectId: "sarvp-tranning-module",
+    storageBucket: "sarvp-tranning-module.firebasestorage.app",
+    messagingSenderId: "768002857828",
+    appId: "1:768002857828:web:2d01910d2b7998cdf4f871",
+    measurementId: "G-R9W7FBXGPP"
+  };
   // ============================================
 
   // Initialize Firebase
@@ -871,6 +869,8 @@
   let currentSession = { user: null, type: null };
   let watchedData = {};        // for current employee
   let employeeCredentials = {}; // only used by admin
+  let inactivityTimer = null;
+  const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
   // ===== TOAST FUNCTION =====
   function showToast(message, isSuccess = true) {
@@ -883,11 +883,134 @@
     }, 2500);
   }
 
+  // ===== SESSION MANAGEMENT =====
+  function saveSession(user, type) {
+    const session = {
+      user: user,
+      type: type,
+      lastActivity: Date.now()
+    };
+    localStorage.setItem('session', JSON.stringify(session));
+  }
+
+  function clearSession() {
+    localStorage.removeItem('session');
+  }
+
+  function updateActivity() {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session) {
+      session.lastActivity = Date.now();
+      localStorage.setItem('session', JSON.stringify(session));
+    }
+  }
+
+  // Activity event listeners
+  function startActivityTracking() {
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
+      window.addEventListener(event, updateActivity);
+    });
+  }
+
+  function stopActivityTracking() {
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
+      window.removeEventListener(event, updateActivity);
+    });
+  }
+
+  // Inactivity checker
+  function startInactivityTimer() {
+    if (inactivityTimer) clearInterval(inactivityTimer);
+    inactivityTimer = setInterval(() => {
+      const session = JSON.parse(localStorage.getItem('session'));
+      if (session && (Date.now() - session.lastActivity > INACTIVITY_LIMIT)) {
+        // Auto logout due to inactivity
+        showToast('Session expired due to inactivity', false);
+        signOut();
+      }
+    }, 10000); // check every 10 seconds
+  }
+
+  // Restore session on page load
+  async function restoreSession() {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (!session) return false;
+
+    // Check if session is not expired
+    if (Date.now() - session.lastActivity > INACTIVITY_LIMIT) {
+      clearSession();
+      return false;
+    }
+
+    // Attempt to restore based on type
+    if (session.type === 'employee') {
+      try {
+        const docRef = db.collection('employees').doc(session.user);
+        const docSnap = await docRef.get();
+        if (!docSnap.exists) {
+          clearSession();
+          return false;
+        }
+        currentUser = session.user;
+        watchedData = { watched: docSnap.data().watched || {}, lastActivity: docSnap.data().lastActivity || new Date().toLocaleDateString() };
+        currentSession = { user: session.user, type: 'employee' };
+        showEmployeeView();
+        renderModules();
+        updateProgress();
+        populateWatchedLog();
+        document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
+        startActivityTracking();
+        startInactivityTimer();
+        return true;
+      } catch (error) {
+        console.error('Session restore error:', error);
+        clearSession();
+        return false;
+      }
+    } else if (session.type === 'admin') {
+      try {
+        const configDoc = await db.collection('admin').doc('config').get();
+        if (!configDoc.exists) {
+          clearSession();
+          return false;
+        }
+        // Load all employees
+        const employeesSnapshot = await db.collection('employees').get();
+        employeeCredentials = {};
+        watchedData = {};
+        employeesSnapshot.forEach(doc => {
+          const emp = doc.data();
+          employeeCredentials[doc.id] = emp.password;
+          watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
+        });
+        currentSession = { user: 'Admin', type: 'admin' };
+        showAdminView();
+        loadAdminData();
+        renderEmployeeList();
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+        startActivityTracking();
+        startInactivityTimer();
+        return true;
+      } catch (error) {
+        console.error('Admin session restore error:', error);
+        clearSession();
+        return false;
+      }
+    }
+    return false;
+  }
+
   // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', function() {
-    // No persistent session – we rely on Firebase login each time.
-    document.querySelector('.company-section').style.display = 'block';
-    document.getElementById('login-choice').style.display = 'flex';
+  document.addEventListener('DOMContentLoaded', async function() {
+    // Try to restore session first
+    const restored = await restoreSession();
+    if (!restored) {
+      // No valid session, show company section
+      document.querySelector('.company-section').style.display = 'block';
+      document.getElementById('login-choice').style.display = 'flex';
+    }
 
     // Attach event listeners
     document.getElementById('employeeBtn').addEventListener('click', () => {
@@ -976,6 +1099,12 @@
       updateProgress();
       populateWatchedLog();
       document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
+      
+      // Save session and start tracking
+      saveSession(name, 'employee');
+      startActivityTracking();
+      startInactivityTimer();
+      
       showToast(`Welcome, ${currentUser}!`);
     } catch (error) {
       console.error('Login error:', error);
@@ -1013,6 +1142,12 @@
       renderModuleInsights();
       renderDistribution();
       renderRecentActive();
+      
+      // Save session and start tracking
+      saveSession('Admin', 'admin');
+      startActivityTracking();
+      startInactivityTimer();
+      
       showToast('Admin logged in');
     } catch (error) {
       console.error('Admin login error:', error);
@@ -1025,6 +1160,15 @@
     if (confirm('Are you sure you want to sign out?')) {
       currentUser = null;
       currentSession = { user: null, type: null };
+      
+      // Clear session and stop tracking
+      clearSession();
+      stopActivityTracking();
+      if (inactivityTimer) {
+        clearInterval(inactivityTimer);
+        inactivityTimer = null;
+      }
+      
       hideAllSections();
       document.querySelector('.company-section').style.display = 'block';
       document.getElementById('login-choice').style.display = 'flex';
