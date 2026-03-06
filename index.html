@@ -1,791 +1,1214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SARVP Training Portal (Cloud + Session)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* ===== GLOBAL ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
-    }
-    :root {
-      --primary: #00ffd5;
-      --secondary: #00ff7f;
-      --accent: #00a8ff;
-      --dark: #121212;
-      --darker: #0a0a0a;
-      --card-bg: #1a1a1a;
-      --text: #ffffff;
-      --text-secondary: #cccccc;
-      --toast-bg: #333;
-      --toast-success: #00cc66;
-    }
-    body {
-      background: linear-gradient(135deg, var(--darker), var(--dark));
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 20% 80%, rgba(0,255,213,0.1), transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(0,255,127,0.1), transparent 50%);
-      z-index: -1;
-    }
-    a { text-decoration: none; color: inherit; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SARVP RM Training Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ===== GLOBAL STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+:root {
+    --primary: #cc6238;
+    --secondary: #572b67;
+    --accent: #cc6238;
+    --dark: #333333;
+    --darker: #1a1a1a;
+    --card-bg: #ffffff;
+    --text: #333333;
+    --text-secondary: #666666;
+    --toast-bg: #333;
+    --toast-success: #00cc66;
+    --toast-error: #ff4d4d;
+    --light-bg: #f5f5f5;
+    --border-color: #e0e0e0;
+}
+body {
+    background: #ffffff;
+    color: var(--text);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 20% 80%, rgba(204,98,56,0.08), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(87,43,103,0.08), transparent 50%);
+    z-index: -1;
+}
+a { text-decoration: none; color: inherit; }
 
-    /* ===== HEADER ===== */
-    header {
-      position: sticky; top: 0;
-      background: rgba(26,26,26,0.95);
-      backdrop-filter: blur(10px);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      border-bottom: 1px solid rgba(0,255,213,0.2);
-      animation: slideDown 0.5s ease-out;
-    }
-    @keyframes slideDown {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
-    }
-    .logo-container {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .logo {
-      width: 50px; height: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.5rem;
-      color: var(--dark);
-      box-shadow: 0 4px 10px rgba(0,255,213,0.3);
-    }
-    header h1 {
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 1.8rem;
-      text-shadow: 0 0 10px rgba(0,255,213,0.5);
-    }
-    .header-buttons {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    #login-choice {
-      display: flex;
-      gap: 1rem;
-    }
-    header button {
-      padding: 0.6rem 1.2rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--dark);
-      border: none; border-radius: 8px;
-      cursor: pointer; font-weight: 500;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,255,213,0.3);
-      position: relative; overflow: hidden;
-    }
-    header button::before {
-      content: ""; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: 0.5s;
-    }
-    header button:hover::before { left: 100%; }
-    header button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0,255,213,0.5);
-    }
-    .sign-out-btn {
-      background: linear-gradient(135deg, #ff4d4d, #ff1a1a) !important;
-      display: none;
-    }
-    .sign-out-btn:hover {
-      box-shadow: 0 6px 15px rgba(255,77,77,0.5) !important;
-    }
+/* ===== HEADER ===== */
+header {
+    position: sticky; top: 0;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    border-bottom: 2px solid var(--primary);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    animation: slideDown 0.5s ease-out;
+}
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.logo {
+    width: 50px; height: 50px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(204,98,56,0.4);
+}
+header h1 {
+    color: var(--secondary);
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+#login-choice {
+    display: flex;
+    gap: 1rem;
+}
+header button {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+    border: none; border-radius: 8px;
+    cursor: pointer; font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(204,98,56,0.3);
+    position: relative; overflow: hidden;
+}
+header button::before {
+    content: ""; position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: 0.5s;
+}
+header button:hover::before { left: 100%; }
+header button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(87,43,103,0.4);
+}
+.sign-out-btn {
+    background: linear-gradient(135deg, #ff4d4d, #cc3333) !important;
+    display: none;
+}
+.sign-out-btn:hover {
+    box-shadow: 0 6px 15px rgba(255,77,77,0.5) !important;
+}
 
-    /* ===== COMPANY INFO SECTION ===== */
-    .company-section {
-      padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; text-align: center;
-      animation: fadeIn 0.8s ease-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .company-section h2 {
-      color: var(--primary); font-size: 2.5rem; margin-bottom: 1.5rem;
-    }
-    .company-section .tagline {
-      font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;
-      max-width: 800px; margin-left: auto; margin-right: auto;
-    }
-    .company-features {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;
-      margin: 3rem 0;
-    }
-    .feature-card {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px);
-      padding: 2rem; border-radius: 16px;
-      border: 1px solid rgba(0,255,213,0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0,255,213,0.2);
-    }
-    .feature-icon {
-      width: 70px; height: 70px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 1.5rem; font-size: 1.8rem; color: var(--dark);
-    }
-    .feature-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .feature-card p { color: var(--text-secondary); line-height: 1.6; }
-    .company-stats {
-      display: flex; justify-content: center; gap: 3rem; margin: 3rem 0; flex-wrap: wrap;
-    }
-    .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); display: block; }
-    .stat-label { color: var(--text-secondary); }
-    .cta-section {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px);
-      padding: 3rem; border-radius: 16px; margin-top: 3rem;
-      border: 1px solid rgba(0,255,213,0.2);
-    }
-    .cta-section h3 { color: var(--primary); font-size: 1.8rem; margin-bottom: 1rem; }
-    .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
-    .cta-buttons { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
-    .cta-button {
-      padding: 0.8rem 2rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--dark); border: none; border-radius: 8px; font-weight: 500;
-      cursor: pointer; transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,255,213,0.3);
-    }
-    .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,255,213,0.4);
-    }
-    .cta-button.secondary {
-      background: transparent; color: var(--primary); border: 2px solid var(--primary);
-    }
-    .cta-button.secondary:hover { background: rgba(0,255,213,0.1); }
+/* ===== COMPANY INFO SECTION ===== */
+.company-section {
+    padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.company-section h2 {
+    color: var(--secondary); font-size: 2.5rem; margin-bottom: 1.5rem;
+}
+.company-section .tagline {
+    font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;
+    max-width: 800px; margin-left: auto; margin-right: auto;
+}
+.company-features {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;
+    margin: 3rem 0;
+}
+.feature-card {
+    background: #ffffff;
+    padding: 2rem; border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(204,98,56,0.2);
+    border-color: var(--primary);
+}
+.feature-icon {
+    width: 70px; height: 70px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem; font-size: 1.8rem; color: #ffffff;
+}
+.feature-card h3 { color: var(--primary); margin-bottom: 1rem; }
+.feature-card p { color: var(--text-secondary); line-height: 1.6; }
+.company-stats {
+    display: flex; justify-content: center; gap: 3rem; margin: 3rem 0; flex-wrap: wrap;
+}
+.stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); display: block; }
+.stat-label { color: var(--text-secondary); }
+.cta-section {
+    background: linear-gradient(135deg, rgba(204,98,56,0.1), rgba(87,43,103,0.1));
+    padding: 3rem; border-radius: 16px; margin-top: 3rem;
+    border: 2px solid var(--primary);
+}
+.cta-section h3 { color: var(--secondary); font-size: 1.8rem; margin-bottom: 1rem; }
+.cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+.cta-button {
+    padding: 0.8rem 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff; border: none; border-radius: 8px; font-weight: 500;
+    cursor: pointer; transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(204,98,56,0.3);
+}
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(87,43,103,0.4);
+}
+.cta-button.secondary {
+    background: #ffffff; color: var(--primary); border: 2px solid var(--primary);
+}
+.cta-button.secondary:hover { background: rgba(204,98,56,0.1); }
 
-    /* ===== LOGIN SECTIONS ===== */
-    .login-section {
-      display: none; padding: 1.5rem; text-align: center;
-      background: rgba(26,26,26,0.8); border-radius: 12px;
-      margin: 2rem auto; max-width: 500px;
-      border: 1px solid rgba(0,255,213,0.2);
-      animation: fadeIn 0.5s ease-out;
-    }
-    .login-section h2 { color: var(--primary); margin-bottom: 1.5rem; }
-    .login-section input {
-      width: 100%; padding: 0.8rem 1rem; margin-bottom: 1rem;
-      border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(18,18,18,0.8); color: var(--text); font-size: 1rem;
-    }
-    .login-section input:focus {
-      outline: none; border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0,255,213,0.2);
-    }
-    .login-section button {
-      padding: 0.8rem 1.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--dark); border: none; border-radius: 8px; font-weight: 500;
-      cursor: pointer; transition: all 0.3s ease;
-    }
-    .login-section button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0,255,213,0.5);
-    }
+/* ===== LOGIN SECTIONS ===== */
+.login-section {
+    display: none; padding: 2rem; text-align: center;
+    background: #ffffff; border-radius: 16px;
+    margin: 2rem auto; max-width: 500px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 10px 40px rgba(204,98,56,0.15);
+    animation: fadeIn 0.5s ease-out;
+}
+.login-section h2 { color: var(--secondary); margin-bottom: 1.5rem; }
+.login-section input {
+    width: 100%; padding: 0.8rem 1rem; margin-bottom: 1rem;
+    border-radius: 8px; border: 1px solid var(--border-color);
+    background: #f9f9f9; color: var(--text); font-size: 1rem;
+}
+.login-section input:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(204,98,56,0.2);
+}
+.login-section button {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff; border: none; border-radius: 8px; font-weight: 500;
+    cursor: pointer; transition: all 0.3s ease;
+    width: 100%;
+}
+.login-section button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(87,43,103,0.4);
+}
+.login-section button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
-    /* ===== TOAST NOTIFICATION ===== */
-    #toast {
-      visibility: hidden;
-      min-width: 250px;
-      background-color: var(--toast-bg);
-      color: #fff;
-      text-align: center;
-      border-radius: 8px;
-      padding: 16px;
-      position: fixed;
-      z-index: 4000;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      border-left: 5px solid var(--toast-success);
-      transition: visibility 0.2s, opacity 0.2s;
-      opacity: 0;
-    }
-    #toast.show {
-      visibility: visible;
-      opacity: 1;
-    }
+/* ===== TOAST NOTIFICATION ===== */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: var(--toast-bg);
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 4000;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border-left: 5px solid var(--toast-success);
+    transition: visibility 0.2s, opacity 0.2s;
+    opacity: 0;
+}
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+}
+#toast.error {
+    border-left-color: var(--toast-error);
+}
 
-    /* ===== MAIN CONTAINER (employee view) ===== */
-    .container { display: none; gap: 2rem; padding: 2rem; animation: fadeIn 0.7s ease-out; }
+/* ===== MAIN CONTAINER (employee view) ===== */
+.container { display: none; gap: 2rem; padding: 2rem; animation: fadeIn 0.7s ease-out; }
 
-    /* Sidebar */
-    .sidebar {
-      flex: 0 0 280px; background: rgba(26,26,26,0.8); backdrop-filter: blur(10px);
-      padding: 1.5rem; border-radius: 16px; position: sticky; top: 100px;
-      height: max-content; border: 1px solid rgba(0,255,213,0.2);
-      animation: slideInLeft 0.5s ease-out;
-    }
-    @keyframes slideInLeft {
-      from { transform: translateX(-100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .sidebar h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-    .sidebar input {
-      width: 100%; padding: 0.7rem 1rem; margin-bottom: 1.2rem;
-      border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(18,18,18,0.8); color: var(--text);
-    }
-    .sidebar input:focus {
-      outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0,255,213,0.2);
-    }
-    .sidebar label { font-weight: 500; margin-bottom: 0.5rem; display: block; color: var(--text-secondary); }
-    .progress-section { margin-top: 2rem; padding: 1.5rem; background: rgba(18,18,18,0.6); border-radius: 12px; }
-    .progress-container {
-      background: rgba(18,18,18,0.8); border-radius: 10px; overflow: hidden; position: relative;
-      margin-top: 0.5rem; height: 24px;
-    }
-    .progress-bar {
-      height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
-      width: 0%; transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
-      position: relative; overflow: hidden;
-    }
-    .progress-bar::after {
-      content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      animation: shimmer 2s infinite;
-    }
-    @keyframes shimmer {
-      0% { left: -100%; } 100% { left: 100%; }
-    }
-    .progress-text {
-      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      color: var(--text); font-weight: 500; font-size: 0.9rem; line-height: 24px;
-    }
-    .progress-circle { width: 120px; height: 120px; position: relative; margin: 1rem auto; }
-    .progress-circle svg { width: 120px; height: 120px; transform: rotate(-90deg); }
-    .progress-circle circle { fill: none; stroke-width: 8; }
-    .progress-circle circle:nth-child(1) { stroke: rgba(255,255,255,0.1); }
-    .progress-circle circle:nth-child(2) {
-      stroke: var(--primary); stroke-dasharray: 314; stroke-dashoffset: 314;
-      transition: stroke-dashoffset 1s; filter: drop-shadow(0 0 5px var(--primary));
-    }
-    #circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; }
-    .enhanced-progress-container { margin-top: 1.5rem; }
-    .progress-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
-    .progress-title { color: var(--primary); }
-    .progress-percentage { color: var(--text); font-weight: 700; }
-    .enhanced-progress-bar { height: 16px; background: rgba(18,18,18,0.8); border-radius: 8px; overflow: hidden; position: relative; }
-    .enhanced-progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
-      width: 0%; transition: width 0.8s; position: relative; overflow: hidden;
-    }
-    .enhanced-progress-fill::after {
-      content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      animation: shimmer 2s infinite;
-    }
-    .company-info { margin-top: 2rem; padding: 1.5rem; background: rgba(18,18,18,0.6); border-radius: 12px; text-align: center; }
-    .company-info h3 { color: var(--primary); }
-    .company-info p { color: var(--text-secondary); font-size: 0.9rem; }
-    .company-info a { color: var(--accent); transition: color 0.3s; }
-    .company-info a:hover { color: var(--primary); }
+/* Sidebar */
+.sidebar {
+    flex: 0 0 280px; background: #ffffff;
+    padding: 1.5rem; border-radius: 16px; position: sticky; top: 100px;
+    height: max-content; border: 2px solid var(--secondary);
+    box-shadow: 0 4px 20px rgba(87,43,103,0.1);
+    animation: slideInLeft 0.5s ease-out;
+}
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.sidebar h3 { color: var(--secondary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.sidebar input {
+    width: 100%; padding: 0.7rem 1rem; margin-bottom: 1.2rem;
+    border-radius: 8px; border: 1px solid var(--border-color);
+    background: #f9f9f9; color: var(--text);
+}
+.sidebar input:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(204,98,56,0.2);
+}
+.sidebar label { font-weight: 500; margin-bottom: 0.5rem; display: block; color: var(--text-secondary); }
+.progress-section { margin-top: 2rem; padding: 1.5rem; background: var(--light-bg); border-radius: 12px; border: 1px solid var(--border-color); }
+.progress-container {
+    background: #e0e0e0; border-radius: 10px; overflow: hidden; position: relative;
+    margin-top: 0.5rem; height: 24px;
+}
+.progress-bar {
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%; transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+    position: relative; overflow: hidden;
+}
+.progress-bar::after {
+    content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+    0% { left: -100%; } 100% { left: 100%; }
+}
+.progress-text {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    color: #ffffff; font-weight: 500; font-size: 0.9rem; line-height: 24px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.progress-circle { width: 120px; height: 120px; position: relative; margin: 1rem auto; }
+.progress-circle svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+.progress-circle circle { fill: none; stroke-width: 8; }
+.progress-circle circle:nth-child(1) { stroke: #e0e0e0; }
+.progress-circle circle:nth-child(2) {
+    stroke: var(--primary); stroke-dasharray: 314; stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1s; filter: drop-shadow(0 0 5px rgba(204,98,56,0.5));
+}
+#circle-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 700; color: var(--secondary); }
+.enhanced-progress-container { margin-top: 1.5rem; }
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+.progress-title { color: var(--secondary); }
+.progress-percentage { color: var(--primary); font-weight: 700; }
+.enhanced-progress-bar { height: 16px; background: #e0e0e0; border-radius: 8px; overflow: hidden; position: relative; }
+.enhanced-progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%; transition: width 0.8s; position: relative; overflow: hidden;
+}
+.enhanced-progress-fill::after {
+    content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+.company-info { margin-top: 2rem; padding: 1.5rem; background: var(--light-bg); border-radius: 12px; text-align: center; border: 1px solid var(--border-color); }
+.company-info h3 { color: var(--primary); }
+.company-info p { color: var(--text-secondary); font-size: 0.9rem; }
+.company-info a { color: var(--secondary); transition: color 0.3s; }
+.company-info a:hover { color: var(--primary); }
 
-    /* Main content */
-    .main { flex: 1; display: flex; flex-direction: column; gap: 2rem; animation: slideInRight 0.5s ease-out; }
-    @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .welcome-section {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); padding: 1.5rem;
-      border-radius: 16px; text-align: center; border: 1px solid rgba(0,255,213,0.2);
-    }
-    .welcome-section h2 { color: var(--primary); }
-    .welcome-section p { color: var(--text-secondary); line-height: 1.6; max-width: 800px; margin: 0 auto; }
-    .video-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;
-    }
-    .video-card {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); border-radius: 16px; overflow: hidden;
-      cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.4s, box-shadow 0.4s;
-      position: relative;
-    }
-    .video-card:hover {
-      transform: translateY(-10px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(0,255,213,0.3);
-      border-color: rgba(0,255,213,0.3);
-    }
-    .video-card img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform 0.3s; }
-    .video-card:hover img { transform: scale(1.05); }
-    .video-card .watch-indicator {
-      position: absolute; top: 10px; right: 10px; background: var(--secondary); color: var(--dark);
-      width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; opacity: 0; transform: scale(0); transition: all 0.3s; z-index: 2;
-    }
-    .video-card.watched .watch-indicator { opacity: 1; transform: scale(1); }
-    .video-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); }
-    .video-progress-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 0.5s; }
-    .video-card-content { padding: 1.2rem; position: relative; z-index: 2; }
-    .video-card h2 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary); }
-    .video-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
-    .watched-log {
-      background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); padding: 1.5rem; border-radius: 16px;
-      border: 1px solid rgba(0,255,213,0.2);
-    }
-    .watched-log h3 { color: var(--primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-    .watched-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .watched-badge {
-      background: linear-gradient(135deg, var(--secondary), #00cc66); color: var(--dark);
-      padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
-      display: flex; align-items: center; gap: 0.3rem;
-    }
-    .progress-badge {
-      background: linear-gradient(135deg, var(--accent), #0095ff); color: white;
-      padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
-      display: flex; align-items: center; gap: 0.3rem;
-    }
+/* Main content */
+.main { flex: 1; display: flex; flex-direction: column; gap: 2rem; animation: slideInRight 0.5s ease-out; }
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.welcome-section {
+    background: #ffffff; padding: 1.5rem;
+    border-radius: 16px; text-align: center; border: 2px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(204,98,56,0.1);
+}
+.welcome-section h2 { color: var(--secondary); }
+.welcome-section p { color: var(--text-secondary); line-height: 1.6; max-width: 800px; margin: 0 auto; }
 
-    /* ===== ADMIN DASHBOARD ===== */
-    #admin-dashboard { display: none; padding: 2rem; animation: fadeIn 0.5s ease-out; }
-    #admin-dashboard h2 { color: var(--primary); margin-bottom: 1.5rem; text-align: center; }
-    .admin-stats {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
-    }
-    .stat-card {
-      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px; text-align: center;
-      border: 1px solid rgba(0,255,213,0.2);
-    }
-    .stat-card h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 0.5rem; }
-    .stat-value { font-size: 2rem; font-weight: 700; color: var(--text); }
-    .stat-label { color: var(--text-secondary); font-size: 0.9rem; }
+/* Tabs for employee section */
+.tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+.tab-btn {
+    padding: 0.6rem 1.5rem;
+    background: #ffffff;
+    border: 2px solid var(--primary);
+    border-radius: 30px;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+}
+.tab-btn:hover {
+    background: rgba(204,98,56,0.1);
+}
+.tab-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: #999;
+    color: #999;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
 
-    /* Employee management card */
-    .admin-card {
-      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
-      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
-    }
-    .admin-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .admin-card input {
-      width: calc(50% - 0.5rem); padding: 0.6rem; margin-right: 0.5rem; margin-bottom: 1rem;
-      border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(18,18,18,0.8); color: var(--text);
-    }
-    .admin-card button {
-      padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--dark); border: none; border-radius: 6px; cursor: pointer; font-weight: 500;
-    }
-    .employee-list {
-      margin-top: 1rem;
-    }
-    .employee-item {
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(18,18,18,0.6); padding: 0.8rem; border-radius: 6px; margin-bottom: 0.5rem;
-    }
-    .employee-item button {
-      padding: 0.3rem 0.8rem; background: var(--accent); border: none; border-radius: 4px;
-      color: white; cursor: pointer; margin-left: 0.5rem;
-    }
-    .employee-item .delete-btn { background: #ff4d4d; }
+/* Video Grid */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.video-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.4s, box-shadow 0.4s;
+    position: relative;
+}
+.video-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(204,98,56,0.2);
+    border-color: var(--primary);
+}
+.video-card img { width: 100%; height: 160px; object-fit: cover; display: block; transition: transform 0.3s; }
+.video-card:hover img { transform: scale(1.05); }
+.video-card .watch-indicator {
+    position: absolute; top: 10px; right: 10px; background: var(--secondary); color: #ffffff;
+    width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; opacity: 0; transform: scale(0); transition: all 0.3s; z-index: 2;
+}
+.video-card.watched .watch-indicator { opacity: 1; transform: scale(1); }
+.video-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(0,0,0,0.1); }
+.video-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.5s; }
+.video-card-content { padding: 1.2rem; position: relative; z-index: 2; }
+.video-card h2 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--secondary); }
+.video-card p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
 
-    /* Module completion insights */
-    .insights-card {
-      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
-      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
-    }
-    .insights-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .module-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .module-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .module-name {
-      width: 250px;
-      color: var(--text);
-      font-weight: 500;
-    }
-    .progress-bar-bg {
-      flex: 1;
-      height: 20px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #6a0dad, #ff8c00);
-      width: 0%;
-      transition: width 0.5s;
-    }
-    .module-percent {
-      min-width: 60px;
-      text-align: right;
-      color: var(--primary);
-      font-weight: 500;
-    }
+/* Resource cards */
+.resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.resource-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.resource-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+.resource-card h3 {
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+}
+.resource-card a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 6px;
+    color: #ffffff;
+}
 
-    /* Progress distribution */
-    .distribution-card {
-      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
-      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
-    }
-    .distribution-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .dist-row {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.8rem;
-    }
-    .dist-label {
-      width: 100px;
-      color: var(--text);
-    }
-    .dist-bar-bg {
-      flex: 1;
-      height: 20px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .dist-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      width: 0%;
-      transition: width 0.5s;
-    }
-    .dist-count {
-      min-width: 50px;
-      text-align: right;
-      color: var(--primary);
-      font-weight: 500;
-    }
+/* Quiz card */
+.quiz-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.quiz-info h3 {
+    color: var(--secondary);
+    margin-bottom: 0.3rem;
+}
+.quiz-score {
+    font-size: 1.2rem;
+    color: var(--primary);
+}
+.quiz-btn {
+    padding: 0.5rem 1.2rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+}
 
-    /* Recently active */
-    .active-card {
-      background: rgba(26,26,26,0.8); padding: 1.5rem; border-radius: 12px;
-      border: 1px solid rgba(0,255,213,0.2); margin-bottom: 2rem;
-    }
-    .active-card h3 { color: var(--primary); margin-bottom: 1rem; }
-    .active-list {
-      list-style: none;
-    }
-    .active-list li {
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-    }
-    .active-list li:last-child { border-bottom: none; }
+/* Feedback form */
+.feedback-card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.feedback-card h3 {
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+}
+.rating {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+.rating i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #ccc;
+}
+.rating i.selected {
+    color: #cc6238;
+}
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: #f9f9f9;
+    border: 1px solid var(--border-color);
+    color: var(--text);
+    margin-bottom: 1rem;
+}
+.submit-feedback {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    #admin-dashboard table {
-      width: 100%; border-collapse: collapse; background: rgba(26,26,26,0.8); border-radius: 12px; overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-    #admin-dashboard th, #admin-dashboard td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    #admin-dashboard th { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: var(--dark); font-weight: 500; }
-    #admin-dashboard tr:nth-child(even) { background: rgba(255,255,255,0.03); }
-    #admin-dashboard tr:hover { background: rgba(0,255,213,0.1); }
-    #admin-dashboard button {
-      padding: 0.5rem 1rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: var(--dark); border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s;
-      font-weight: 500; margin-right: 0.5rem;
-    }
-    #admin-dashboard button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,255,213,0.3); }
-    .delete-btn { background: linear-gradient(135deg, #ff4d4d, #ff1a1a) !important; }
-    .delete-btn:hover { box-shadow: 0 4px 10px rgba(255,77,77,0.3) !important; }
-    .export-btn {
-      margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--accent), #0095ff);
-      color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
-      display: block; margin-left: auto; margin-right: auto;
-    }
-    .export-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,168,255,0.4); }
+/* Leaderboard */
+.leaderboard-table {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.leaderboard-table th, .leaderboard-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+.leaderboard-table th {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+}
+.leaderboard-table tr:hover {
+    background: rgba(204,98,56,0.05);
+}
 
-    /* ===== VIDEO MODAL ===== */
-    .modal {
-      display: none; position: fixed; z-index: 3000; left: 0; top: 0;
-      width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-      align-items: center; justify-content: center;
-    }
-    .modal-content {
-      width: 80%; max-width: 900px; background: #1a1a1a; border-radius: 16px; padding: 1rem; position: relative;
-    }
-    .close {
-      position: absolute; top: -40px; right: 0; font-size: 2.5rem; color: var(--primary); cursor: pointer;
-    }
-    .modal-footer {
-      display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;
-    }
-    #modal-title { color: var(--primary); font-weight: 500; }
-    .video-complete-btn {
-      background: var(--secondary); color: var(--dark); border: none; padding: 0.6rem 1.2rem;
-      border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
-    }
-    .video-complete-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,255,127,0.4); }
+/* Certificate section */
+.certificate-section {
+    text-align: center;
+    margin: 2rem 0;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(204,98,56,0.15);
+}
+.certificate-btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(204,98,56,0.4);
+}
 
-    /* ===== FOOTER ===== */
-    footer {
-      background: rgba(18,18,18,0.9); backdrop-filter: blur(10px); padding: 1.5rem; text-align: center;
-      color: var(--text-secondary); margin-top: 3rem; border-top: 1px solid rgba(0,255,213,0.2);
-    }
-    .footer-content { max-width: 1200px; margin: 0 auto; }
-    .footer-links {
-      display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 1rem 0;
-    }
-    .footer-links a { color: var(--text-secondary); transition: color 0.3s; }
-    .footer-links a:hover { color: var(--primary); }
+.watched-log {
+    background: #ffffff; padding: 1.5rem; border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.watched-log h3 { color: var(--secondary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.watched-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.watched-badge {
+    background: linear-gradient(135deg, var(--secondary), #6a3d8a); color: #ffffff;
+    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+    display: flex; align-items: center; gap: 0.3rem;
+}
+.progress-badge {
+    background: linear-gradient(135deg, var(--primary), #e07040); color: #ffffff;
+    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+    display: flex; align-items: center; gap: 0.3rem;
+}
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 900px) {
-      .container { flex-direction: column; }
-      .sidebar { flex: none; width: 100%; position: relative; top: 0; }
-      header { flex-direction: column; gap: 1rem; }
-      .admin-stats { grid-template-columns: repeat(2,1fr); }
-      .admin-card input { width: 100%; margin-right: 0; }
-      .module-name { width: 180px; }
-    }
-  </style>
+/* ===== ADMIN DASHBOARD ===== */
+#admin-dashboard { display: none; padding: 2rem; animation: fadeIn 0.5s ease-out; }
+#admin-dashboard h2 { color: var(--secondary); margin-bottom: 1.5rem; text-align: center; }
+.admin-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;
+}
+.stat-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 12px; text-align: center;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 15px rgba(204,98,56,0.1);
+}
+.stat-card h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 0.5rem; }
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--secondary); }
+.stat-label { color: var(--text-secondary); font-size: 0.9rem; }
+
+/* Admin tabs */
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.admin-tab-btn {
+    padding: 0.6rem 1.5rem;
+    background: #ffffff;
+    border: 2px solid var(--primary);
+    border-radius: 30px;
+    color: var(--primary);
+    cursor: pointer;
+}
+.admin-tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+}
+.admin-tab-content {
+    display: none;
+}
+.admin-tab-content.active {
+    display: block;
+}
+
+/* Employee management card */
+.admin-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 12px;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 4px 15px rgba(87,43,103,0.1);
+    margin-bottom: 2rem;
+}
+.admin-card h3 { color: var(--primary); margin-bottom: 1rem; }
+.admin-card input, .admin-card select {
+    width: calc(33% - 0.5rem); padding: 0.6rem; margin-right: 0.5rem; margin-bottom: 1rem;
+    border-radius: 6px; border: 1px solid var(--border-color);
+    background: #f9f9f9; color: var(--text);
+}
+.admin-card input:focus, .admin-card select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(204,98,56,0.2);
+}
+.permissions-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.permissions-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text);
+}
+.admin-card button {
+    padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;
+}
+.employee-list {
+    margin-top: 1rem;
+}
+.employee-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--light-bg); padding: 0.8rem; border-radius: 6px; margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    border: 1px solid var(--border-color);
+}
+.employee-item button {
+    padding: 0.3rem 0.8rem; background: var(--secondary); border: none; border-radius: 4px;
+    color: #ffffff; cursor: pointer; margin-left: 0.5rem;
+}
+.employee-item .delete-btn { background: #ff4d4d; }
+
+/* Module completion insights */
+.insights-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 12px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 15px rgba(204,98,56,0.1);
+    margin-bottom: 2rem;
+}
+.insights-card h3 { color: var(--secondary); margin-bottom: 1rem; }
+.module-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.module-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.module-name {
+    width: 250px;
+    color: var(--text);
+    font-weight: 500;
+}
+.progress-bar-bg {
+    flex: 1;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.5s;
+}
+.module-percent {
+    min-width: 60px;
+    text-align: right;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* Progress distribution */
+.distribution-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 12px;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 4px 15px rgba(87,43,103,0.1);
+    margin-bottom: 2rem;
+}
+.distribution-card h3 { color: var(--primary); margin-bottom: 1rem; }
+.dist-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+.dist-label {
+    width: 100px;
+    color: var(--text);
+}
+.dist-bar-bg {
+    flex: 1;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.dist-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    width: 0%;
+    transition: width 0.5s;
+}
+.dist-count {
+    min-width: 50px;
+    text-align: right;
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+/* Recently active */
+.active-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+.active-card h3 { color: var(--secondary); margin-bottom: 1rem; }
+.active-list {
+    list-style: none;
+}
+.active-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+}
+.active-list li:last-child { border-bottom: none; }
+
+#admin-dashboard table {
+    width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 12px; overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+#admin-dashboard th, #admin-dashboard td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+#admin-dashboard th { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #ffffff; font-weight: 500; }
+#admin-dashboard tr:nth-child(even) { background: var(--light-bg); }
+#admin-dashboard tr:hover { background: rgba(204,98,56,0.1); }
+#admin-dashboard button {
+    padding: 0.5rem 1rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff; border: none; border-radius: 6px; cursor: pointer; transition: all 0.3s;
+    font-weight: 500; margin-right: 0.5rem;
+}
+#admin-dashboard button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(87,43,103,0.3); }
+.delete-btn { background: linear-gradient(135deg, #ff4d4d, #cc3333) !important; }
+.delete-btn:hover { box-shadow: 0 4px 10px rgba(255,77,77,0.3) !important; }
+.export-btn, .report-btn {
+    margin-top: 1.5rem; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
+    display: inline-block; margin-right: 1rem;
+}
+.report-btn { background: linear-gradient(135deg, var(--secondary), var(--primary)); }
+.export-btn:hover, .report-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(87,43,103,0.4); }
+
+/* ===== VIDEO MODAL ===== */
+.modal {
+    display: none; position: fixed; z-index: 3000; left: 0; top: 0;
+    width: 100%; height: 100%; background: rgba(0,0,0,0.8);
+    align-items: center; justify-content: center;
+}
+.modal-content {
+    width: 80%; max-width: 900px; background: #ffffff; border-radius: 16px; padding: 1rem; position: relative;
+    border: 3px solid var(--primary);
+}
+.close {
+    position: absolute; top: -40px; right: 0; font-size: 2.5rem; color: var(--primary); cursor: pointer;
+}
+.modal-footer {
+    display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;
+}
+#modal-title { color: var(--secondary); font-weight: 500; }
+.video-complete-btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #ffffff; border: none; padding: 0.6rem 1.2rem;
+    border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.3s;
+}
+.video-complete-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(204,98,56,0.4); }
+
+/* ===== QUIZ MODAL ===== */
+.quiz-modal {
+    display: none;
+    position: fixed;
+    z-index: 4000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+}
+.quiz-modal-content {
+    width: 80%;
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    border: 3px solid var(--secondary);
+}
+.quiz-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    color: var(--secondary);
+    cursor: pointer;
+}
+.quiz-question {
+    margin-bottom: 1.5rem;
+}
+.quiz-options {
+    list-style: none;
+}
+.quiz-options li {
+    margin-bottom: 0.8rem;
+    color: var(--text);
+}
+.quiz-options input {
+    margin-right: 0.8rem;
+}
+.quiz-submit {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: var(--secondary); padding: 1.5rem; text-align: center;
+    color: #ffffff; margin-top: 3rem;
+}
+.footer-content { max-width: 1200px; margin: 0 auto; }
+.footer-links {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 1rem 0;
+}
+.footer-links a { color: #ffffff; transition: color 0.3s; }
+.footer-links a:hover { color: var(--primary); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .container { flex-direction: column; }
+    .sidebar { flex: none; width: 100%; position: relative; top: 0; }
+    header { flex-direction: column; gap: 1rem; }
+    .admin-stats { grid-template-columns: repeat(2,1fr); }
+    .admin-card input { width: 100%; margin-right: 0; }
+    .module-name { width: 180px; }
+}
+</style>
 </head>
 <body>
-
 <!-- ===== HEADER ===== -->
 <header>
-  <div class="logo-container">
-    <div class="logo">S</div>
-    <h1>SARVP Training Portal</h1>
-  </div>
-  <div class="header-buttons">
-    <div id="login-choice">
-      <button id="employeeBtn"><i class="fas fa-user"></i> Employee Login</button>
-      <button id="adminBtn"><i class="fas fa-cog"></i> Admin Login</button>
+    <div class="logo-container">
+        <div class="logo">S</div>
+        <h1>SARVP RM Training Portal</h1>
     </div>
-    <button class="sign-out-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-  </div>
+    <div class="header-buttons">
+        <div id="login-choice">
+            <button id="employeeBtn"><i class="fas fa-user"></i> Employee Login</button>
+            <button id="adminBtn"><i class="fas fa-cog"></i> Admin Login</button>
+        </div>
+        <button class="sign-out-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    </div>
 </header>
 
 <!-- ===== COMPANY INFO SECTION ===== -->
 <section class="company-section">
-  <h2>SARVP Financial Services</h2>
-  <p class="tagline">Your trusted partner for comprehensive financial solutions and growth opportunities</p>
-  <div class="company-features">
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
-      <h3>Loan Services</h3>
-      <p>We offer a wide range of loan products including personal loans, business loans, and mortgage solutions tailored to your needs.</p>
+    <h2>SARVP Financial Services</h2>
+    <p class="tagline">Your trusted partner for comprehensive financial solutions and growth opportunities</p>
+    <div class="company-features">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
+            <h3>Loan Services</h3>
+            <p>We offer a wide range of loan products including Unsecured loans, secured loans, and mortgage solutions tailored to your needs.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+            <h3>Investment Planning</h3>
+            <p>Our expert advisors help you make informed investment decisions to grow your wealth and secure your financial future.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3>Financial Needs</h3>
+            <p>We prioritize the security of your financial transactions and personal information with state-of-the-art protection systems.</p>
+        </div>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-      <h3>Investment Planning</h3>
-      <p>Our expert advisors help you make informed investment decisions to grow your wealth and secure your financial future.</p>
+    <div class="company-stats">
+        <div class="stat-item"><span class="stat-number">10+</span><span class="stat-label">Years Experience</span></div>
+        <div class="stat-item"><span class="stat-number">6K+</span><span class="stat-label">Happy Customers</span></div>
+        <div class="stat-item"><span class="stat-number">10+</span><span class="stat-label">Branch Locations</span></div>
+        <div class="stat-item"><span class="stat-number">₹50Cr+</span><span class="stat-label">Assets Managed</span></div>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-      <h3>Financial Security</h3>
-      <p>We prioritize the security of your financial transactions and personal information with state-of-the-art protection systems.</p>
+    <div class="cta-section">
+        <h3>Ready to enhance your skills?</h3>
+        <p>Access our comprehensive training portal to learn about our processes, services, and best practices. Login now to get started with your professional development journey.</p>
+        <div class="cta-buttons">
+            <button class="cta-button" id="companyEmployeeBtn"><i class="fas fa-user"></i> Employee Login</button>
+            <button class="cta-button secondary" onclick="window.open('https://www.sarvpfinance.in', '_blank')"><i class="fas fa-external-link-alt"></i> Visit Our Website</button>
+        </div>
     </div>
-  </div>
-  <div class="company-stats">
-    <div class="stat-item"><span class="stat-number">15+</span><span class="stat-label">Years Experience</span></div>
-    <div class="stat-item"><span class="stat-number">50K+</span><span class="stat-label">Happy Customers</span></div>
-    <div class="stat-item"><span class="stat-number">25+</span><span class="stat-label">Branch Locations</span></div>
-    <div class="stat-item"><span class="stat-number">₹500Cr+</span><span class="stat-label">Assets Managed</span></div>
-  </div>
-  <div class="cta-section">
-    <h3>Ready to enhance your skills?</h3>
-    <p>Access our comprehensive training portal to learn about our processes, services, and best practices. Login now to get started with your professional development journey.</p>
-    <div class="cta-buttons">
-      <button class="cta-button" id="companyEmployeeBtn"><i class="fas fa-user"></i> Employee Login</button>
-      <button class="cta-button secondary" onclick="window.open('https://www.sarvpfinance.in', '_blank')"><i class="fas fa-external-link-alt"></i> Visit Our Website</button>
-    </div>
-  </div>
 </section>
 
 <!-- ===== EMPLOYEE LOGIN ===== -->
 <div class="login-section" id="employee-login">
-  <h2><i class="fas fa-user-lock"></i> Employee Login</h2>
-  <input type="text" id="emp-name" placeholder="Your Name">
-  <input type="password" id="emp-password" placeholder="Your Password">
-  <button onclick="employeeLogin()">Login</button>
+    <h2><i class="fas fa-user-lock"></i> Employee Login</h2>
+    <input type="text" id="emp-name" placeholder="Your Name">
+    <input type="password" id="emp-password" placeholder="Your Password">
+    <button id="emp-login-btn" onclick="employeeLogin()">Login</button>
 </div>
 
 <!-- ===== ADMIN LOGIN ===== -->
 <div class="login-section" id="admin-box">
-  <h2><i class="fas fa-cog"></i> Admin Login</h2>
-  <input type="password" id="admin-password" placeholder="Enter Admin Password">
-  <button onclick="checkAdmin()">Login to Dashboard</button>
+    <h2><i class="fas fa-cog"></i> Admin Login</h2>
+    <input type="password" id="admin-password" placeholder="Enter Admin Password">
+    <button id="admin-login-btn" onclick="checkAdmin()">Login to Dashboard</button>
 </div>
 
 <!-- ===== MAIN CONTAINER (employee view) ===== -->
 <div class="container">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h3><i class="fas fa-search"></i> Search Videos</h3>
-    <label for="searchBox">Search Videos</label>
-    <input type="text" id="searchBox" placeholder="Search...">
-    
-    <div class="progress-section">
-      <h3><i class="fas fa-chart-line"></i> Training Progress</h3>
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-fill"></div>
-        <div class="progress-text" id="progress-text">0% Completed</div>
-      </div>
-      <div class="progress-circle">
-        <svg width="120" height="120">
-          <circle cx="60" cy="60" r="50" stroke="rgba(255,255,255,0.1)" stroke-width="8" fill="none"/>
-          <circle cx="60" cy="60" r="50" stroke="#00ffd5" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
-        </svg>
-        <div id="circle-text">0%</div>
-      </div>
-      <div class="enhanced-progress-container">
-        <div class="progress-header">
-          <span class="progress-title">Overall Completion</span>
-          <span class="progress-percentage" id="module-percentage">0%</span>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3><i class="fas fa-search"></i> Search Videos</h3>
+        <label for="searchBox">Search Videos</label>
+        <input type="text" id="searchBox" placeholder="Search...">
+        <div class="progress-section">
+            <h3><i class="fas fa-chart-line"></i> Training Progress</h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-fill"></div>
+                <div class="progress-text" id="progress-text">0% Completed</div>
+            </div>
+            <div class="progress-circle">
+                <svg width="120" height="120">
+                    <circle cx="60" cy="60" r="50" stroke="#e0e0e0" stroke-width="8" fill="none"/>
+                    <circle cx="60" cy="60" r="50" stroke="#cc6238" stroke-width="8" fill="none" stroke-dasharray="314" stroke-dashoffset="314"/>
+                </svg>
+                <div id="circle-text">0%</div>
+            </div>
+            <div class="enhanced-progress-container">
+                <div class="progress-header">
+                    <span class="progress-title">Overall Completion</span>
+                    <span class="progress-percentage" id="module-percentage">0%</span>
+                </div>
+                <div class="enhanced-progress-bar">
+                    <div class="enhanced-progress-fill" id="enhanced-progress-fill"></div>
+                </div>
+            </div>
         </div>
-        <div class="enhanced-progress-bar">
-          <div class="enhanced-progress-fill" id="enhanced-progress-fill"></div>
+        <div class="company-info">
+            <h3>SARVP Financial Services</h3>
+            <p>Prayagraj Branch</p>
+            <p><a href="https://www.sarvpfinance.in" target="_blank">Visit Website</a></p>
         </div>
-      </div>
     </div>
-    
-    <div class="company-info">
-      <h3>SARVP Financial Services</h3>
-      <p>Prayagraj Branch</p>
-      <p><a href="https://www.sarvpfinance.in" target="_blank">Visit Website</a></p>
+    <!-- Main content with tabs -->
+    <div class="main">
+        <div class="welcome-section">
+            <h2 id="welcome-msg">Welcome to SARVP RM Training Portal</h2>
+            <p>Complete modules, take quizzes, access resources, and track your performance.</p>
+        </div>
+        <div class="tabs" id="employeeTabs">
+            <!-- Tabs will be populated by JS based on permissions -->
+        </div>
+        <!-- Videos Tab -->
+        <div id="videos-tab" class="tab-content">
+            <div class="video-grid" id="videoGrid">
+                <!-- Modules will be injected by JavaScript -->
+            </div>
+            <div class="watched-log" style="margin-top: 2rem;">
+                <h3><i class="fas fa-history"></i> Your Progress Log</h3>
+                <div class="watched-list" id="watched-list"></div>
+            </div>
+        </div>
+        <!-- Resources Tab -->
+        <div id="resources-tab" class="tab-content">
+            <div class="resource-grid" id="resourceGrid">
+                <!-- Resources will be loaded here -->
+            </div>
+        </div>
+        <!-- Quizzes Tab -->
+        <div id="quizzes-tab" class="tab-content">
+            <div id="quizList"></div>
+        </div>
+        <!-- Feedback Tab -->
+        <div id="feedback-tab" class="tab-content">
+            <div id="feedbackList"></div>
+        </div>
+        <!-- Leaderboard Tab -->
+        <div id="leaderboard-tab" class="tab-content">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr><th>Rank</th><th>Employee</th><th>Avg Quiz Score</th><th>Videos Completed</th><th>Points</th></tr>
+                </thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+        </div>
+        <!-- Certificate Tab -->
+        <div id="certificate-tab" class="tab-content">
+            <div class="certificate-section">
+                <h3>Congratulations!</h3>
+                <p>You have completed all training modules. You can now download your certificate.</p>
+                <button class="certificate-btn" onclick="generateCertificate()"><i class="fas fa-certificate"></i> Download Certificate</button>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <!-- Main content -->
-  <div class="main">
-    <div class="welcome-section">
-      <h2 id="welcome-msg">Welcome to SARVP Training Portal</h2>
-      <p>Complete all modules to enhance your skills. Each module includes a video and a "Mark as Completed" button.</p>
-    </div>
-    
-    <div class="video-grid" id="videoGrid">
-      <!-- Modules will be injected by JavaScript -->
-    </div>
-
-    <div class="watched-log">
-      <h3><i class="fas fa-history"></i> Your Progress Log</h3>
-      <div class="watched-list" id="watched-list"></div>
-    </div>
-
-    <!-- Certificate button removed -->
-  </div>
 </div>
 
 <!-- ===== ADMIN DASHBOARD ===== -->
 <div id="admin-dashboard">
-  <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
-  
-  <!-- Employee Management Card -->
-  <div class="admin-card">
-    <h3><i class="fas fa-user-plus"></i> Manage Employees</h3>
-    <input type="text" id="newEmpName" placeholder="Employee Name">
-    <input type="text" id="newEmpPass" placeholder="Password">
-    <button onclick="addEmployee()">Add Employee</button>
-    <div class="employee-list" id="employee-list">
-      <!-- List of employees with actions will appear here -->
+    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>Total Employees</h3>
+            <div class="stat-value" id="total-employees">0</div>
+            <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-card">
+            <h3>Avg Progress</h3>
+            <div class="stat-value" id="avg-progress">0%</div>
+            <div class="stat-label">Completion Rate</div>
+        </div>
+        <div class="stat-card">
+            <h3>Total Completed</h3>
+            <div class="stat-value" id="total-completed">0</div>
+            <div class="stat-label">Modules Finished</div>
+        </div>
+        <div class="stat-card">
+            <h3>Top Performer</h3>
+            <div class="stat-value" id="top-performer" style="font-size:1.5rem">-</div>
+            <div class="stat-label">Highest Score</div>
+        </div>
     </div>
-  </div>
-
-  <!-- Module Completion Insights -->
-  <div class="insights-card">
-    <h3><i class="fas fa-chart-pie"></i> Module Completion Overview</h3>
-    <div class="module-stats" id="moduleStats">
-      <!-- Filled by JavaScript -->
+    <div class="admin-tabs">
+        <button class="admin-tab-btn active" onclick="showAdminTab('employees', event)">Employees</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('resources', event)">Resources</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('quizzes', event)">Quizzes</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('feedback', event)">Feedback</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('reports', event)">Reports</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('insights', event)">Insights</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('settings', event)">Settings</button>
     </div>
-  </div>
-
-  <!-- Progress Distribution -->
-  <div class="distribution-card">
-    <h3><i class="fas fa-chart-bar"></i> Progress Distribution</h3>
-    <div id="distContainer">
-      <!-- Will be filled by JS -->
+    <!-- Employees Tab -->
+    <div id="admin-employees" class="admin-tab-content active">
+        <div class="admin-card">
+            <h3><i class="fas fa-user-plus"></i> Add/Edit Employee</h3>
+            <input type="text" id="empName" placeholder="Employee Name">
+            <input type="password" id="empPass" placeholder="Password">
+            <select id="empRole">
+                <option value="Loan Officer">Loan Officer</option>
+                <option value="Collection Officer">Collection Officer</option>
+                <option value="Credit Officer">Credit Officer</option>
+                <option value="Branch Manager">Branch Manager</option>
+                <option value="Operation Executive">Operation Executive</option>
+            </select>
+            <div class="permissions-group" id="permissionsCheckboxes">
+                <label><input type="checkbox" value="videos" checked> Videos</label>
+                <label><input type="checkbox" value="resources" checked> Resources</label>
+                <label><input type="checkbox" value="quizzes" checked> Quizzes</label>
+                <label><input type="checkbox" value="feedback" checked> Feedback</label>
+                <label><input type="checkbox" value="leaderboard" checked> Leaderboard</label>
+                <label><input type="checkbox" value="certificate" checked> Certificate</label>
+            </div>
+            <button onclick="addOrUpdateEmployee()">Save Employee</button>
+        </div>
+        <div class="employee-list" id="employee-list"></div>
+        <table>
+            <thead><tr><th>Employee</th><th>Role</th><th>Watched</th><th>Progress</th><th>Last Activity</th><th>Actions</th></tr></thead>
+            <tbody id="admin-table-body"></tbody>
+        </table>
     </div>
-  </div>
-
-  <!-- Recently Active Employees -->
-  <div class="active-card">
-    <h3><i class="fas fa-clock"></i> Recently Active (Last 7 Days)</h3>
-    <ul class="active-list" id="recentActive">
-      <!-- Filled by JS -->
-    </ul>
-  </div>
-
-  <div class="admin-stats">
-    <div class="stat-card">
-      <h3>Total Employees</h3>
-      <div class="stat-value" id="total-employees">0</div>
-      <div class="stat-label">Registered Users</div>
+    <!-- Resources Tab -->
+    <div id="admin-resources" class="admin-tab-content">
+        <div class="admin-card">
+            <h3>Add Resource</h3>
+            <input type="text" id="resTitle" placeholder="Title">
+            <input type="text" id="resLink" placeholder="Link (URL)">
+            <select id="resType">
+                <option value="PDF">PDF</option>
+                <option value="Video">Video</option>
+                <option value="Article">Article</option>
+            </select>
+            <button onclick="addResource()">Add Resource</button>
+        </div>
+        <div id="resourceAdminList"></div>
     </div>
-    <div class="stat-card">
-      <h3>Avg. Progress</h3>
-      <div class="stat-value" id="avg-progress">0%</div>
-      <div class="stat-label">Across All Users</div>
+    <!-- Quizzes Tab -->
+    <div id="admin-quizzes" class="admin-tab-content">
+        <div class="admin-card">
+            <h3>Add Quiz Question</h3>
+            <select id="quizModule">
+                <!-- options will be populated by JS -->
+            </select>
+            <input type="text" id="quizQuestion" placeholder="Question">
+            <input type="text" id="quizOpt1" placeholder="Option 1">
+            <input type="text" id="quizOpt2" placeholder="Option 2">
+            <input type="text" id="quizOpt3" placeholder="Option 3">
+            <input type="text" id="quizOpt4" placeholder="Option 4">
+            <input type="number" id="quizCorrect" placeholder="Correct option (1-4)" min="1" max="4">
+            <button onclick="addQuizQuestion()">Add Question</button>
+        </div>
+        <div id="quizAdminList"></div>
     </div>
-    <div class="stat-card">
-      <h3>Completed Videos</h3>
-      <div class="stat-value" id="total-completed">0</div>
-      <div class="stat-label">Across All Users</div>
+    <!-- Feedback Tab -->
+    <div id="admin-feedback" class="admin-tab-content">
+        <div id="feedbackAdminList"></div>
     </div>
-    <div class="stat-card">
-      <h3>Top Performer</h3>
-      <div class="stat-value" id="top-performer">-</div>
-      <div class="stat-label">Highest Progress</div>
+    <!-- Reports Tab -->
+    <div id="admin-reports" class="admin-tab-content">
+        <div class="admin-card">
+            <h3>Generate Reports</h3>
+            <button class="report-btn" onclick="generatePDFReport('summary')">Summary Report (PDF)</button>
+            <button class="report-btn" onclick="generatePDFReport('detailed')">Detailed Report (PDF)</button>
+            <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+        </div>
     </div>
-  </div>
-  
-  <table>
-    <thead>
-      <tr><th>Employee</th><th>Watched Videos</th><th>Progress</th><th>Last Activity</th><th>Actions</th></tr>
-    </thead>
-    <tbody id="admin-table-body"></tbody>
-  </table>
-  <button class="export-btn" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV Report</button>
+    <!-- Insights Tab -->
+    <div id="admin-insights" class="admin-tab-content">
+        <div class="insights-card">
+            <h3>Module Completion Overview</h3>
+            <div class="module-stats" id="moduleStats"></div>
+        </div>
+        <div class="distribution-card">
+            <h3>Progress Distribution</h3>
+            <div id="distContainer"></div>
+        </div>
+        <div class="active-card">
+            <h3>Recently Active</h3>
+            <ul class="active-list" id="recentActive"></ul>
+        </div>
+    </div>
+    <!-- Settings Tab -->
+    <div id="admin-settings" class="admin-tab-content">
+        <div class="admin-card">
+            <h3>Certificate Settings</h3>
+            <input type="text" id="authName" placeholder="Authorized Signatory Name" value="Authorised Signatory">
+            <button onclick="saveSettings()">Save</button>
+        </div>
+    </div>
 </div>
 
 <!-- ===== VIDEO MODAL (YouTube) ===== -->
 <div id="video-modal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <iframe id="youtube-frame" width="100%" height="400" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <div class="modal-footer">
-      <p id="modal-title"></p>
-      <button id="mark-complete-btn" class="video-complete-btn"><i class="fas fa-check"></i> Mark as Completed</button>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <iframe id="youtube-frame" width="100%" height="400" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="modal-footer">
+            <p id="modal-title"></p>
+            <button id="mark-complete-btn" class="video-complete-btn"><i class="fas fa-check"></i> Mark as Completed</button>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- ===== QUIZ MODAL ===== -->
+<div id="quiz-modal" class="quiz-modal">
+    <div class="quiz-modal-content">
+        <span class="quiz-close">&times;</span>
+        <h2 id="quizModalTitle" style="color: var(--secondary); margin-bottom: 1rem;"></h2>
+        <div id="quizQuestions"></div>
+        <button class="quiz-submit" onclick="submitQuiz()">Submit Quiz</button>
+    </div>
 </div>
 
 <!-- ===== TOAST NOTIFICATION ===== -->
@@ -793,25 +1216,24 @@
 
 <!-- ===== FOOTER ===== -->
 <footer>
-  <div class="footer-content">
-    <p><strong>SARVP Financial Services Pvt. Ltd.</strong> | Prayagraj Branch</p>
-    <div class="footer-links">
-      <a href="https://www.sarvpfinance.in" target="_blank">Visit Our Website</a>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Contact Support</a>
+    <div class="footer-content">
+        <p><strong>SARVP Financial Services Pvt. Ltd.</strong> | Prayagraj Branch</p>
+        <div class="footer-links">
+            <a href="https://www.sarvpfinance.in" target="_blank">Visit Our Website</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Support</a>
+        </div>
+        <p>Developed by Pawan Keshari | &copy; 2025 All Rights Reserved</p>
     </div>
-    <p>Developed by Pawan Keshari | &copy; 2025 All Rights Reserved</p>
-  </div>
 </footer>
 
 <!-- Firebase SDK (9.x compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
 <script>
-  // ===== 🔥 APNA FIREBASE CONFIG YAHAN DALO =====
-  const firebaseConfig = {
+// ===== 🔥 FIREBASE CONFIG =====
+const firebaseConfig = {
     apiKey: "AIzaSyDsHgmdw24P6Q_0S6Bpt_JPVKPQPSAOOQ4",
     authDomain: "sarvp-tranning-module.firebaseapp.com",
     projectId: "sarvp-tranning-module",
@@ -819,33 +1241,16 @@
     messagingSenderId: "768002857828",
     appId: "1:768002857828:web:2d01910d2b7998cdf4f871",
     measurementId: "G-R9W7FBXGPP"
-  };
-  // ============================================
+};
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+// Initialize Firebase safely
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
 
-  // ===== CONFIGURATION =====
-  const YOUTUBE_IDS = {
-    video1: 'dQw4w9WgXcQ',   // Replace with your actual YouTube video IDs
-    video2: '3JZ_D3ELwOQ',
-    video3: 'LXb3EKWsInQ',
-    video4: 'e-ORhEE9VVg',
-    video5: '0fYi8SGA20k',
-    video6: '5qap5aO4i9A',
-    video7: 'kJQP7kiw5Fk',
-    video8: 'tgbNymZ7vqY',
-    video9: 'RgKAFK5djSk',
-    video10: 'W_0AMPfmuaI',
-    video11: 'J---aiyznGQ',
-    video12: 'C0DPdy98e4c',
-    video13: 'e-ORhEE9VVg',
-    video14: 'LXb3EKWsInQ',
-    video15: '3JZ_D3ELwOQ',
-    video16: 'dQw4w9WgXcQ'
-  };
-  const MODULE_TITLES = [
+// ===== CONSTANTS =====
+const MODULE_TITLES = [
     "Ext.Co-applicant or Guarantor",
     "Application Information Update",
     "How To Collect Login Fees",
@@ -862,722 +1267,1355 @@
     "Effective Sales Techniques",
     "Loan Assessment Criteria",
     "Risk Management"
-  ];
+];
 
-  // ===== GLOBALS =====
-  let currentUser = null;
-  let currentSession = { user: null, type: null };
-  let watchedData = {};        // for current employee
-  let employeeCredentials = {}; // only used by admin
-  let inactivityTimer = null;
-  const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
+const YOUTUBE_IDS = {
+    video1: '6UvcAO0rvhsrpSE6',
+    video2: '3JZ_D3ELwOQ',
+    video3: 'LXb3EKWsInQ',
+    video4: 'e-ORhEE9VVg',
+    video5: '0fYi8SGA20k',
+    video6: '5qap5aO4i9A',
+    video7: 'kJQP7kiw5Fk',
+    video8: 'tgbNymZ7vqY',
+    video9: 'RgKAFK5djSk',
+    video10: 'W_0AMPfmuaI',
+    video11: 'J---aiyznGQ',
+    video12: 'C0DPdy98e4c',
+    video13: 'e-ORhEE9VVg',
+    video14: 'LXb3EKWsInQ',
+    video15: '3JZ_D3ELwOQ',
+    video16: 'dQw4w9WgXcQ'
+};
 
-  // ===== TOAST FUNCTION =====
-  function showToast(message, isSuccess = true) {
+// ===== GLOBALS =====
+let currentUser = null;
+let currentUserRole = null;
+let currentUserPermissions = [];
+let watchedData = {};
+let allEmployeesData = {};
+let inactivityTimer = null;
+const INACTIVITY_LIMIT = 5 * 60 * 1000;
+const SESSION_KEY = 'sarvp_session';
+
+// ===== TOAST =====
+function showToast(msg, isSuccess = true) {
     const toast = document.getElementById('toast');
-    toast.textContent = message;
+    toast.textContent = msg;
     toast.style.borderLeftColor = isSuccess ? '#00cc66' : '#ff4d4d';
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2500);
-  }
+    toast.className = isSuccess ? 'show' : 'show error';
+    setTimeout(() => toast.className = '', 2500);
+}
 
-  // ===== SESSION MANAGEMENT =====
-  function saveSession(user, type) {
-    const session = {
-      user: user,
-      type: type,
-      lastActivity: Date.now()
-    };
-    localStorage.setItem('session', JSON.stringify(session));
-  }
+// ===== SESSION MANAGEMENT =====
+function saveSession(user, type) {
+    const session = { user, type, lastActivity: Date.now() };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+}
 
-  function clearSession() {
-    localStorage.removeItem('session');
-  }
+function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
+}
 
-  function updateActivity() {
-    const session = JSON.parse(localStorage.getItem('session'));
-    if (session) {
-      session.lastActivity = Date.now();
-      localStorage.setItem('session', JSON.stringify(session));
+function getSession() {
+    try {
+        return JSON.parse(localStorage.getItem(SESSION_KEY));
+    } catch (e) {
+        return null;
     }
-  }
+}
 
-  // Activity event listeners
-  function startActivityTracking() {
-    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window.addEventListener(event, updateActivity);
-    });
-  }
+function updateActivity() {
+    const s = getSession();
+    if (s) {
+        s.lastActivity = Date.now();
+        localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    }
+}
 
-  function stopActivityTracking() {
-    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window.removeEventListener(event, updateActivity);
-    });
-  }
+function startActivityTracking() {
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(e => 
+        window.addEventListener(e, updateActivity)
+    );
+}
 
-  // Inactivity checker
-  function startInactivityTimer() {
+function stopActivityTracking() {
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(e => 
+        window.removeEventListener(e, updateActivity)
+    );
+}
+
+function startInactivityTimer() {
     if (inactivityTimer) clearInterval(inactivityTimer);
     inactivityTimer = setInterval(() => {
-      const session = JSON.parse(localStorage.getItem('session'));
-      if (session && (Date.now() - session.lastActivity > INACTIVITY_LIMIT)) {
-        // Auto logout due to inactivity
-        showToast('Session expired due to inactivity', false);
-        signOut();
-      }
-    }, 10000); // check every 10 seconds
-  }
+        const s = getSession();
+        if (s && Date.now() - s.lastActivity > INACTIVITY_LIMIT) {
+            showToast('Session expired due to inactivity', false);
+            signOut();
+        }
+    }, 10000);
+}
 
-  // Restore session on page load
-  async function restoreSession() {
-    const session = JSON.parse(localStorage.getItem('session'));
-    if (!session) return false;
-
-    // Check if session is not expired
-    if (Date.now() - session.lastActivity > INACTIVITY_LIMIT) {
-      clearSession();
-      return false;
+// ===== RESTORE SESSION ON PAGE LOAD =====
+async function restoreSession() {
+    const s = getSession();
+    if (!s) return false;
+    
+    if (Date.now() - s.lastActivity > INACTIVITY_LIMIT) {
+        clearSession();
+        return false;
     }
-
-    // Attempt to restore based on type
-    if (session.type === 'employee') {
-      try {
-        const docRef = db.collection('employees').doc(session.user);
-        const docSnap = await docRef.get();
-        if (!docSnap.exists) {
-          clearSession();
-          return false;
+    
+    if (s.type === 'employee') {
+        try {
+            const doc = await db.collection('employees').doc(s.user).get();
+            if (!doc.exists) {
+                clearSession();
+                return false;
+            }
+            const data = doc.data();
+            currentUser = s.user;
+            currentUserRole = data.role || 'RM';
+            currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+            watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
+            
+            showEmployeeView();
+            renderModules();
+            updateProgress();
+            populateWatchedLog();
+            loadResources();
+            loadQuizList();
+            loadFeedbackForms();
+            loadLeaderboard();
+            renderTabs();
+            document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
+            
+            startActivityTracking();
+            startInactivityTimer();
+            return true;
+        } catch(e) {
+            console.error('Session restore error:', e);
+            clearSession();
+            return false;
         }
-        currentUser = session.user;
-        watchedData = { watched: docSnap.data().watched || {}, lastActivity: docSnap.data().lastActivity || new Date().toLocaleDateString() };
-        currentSession = { user: session.user, type: 'employee' };
-        showEmployeeView();
-        renderModules();
-        updateProgress();
-        populateWatchedLog();
-        document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
-        startActivityTracking();
-        startInactivityTimer();
-        return true;
-      } catch (error) {
-        console.error('Session restore error:', error);
-        clearSession();
-        return false;
-      }
-    } else if (session.type === 'admin') {
-      try {
-        const configDoc = await db.collection('admin').doc('config').get();
-        if (!configDoc.exists) {
-          clearSession();
-          return false;
+    } else if (s.type === 'admin') {
+        try {
+            const configDoc = await db.collection('admin').doc('config').get();
+            if (!configDoc.exists) {
+                clearSession();
+                return false;
+            }
+            await loadAllEmployeesData();
+            currentUser = 'Admin';
+            
+            showAdminView();
+            loadAdminData();
+            renderEmployeeList();
+            renderModuleInsights();
+            renderDistribution();
+            renderRecentActive();
+            
+            startActivityTracking();
+            startInactivityTimer();
+            return true;
+        } catch(e) {
+            console.error('Admin session restore error:', e);
+            clearSession();
+            return false;
         }
-        // Load all employees
-        const employeesSnapshot = await db.collection('employees').get();
-        employeeCredentials = {};
-        watchedData = {};
-        employeesSnapshot.forEach(doc => {
-          const emp = doc.data();
-          employeeCredentials[doc.id] = emp.password;
-          watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
-        });
-        currentSession = { user: 'Admin', type: 'admin' };
-        showAdminView();
-        loadAdminData();
-        renderEmployeeList();
-        renderModuleInsights();
-        renderDistribution();
-        renderRecentActive();
-        startActivityTracking();
-        startInactivityTimer();
-        return true;
-      } catch (error) {
-        console.error('Admin session restore error:', error);
-        clearSession();
-        return false;
-      }
     }
     return false;
-  }
+}
 
-  // ===== INIT =====
-  document.addEventListener('DOMContentLoaded', async function() {
-    // Try to restore session first
-    const restored = await restoreSession();
-    if (!restored) {
-      // No valid session, show company section
-      document.querySelector('.company-section').style.display = 'block';
-      document.getElementById('login-choice').style.display = 'flex';
-    }
-
-    // Attach event listeners
-    document.getElementById('employeeBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('employee-login').style.display = 'block';
+// ===== LOAD ALL EMPLOYEES DATA =====
+async function loadAllEmployeesData() {
+    const snapshot = await db.collection('employees').get();
+    allEmployeesData = {};
+    snapshot.forEach(doc => {
+        allEmployeesData[doc.id] = doc.data();
     });
-    document.getElementById('companyEmployeeBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('employee-login').style.display = 'block';
-    });
-    document.getElementById('adminBtn').addEventListener('click', () => {
-      hideAllSections();
-      document.getElementById('admin-box').style.display = 'block';
-    });
-    document.getElementById('signOutBtn').addEventListener('click', signOut);
+}
 
-    document.getElementById('searchBox')?.addEventListener('input', filterModules);
-
-    // Setup modal close
-    const modal = document.getElementById('video-modal');
-    const closeBtn = document.querySelector('.close');
-    closeBtn.onclick = () => {
-      modal.style.display = 'none';
-      document.getElementById('youtube-frame').src = '';
-    };
-    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-    document.getElementById('mark-complete-btn').addEventListener('click', () => {
-      const videoId = modal.dataset.currentVideo;
-      if (videoId) {
-        markVideoCompleted(videoId);
-        modal.style.display = 'none';
-        document.getElementById('youtube-frame').src = '';
-      }
-    });
-  });
-
-  // ===== UI HELPERS =====
-  function hideAllSections() {
+// ===== UI HELPERS =====
+function hideAllSections() {
     document.querySelector('.company-section').style.display = 'none';
     document.getElementById('login-choice').style.display = 'none';
     document.getElementById('employee-login').style.display = 'none';
     document.getElementById('admin-box').style.display = 'none';
     document.querySelector('.container').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'none';
-  }
+}
 
-  function showEmployeeView() {
+function showEmployeeView() {
     hideAllSections();
     document.querySelector('.container').style.display = 'flex';
     document.getElementById('signOutBtn').style.display = 'block';
-  }
+}
 
-  function showAdminView() {
+function showAdminView() {
     hideAllSections();
     document.getElementById('admin-dashboard').style.display = 'block';
     document.getElementById('signOutBtn').style.display = 'block';
-  }
+}
 
-  // ===== EMPLOYEE LOGIN =====
-  window.employeeLogin = async function() {
-    const name = document.getElementById('emp-name').value.trim();
-    const password = document.getElementById('emp-password').value;
-    if (!name || !password) {
-      showToast('Please enter both name and password', false);
-      return;
+function showLandingPage() {
+    hideAllSections();
+    document.querySelector('.company-section').style.display = 'block';
+    document.getElementById('login-choice').style.display = 'flex';
+    document.getElementById('signOutBtn').style.display = 'none';
+}
+
+// ===== EMPLOYEE LOGIN =====
+window.employeeLogin = async function() {
+    const nameInput = document.getElementById('emp-name');
+    const passInput = document.getElementById('emp-password');
+    const loginBtn = document.getElementById('emp-login-btn');
+    
+    const name = nameInput.value.trim();
+    const pass = passInput.value;
+    
+    if (!name || !pass) {
+        showToast('Please enter both name and password', false);
+        return;
     }
+    
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Logging in...';
+    
     try {
-      const docRef = db.collection('employees').doc(name);
-      const docSnap = await docRef.get();
-      if (!docSnap.exists) {
-        showToast('Employee not found', false);
-        return;
-      }
-      const empData = docSnap.data();
-      if (empData.password !== password) {
-        showToast('Incorrect password', false);
-        return;
-      }
-      // Login successful
-      currentUser = name;
-      watchedData = { watched: empData.watched || {}, lastActivity: empData.lastActivity || new Date().toLocaleDateString() };
-      currentSession = { user: name, type: 'employee' };
-      showEmployeeView();
-      renderModules();
-      updateProgress();
-      populateWatchedLog();
-      document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
-      
-      // Save session and start tracking
-      saveSession(name, 'employee');
-      startActivityTracking();
-      startInactivityTimer();
-      
-      showToast(`Welcome, ${currentUser}!`);
-    } catch (error) {
-      console.error('Login error:', error);
-      showToast('Error connecting to database', false);
+        const doc = await db.collection('employees').doc(name).get();
+        if (!doc.exists) {
+            showToast('Employee not found', false);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+            return;
+        }
+        
+        const data = doc.data();
+        if (data.password !== pass) {
+            showToast('Incorrect password', false);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+            return;
+        }
+        
+        currentUser = name;
+        currentUserRole = data.role || 'RM';
+        currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+        watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
+        
+        showEmployeeView();
+        renderModules();
+        updateProgress();
+        populateWatchedLog();
+        loadResources();
+        loadQuizList();
+        loadFeedbackForms();
+        loadLeaderboard();
+        renderTabs();
+        document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
+        
+        saveSession(name, 'employee');
+        startActivityTracking();
+        startInactivityTimer();
+        
+        showToast(`Welcome, ${currentUser}!`);
+        passInput.value = '';
+    } catch(e) {
+        console.error('Login error:', e);
+        showToast('Error connecting to server', false);
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login';
     }
-  };
+};
 
-  // ===== ADMIN LOGIN =====
-  window.checkAdmin = async function() {
-    const pass = document.getElementById('admin-password').value;
+// ===== ADMIN LOGIN =====
+window.checkAdmin = async function() {
+    const passInput = document.getElementById('admin-password');
+    const loginBtn = document.getElementById('admin-login-btn');
+    const pass = passInput.value;
+    
+    if (!pass) {
+        showToast('Please enter admin password', false);
+        return;
+    }
+    
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Logging in...';
+    
     try {
-      const configDoc = await db.collection('admin').doc('config').get();
-      if (!configDoc.exists) {
-        showToast('Admin not configured', false);
-        return;
-      }
-      const adminPassword = configDoc.data().adminPassword;
-      if (pass !== adminPassword) {
-        showToast('Incorrect admin password', false);
-        return;
-      }
-      // Load all employees
-      const employeesSnapshot = await db.collection('employees').get();
-      employeeCredentials = {};
-      watchedData = {}; // We'll rebuild watchedData from employees
-      employeesSnapshot.forEach(doc => {
-        const emp = doc.data();
-        employeeCredentials[doc.id] = emp.password;
-        watchedData[doc.id] = { watched: emp.watched || {}, lastActivity: emp.lastActivity || 'N/A' };
-      });
-      currentSession = { user: 'Admin', type: 'admin' };
-      showAdminView();
-      loadAdminData();
-      renderEmployeeList();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      
-      // Save session and start tracking
-      saveSession('Admin', 'admin');
-      startActivityTracking();
-      startInactivityTimer();
-      
-      showToast('Admin logged in');
-    } catch (error) {
-      console.error('Admin login error:', error);
-      showToast('Error connecting to database', false);
+        const configDoc = await db.collection('admin').doc('config').get();
+        
+        if (!configDoc.exists) {
+            await db.collection('admin').doc('config').set({
+                adminPassword: 'admin123',
+                createdAt: new Date().toISOString()
+            });
+            showToast('Admin account created. Default password: admin123', false);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login to Dashboard';
+            return;
+        }
+        
+        const adminData = configDoc.data();
+        if (pass !== adminData.adminPassword) {
+            showToast('Incorrect admin password', false);
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login to Dashboard';
+            return;
+        }
+        
+        await loadAllEmployeesData();
+        currentUser = 'Admin';
+        
+        showAdminView();
+        loadAdminData();
+        renderEmployeeList();
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+        
+        saveSession('Admin', 'admin');
+        startActivityTracking();
+        startInactivityTimer();
+        
+        showToast('Admin logged in successfully');
+        passInput.value = '';
+    } catch(e) {
+        console.error('Admin login error:', e);
+        showToast('Error connecting to server', false);
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login to Dashboard';
     }
-  };
+};
 
-  // ===== SIGN OUT =====
-  function signOut() {
-    if (confirm('Are you sure you want to sign out?')) {
-      currentUser = null;
-      currentSession = { user: null, type: null };
-      
-      // Clear session and stop tracking
-      clearSession();
-      stopActivityTracking();
-      if (inactivityTimer) {
+// ===== SIGN OUT =====
+function signOut() {
+    currentUser = null;
+    currentUserRole = null;
+    currentUserPermissions = [];
+    watchedData = {};
+    allEmployeesData = {};
+    
+    clearSession();
+    stopActivityTracking();
+    if (inactivityTimer) {
         clearInterval(inactivityTimer);
         inactivityTimer = null;
-      }
-      
-      hideAllSections();
-      document.querySelector('.company-section').style.display = 'block';
-      document.getElementById('login-choice').style.display = 'flex';
-      document.getElementById('signOutBtn').style.display = 'none';
-      // Reset input fields
-      document.getElementById('emp-name').value = '';
-      document.getElementById('emp-password').value = '';
-      document.getElementById('admin-password').value = '';
     }
-  }
+    
+    hideAllSections();
+    showLandingPage();
+    
+    document.getElementById('emp-name').value = '';
+    document.getElementById('emp-password').value = '';
+    document.getElementById('admin-password').value = '';
+    
+    document.getElementById('video-modal').style.display = 'none';
+    document.getElementById('quiz-modal').style.display = 'none';
+    document.getElementById('youtube-frame').src = '';
+    
+    showToast('Signed out successfully');
+}
 
-  // ===== ADMIN EMPLOYEE MANAGEMENT =====
-  async function renderEmployeeList() {
-    const listDiv = document.getElementById('employee-list');
-    listDiv.innerHTML = '';
-    const snapshot = await db.collection('employees').get();
-    snapshot.forEach(doc => {
-      const emp = doc.data();
-      const item = document.createElement('div');
-      item.className = 'employee-item';
-      item.innerHTML = `
-        <span><strong>${doc.id}</strong> (password: ${emp.password})</span>
-        <div>
-          <button onclick="resetEmployeePassword('${doc.id}')">Reset Pass</button>
-          <button class="delete-btn" onclick="deleteEmployee('${doc.id}')">Delete</button>
-        </div>
-      `;
-      listDiv.appendChild(item);
+// ===== RENDER TABS BASED ON PERMISSIONS =====
+function renderTabs() {
+    const tabsContainer = document.getElementById('employeeTabs');
+    const perms = currentUserPermissions;
+    const tabMap = {
+        videos: 'Videos',
+        resources: 'Resources',
+        quizzes: 'Quizzes',
+        feedback: 'Feedback',
+        leaderboard: 'Leaderboard',
+        certificate: 'Certificate'
+    };
+    
+    let html = '';
+    perms.forEach(p => {
+        if (tabMap[p]) {
+            html += `<button class="tab-btn" data-tab="${p}" onclick="showTab('${p}')">${tabMap[p]}</button>`;
+        }
     });
-    if (snapshot.empty) {
-      listDiv.innerHTML = '<p>No employees added yet.</p>';
+    
+    tabsContainer.innerHTML = html;
+    
+    if (perms.length > 0) {
+        showTab(perms[0]);
     }
-  }
+}
 
-  window.addEmployee = async function() {
-    const name = document.getElementById('newEmpName').value.trim();
-    const pass = document.getElementById('newEmpPass').value.trim();
-    if (!name || !pass) {
-      showToast('Please enter both name and password', false);
-      return;
-    }
-    try {
-      const docRef = db.collection('employees').doc(name);
-      const docSnap = await docRef.get();
-      if (docSnap.exists) {
-        showToast('Employee already exists', false);
-        return;
-      }
-      await docRef.set({
-        password: pass,
-        watched: {},
-        lastActivity: new Date().toLocaleDateString()
-      });
-      // Refresh lists
-      renderEmployeeList();
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      document.getElementById('newEmpName').value = '';
-      document.getElementById('newEmpPass').value = '';
-      showToast(`Employee ${name} added`);
-    } catch (error) {
-      console.error('Add error:', error);
-      showToast('Error adding employee', false);
-    }
-  };
+window.showTab = function(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    document.getElementById(`${tab}-tab`).classList.add('active');
+    
+    const btn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+    if (btn) btn.classList.add('active');
+    
+    if (tab === 'resources') loadResources();
+    if (tab === 'quizzes') loadQuizList();
+    if (tab === 'feedback') loadFeedbackForms();
+    if (tab === 'leaderboard') loadLeaderboard();
+    if (tab === 'certificate') checkCertificate();
+};
 
-  window.resetEmployeePassword = async function(name) {
-    const newPass = prompt(`Enter new password for ${name}:`);
-    if (newPass && newPass.trim() !== '') {
-      await db.collection('employees').doc(name).update({ password: newPass.trim() });
-      renderEmployeeList();
-      showToast(`Password updated for ${name}`);
-    }
-  };
-
-  window.deleteEmployee = async function(name) {
-    if (confirm(`Delete employee ${name}? This will also delete all their progress.`)) {
-      await db.collection('employees').doc(name).delete();
-      renderEmployeeList();
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      showToast(`Employee ${name} deleted`);
-    }
-  };
-
-  // ===== MODULES RENDERING =====
-  function renderModules() {
+// ===== VIDEO MODULES =====
+function renderModules() {
     const grid = document.getElementById('videoGrid');
-    if (!grid) return;
     grid.innerHTML = '';
-    MODULE_TITLES.forEach((title, index) => {
-      const videoId = `video${index+1}`;
-      const progress = watchedData.watched?.[videoId] || 0;
-      const watchedClass = progress >= 90 ? 'watched' : '';
-      const card = document.createElement('div');
-      card.className = `video-card ${watchedClass}`;
-      card.setAttribute('data-id', videoId);
-      card.innerHTML = `
-        <img src="https://via.placeholder.com/400x200/00ffd5/121212?text=${encodeURIComponent(title)}" alt="${title}">
-        <div class="watch-indicator"><i class="fas fa-check"></i></div>
-        <div class="video-progress"><div class="video-progress-fill" id="progress-${videoId}" style="width:${progress}%;"></div></div>
-        <div class="video-card-content">
-          <h2>${title}</h2>
-          <p>Click to watch and learn.</p>
-        </div>
-      `;
-      card.addEventListener('click', () => openVideo(videoId, title));
-      grid.appendChild(card);
+    
+    MODULE_TITLES.forEach((title, i) => {
+        const vid = `video${i+1}`;
+        const prog = watchedData.watched?.[vid] || 0;
+        const watchedClass = prog >= 90 ? 'watched' : '';
+        
+        const card = document.createElement('div');
+        card.className = `video-card ${watchedClass}`;
+        card.dataset.id = vid;
+        
+        const encodedTitle = encodeURIComponent(title.length > 20 ? title.substring(0,20)+'...' : title);
+        card.innerHTML = `
+            <img src="https://via.placeholder.com/400x200/cc6238/ffffff?text=${encodedTitle}" alt="${title}">
+            <div class="watch-indicator"><i class="fas fa-check"></i></div>
+            <div class="video-progress"><div class="video-progress-fill" id="progress-${vid}" style="width:${prog}%;"></div></div>
+            <div class="video-card-content"><h2>${title}</h2><p>Click to watch</p></div>
+        `;
+        
+        card.addEventListener('click', () => openVideo(vid, title));
+        grid.appendChild(card);
     });
-  }
+}
 
-  let currentVideoId = null;
-  function openVideo(videoId, title) {
-    currentVideoId = videoId;
+function openVideo(vid, title) {
     const modal = document.getElementById('video-modal');
-    const iframe = document.getElementById('youtube-frame');
-    iframe.src = `https://www.youtube.com/embed/${YOUTUBE_IDS[videoId]}?autoplay=1`;
+    document.getElementById('youtube-frame').src = `https://www.youtube-nocookie.com/embed/${YOUTUBE_IDS[vid]}?autoplay=1`;
     document.getElementById('modal-title').innerText = title;
     modal.style.display = 'flex';
-    modal.dataset.currentVideo = videoId;
-  }
+    modal.dataset.currentVideo = vid;
+}
 
-  async function markVideoCompleted(videoId) {
+window.markVideoCompleted = async function(vid) {
     if (!currentUser) return;
+    
     if (!watchedData.watched) watchedData.watched = {};
-    watchedData.watched[videoId] = 100;
-    if (watchedData.lastPosition) delete watchedData.lastPosition[videoId];
+    watchedData.watched[vid] = 100;
     watchedData.lastActivity = new Date().toLocaleDateString();
-    // Update Firestore
+    
     await db.collection('employees').doc(currentUser).update({
-      [`watched.${videoId}`]: 100,
-      lastActivity: watchedData.lastActivity
+        [`watched.${vid}`]: 100,
+        lastActivity: watchedData.lastActivity
     });
+    
     updateProgress();
     populateWatchedLog();
-    const card = document.querySelector(`[data-id="${videoId}"]`);
+    
+    const card = document.querySelector(`[data-id="${vid}"]`);
     if (card) card.classList.add('watched');
-    const progressFill = document.getElementById(`progress-${videoId}`);
-    if (progressFill) progressFill.style.width = '100%';
-    showToast('✅ Video marked as completed!');
-  }
+    
+    const fill = document.getElementById(`progress-${vid}`);
+    if (fill) fill.style.width = '100%';
+    
+    showToast('✅ Marked as completed');
+    checkCertificate();
+};
 
-  // ===== PROGRESS TRACKING =====
-  function updateProgress() {
-    if (!currentUser) return;
-    const total = MODULE_TITLES.length;
-    let totalProgress = 0;
-    let completed = 0;
-    for (let i = 1; i <= total; i++) {
-      const prog = watchedData.watched?.[`video${i}`] || 0;
-      totalProgress += prog;
-      if (prog >= 90) completed++;
+document.getElementById('mark-complete-btn').addEventListener('click', function() {
+    const vid = document.getElementById('video-modal').dataset.currentVideo;
+    if (vid) {
+        markVideoCompleted(vid);
+        document.getElementById('video-modal').style.display = 'none';
+        document.getElementById('youtube-frame').src = '';
     }
-    const avg = totalProgress / total;
+});
+
+function updateProgress() {
+    const total = MODULE_TITLES.length;
+    let sum = 0;
+    
+    for (let i = 1; i <= total; i++) {
+        const p = watchedData.watched?.[`video${i}`] || 0;
+        sum += p;
+    }
+    
+    const avg = total > 0 ? sum / total : 0;
+    
     document.getElementById('progress-fill').style.width = avg + '%';
     document.getElementById('progress-text').innerText = Math.round(avg) + '% Completed';
     document.getElementById('enhanced-progress-fill').style.width = avg + '%';
     document.getElementById('module-percentage').innerText = Math.round(avg) + '%';
+    
     const circle = document.querySelector('.progress-circle circle:nth-child(2)');
     circle.style.strokeDashoffset = 314 - (314 * (avg / 100));
     document.getElementById('circle-text').innerText = Math.round(avg) + '%';
-  }
+}
 
-  function populateWatchedLog() {
-    if (!currentUser) return;
+function populateWatchedLog() {
     const log = document.getElementById('watched-list');
     log.innerHTML = '';
-    let hasAny = false;
+    
+    let has = false;
     for (let i = 1; i <= MODULE_TITLES.length; i++) {
-      const prog = watchedData.watched?.[`video${i}`] || 0;
-      if (prog > 5) {
-        hasAny = true;
-        const title = MODULE_TITLES[i-1];
-        const badge = document.createElement('div');
-        if (prog >= 90) {
-          badge.className = 'watched-badge';
-          badge.innerHTML = `<i class="fas fa-check"></i> ${title} (Completed)`;
-        } else {
-          badge.className = 'progress-badge';
-          badge.innerHTML = `<i class="fas fa-play-circle"></i> ${title} (${Math.round(prog)}%)`;
+        const p = watchedData.watched?.[`video${i}`] || 0;
+        if (p > 5) {
+            has = true;
+            const title = MODULE_TITLES[i-1];
+            const badge = document.createElement('div');
+            badge.className = p >= 90 ? 'watched-badge' : 'progress-badge';
+            badge.innerHTML = p >= 90 
+                ? `<i class="fas fa-check"></i> ${title} (Completed)` 
+                : `<i class="fas fa-play-circle"></i> ${title} (${Math.round(p)}%)`;
+            log.appendChild(badge);
         }
-        log.appendChild(badge);
-      }
     }
-    if (!hasAny) log.innerHTML = '<p>You haven’t started any videos yet.</p>';
-  }
+    
+    if (!has) log.innerHTML = '<p>No progress yet</p>';
+}
 
-  function filterModules() {
+window.filterModules = function() {
     const val = document.getElementById('searchBox').value.toLowerCase();
-    document.querySelectorAll('.video-card').forEach(card => {
-      const title = card.querySelector('h2').innerText.toLowerCase();
-      card.style.display = title.includes(val) ? 'block' : 'none';
+    document.querySelectorAll('.video-card').forEach(c => {
+        c.style.display = c.querySelector('h2').innerText.toLowerCase().includes(val) ? 'block' : 'none';
     });
-  }
+};
 
-  // ===== ADMIN INSIGHTS =====
-  function renderModuleInsights() {
-    const container = document.getElementById('moduleStats');
-    if (!container) return;
-    const totalEmployees = Object.keys(employeeCredentials).length;
-    let html = '';
-    MODULE_TITLES.forEach((title, index) => {
-      const videoId = `video${index+1}`;
-      let completedCount = 0;
-      for (let user in watchedData) {
-        if (!employeeCredentials[user]) continue;
-        if ((watchedData[user]?.watched?.[videoId] || 0) >= 90) completedCount++;
-      }
-      const percent = totalEmployees ? Math.round((completedCount / totalEmployees) * 100) : 0;
-      html += `
-        <div class="module-row">
-          <span class="module-name">${title}</span>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: ${percent}%;"></div>
-          </div>
-          <span class="module-percent">${percent}% (${completedCount}/${totalEmployees})</span>
-        </div>
-      `;
+// ===== RESOURCES =====
+async function loadResources() {
+    const snap = await db.collection('resources').get();
+    const grid = document.getElementById('resourceGrid');
+    grid.innerHTML = '';
+    
+    snap.forEach(doc => {
+        const r = doc.data();
+        const icon = r.type === 'PDF' ? 'file-pdf' : r.type === 'Video' ? 'video' : 'file-alt';
+        grid.innerHTML += `
+            <div class="resource-card">
+                <i class="fas fa-${icon}"></i>
+                <h3>${r.title}</h3>
+                <a href="${r.link}" target="_blank" rel="noopener noreferrer">Open</a>
+            </div>
+        `;
     });
-    container.innerHTML = html || '<p>No employees yet.</p>';
-  }
+}
 
-  function renderDistribution() {
-    const container = document.getElementById('distContainer');
-    if (!container) return;
-    const totalEmployees = Object.keys(employeeCredentials).length;
-    if (totalEmployees === 0) {
-      container.innerHTML = '<p>No employees yet.</p>';
-      return;
+// ===== QUIZZES =====
+let currentQuizModule = null;
+let currentQuizQuestions = [];
+
+async function loadQuizList() {
+    const list = document.getElementById('quizList');
+    list.innerHTML = '';
+    
+    const allResultsSnap = await db.collection('quizResults').where('employee', '==', currentUser).get();
+    const resultsMap = {};
+    allResultsSnap.forEach(d => {
+        const data = d.data();
+        resultsMap[data.module] = data.score;
+    });
+    
+    for (let i = 1; i <= MODULE_TITLES.length; i++) {
+        const moduleName = MODULE_TITLES[i-1];
+        const quizSnap = await db.collection('quizzes').doc(`module${i}`).collection('questions').get();
+        const qCount = quizSnap.size;
+        const score = resultsMap[`module${i}`] !== undefined ? resultsMap[`module${i}`] : null;
+        
+        list.innerHTML += `
+            <div class="quiz-card">
+                <div class="quiz-info">
+                    <h3>${moduleName}</h3>
+                    <p>${qCount} questions</p>
+                    ${score !== null ? `<p class="quiz-score">Score: ${score}/${qCount}</p>` : ''}
+                </div>
+                <button class="quiz-btn" onclick="startQuiz('module${i}')">${score !== null ? 'Retake' : 'Start'}</button>
+            </div>
+        `;
     }
-    const ranges = [
-      { min: 0, max: 25, label: '0-25%' },
-      { min: 26, max: 50, label: '26-50%' },
-      { min: 51, max: 75, label: '51-75%' },
-      { min: 76, max: 100, label: '76-100%' }
-    ];
+}
+
+window.startQuiz = async function(moduleId) {
+    const snap = await db.collection('quizzes').doc(moduleId).collection('questions').get();
+    if (snap.empty) {
+        showToast('No questions available yet', false);
+        return;
+    }
+    
+    currentQuizModule = moduleId;
+    currentQuizQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    
+    const modal = document.getElementById('quiz-modal');
+    document.getElementById('quizModalTitle').innerText = 'Quiz: ' + MODULE_TITLES[parseInt(moduleId.replace('module', '')) - 1];
+    
+    let html = '';
+    currentQuizQuestions.forEach((q, idx) => {
+        html += `<div class="quiz-question"><p>${idx+1}. ${q.question}</p><ul class="quiz-options">`;
+        for (let i = 1; i <= 4; i++) {
+            html += `<li><input type="radio" name="q${idx}" value="${i}" id="q${idx}o${i}"> <label for="q${idx}o${i}">${q[`opt${i}`]}</label></li>`;
+        }
+        html += `</ul></div>`;
+    });
+    
+    document.getElementById('quizQuestions').innerHTML = html;
+    modal.style.display = 'flex';
+};
+
+window.submitQuiz = async function() {
+    let correct = 0;
+    currentQuizQuestions.forEach((q, idx) => {
+        const sel = document.querySelector(`input[name="q${idx}"]:checked`);
+        if (sel && parseInt(sel.value) === q.correct) correct++;
+    });
+    
+    const total = currentQuizQuestions.length;
+    const existing = await db.collection('quizResults').where('employee', '==', currentUser).where('module', '==', currentQuizModule).get();
+    
+    if (!existing.empty) {
+        await existing.docs[0].ref.update({ 
+            score: correct, 
+            date: new Date().toISOString() 
+        });
+    } else {
+        await db.collection('quizResults').add({ 
+            employee: currentUser, 
+            module: currentQuizModule, 
+            score: correct, 
+            total, 
+            date: new Date().toISOString() 
+        });
+    }
+    
+    showToast(`Quiz submitted! Score: ${correct}/${total}`);
+    document.getElementById('quiz-modal').style.display = 'none';
+    loadQuizList();
+    loadLeaderboard();
+};
+
+// ===== FEEDBACK =====
+async function loadFeedbackForms() {
+    const cont = document.getElementById('feedbackList');
+    cont.innerHTML = '';
+    
+    const allFeedbackSnap = await db.collection('feedback').where('employee', '==', currentUser).get();
+    const feedbackMap = {};
+    allFeedbackSnap.forEach(d => {
+        const data = d.data();
+        feedbackMap[data.module] = true;
+    });
+    
+    for (let i = 1; i <= MODULE_TITLES.length; i++) {
+        const moduleName = MODULE_TITLES[i-1];
+        const hasFeedback = feedbackMap[`module${i}`];
+        
+        cont.innerHTML += `
+            <div class="feedback-card" id="feedback-${i}">
+                <h3>${moduleName}</h3>
+                ${hasFeedback 
+                    ? '<p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Feedback submitted</p>' 
+                    : `
+                <div class="rating" id="rating-${i}">
+                    <i class="far fa-star" data-val="1"></i><i class="far fa-star" data-val="2"></i><i class="far fa-star" data-val="3"></i><i class="far fa-star" data-val="4"></i><i class="far fa-star" data-val="5"></i>
+                </div>
+                <textarea id="comment-${i}" placeholder="Your comments..."></textarea>
+                <button class="submit-feedback" onclick="submitFeedback('${i}')">Submit</button>
+                `}
+            </div>
+        `;
+        
+        if (!hasFeedback) {
+            const stars = document.querySelectorAll(`#rating-${i} i`);
+            stars.forEach(s => s.addEventListener('click', function() {
+                const val = this.dataset.val;
+                stars.forEach(ss => ss.classList.remove('selected', 'fas'));
+                for (let j = 0; j < val; j++) stars[j].classList.add('selected', 'fas');
+                for (let j = val; j < 5; j++) stars[j].classList.remove('selected', 'fas');
+            }));
+        }
+    }
+}
+
+window.submitFeedback = async function(moduleIndex) {
+    const rating = document.querySelectorAll(`#rating-${moduleIndex} i.selected`).length;
+    if (rating === 0) {
+        showToast('Please give a rating', false);
+        return;
+    }
+    
+    const comment = document.getElementById(`comment-${moduleIndex}`).value;
+    await db.collection('feedback').add({
+        employee: currentUser,
+        module: `module${moduleIndex}`,
+        rating,
+        comment,
+        date: new Date().toISOString()
+    });
+    
+    showToast('Feedback submitted');
+    loadFeedbackForms();
+};
+
+// ===== LEADERBOARD =====
+async function loadLeaderboard() {
+    const users = await db.collection('employees').get();
+    const leaderboard = [];
+    
+    const allQuizResults = await db.collection('quizResults').get();
+    const quizScoresMap = {};
+    allQuizResults.forEach(r => {
+        const data = r.data();
+        if (!quizScoresMap[data.employee]) quizScoresMap[data.employee] = { totalScore: 0, totalQ: 0 };
+        quizScoresMap[data.employee].totalScore += data.score;
+        quizScoresMap[data.employee].totalQ += data.total;
+    });
+    
+    for (let u of users.docs) {
+        const emp = u.id;
+        const data = u.data();
+        const watched = data.watched || {};
+        const videosCompleted = Object.values(watched).filter(p => p >= 90).length;
+        
+        const scores = quizScoresMap[emp] || { totalScore: 0, totalQ: 0 };
+        const avgScore = scores.totalQ ? Math.round((scores.totalScore / scores.totalQ) * 100) : 0;
+        const points = videosCompleted * 10 + avgScore * 2;
+        
+        leaderboard.push({ emp, videosCompleted, avgScore, points });
+    }
+    
+    leaderboard.sort((a, b) => b.points - a.points);
+    
+    document.getElementById('leaderboard-body').innerHTML = leaderboard.map((l, idx) => `
+        <tr><td>${idx+1}</td><td>${l.emp}</td><td>${l.avgScore}%</td><td>${l.videosCompleted}/${MODULE_TITLES.length}</td><td>${l.points}</td></tr>
+    `).join('');
+}
+
+// ===== CERTIFICATE =====
+function checkCertificate() {
+    const total = MODULE_TITLES.length;
+    let completed = 0;
+    
+    for (let i = 1; i <= total; i++) {
+        if ((watchedData.watched?.[`video${i}`] || 0) >= 90) completed++;
+    }
+    
+    const certSection = document.querySelector('#certificate-tab .certificate-section');
+    if (!certSection) return;
+    
+    if (completed === total) {
+        certSection.style.display = 'block';
+    } else {
+        certSection.style.display = 'none';
+    }
+}
+
+window.generateCertificate = function() {
+    const name = currentUser;
+    const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const signatory = 'Authorised Signatory';
+    
+    const win = window.open('', '_blank');
+    if (!win) {
+        showToast('Popup blocked! Please allow popups.', false);
+        return;
+    }
+    
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>Certificate of Completion</title>
+        <style>
+            body { margin:0; background:#fff; font-family:Arial; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+            .cert { width:21cm; min-height:29.7cm; background:white; box-shadow:0 0 10px #aaa; position:relative; overflow:hidden; border: 5px solid #cc6238; }
+            .stripe-top { height:15px; background:linear-gradient(90deg,#cc6238,#572b67); }
+            .stripe-bottom { height:15px; background:linear-gradient(90deg,#572b67,#cc6238); position:absolute; bottom:0; width:100%; }
+            .content { padding:2cm; text-align:center; }
+            .logo { font-size:3rem; font-weight:700; background:linear-gradient(135deg,#cc6238,#572b67); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+            h1 { color:#572b67; }
+            .subtitle { color:#cc6238; border-bottom:2px solid #572b67; display:inline-block; padding-bottom:0.5rem; margin-bottom:2rem; }
+            .employee-name { font-size:3rem; color:#cc6238; border-bottom:3px solid #572b67; display:inline-block; padding-bottom:0.5rem; margin:1rem 0; }
+            .date { margin-top:2rem; color:#572b67; }
+            .signature { margin-top:3rem; display:flex; justify-content:space-around; }
+            .signature .line { width:200px; border-bottom:2px solid #cc6238; margin-bottom:0.3rem; }
+        </style>
+        </head>
+        <body>
+        <div class="cert">
+            <div class="stripe-top"></div>
+            <div class="content">
+                <div class="logo">SARVP</div>
+                <h1>Financial Services</h1>
+                <div class="subtitle">TRAINING COMPLETION CERTIFICATE</div>
+                <p>This is proudly presented to</p>
+                <div class="employee-name">${name}</div>
+                <p>for successfully completing all training modules.</p>
+                <div class="date">Date: ${date}</div>
+                <div class="signature">
+                    <div><div class="line"></div><p>${signatory}</p><p>Authorised Signatory</p></div>
+                    <div><div class="line"></div><p>Training Coordinator</p></div>
+                </div>
+            </div>
+            <div class="stripe-bottom"></div>
+        </div>
+        <script>window.onload=()=>window.print();<\/script>
+        </body></html>
+    `);
+    win.document.close();
+    showToast('🎉 Certificate generated!');
+};
+
+// ===== ADMIN FUNCTIONS =====
+async function renderEmployeeList() {
+    const list = document.getElementById('employee-list');
+    list.innerHTML = '';
+    
+    for (let name in allEmployeesData) {
+        const data = allEmployeesData[name];
+        list.innerHTML += `
+            <div class="employee-item">
+                <span><strong>${name}</strong> (${data.role || 'RM'})</span>
+                <div>
+                    <button onclick="editEmployee('${name}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteEmployee('${name}')">Delete</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (Object.keys(allEmployeesData).length === 0) {
+        list.innerHTML = '<p>No employees</p>';
+    }
+}
+
+window.editEmployee = async function(name) {
+    const data = allEmployeesData[name];
+    document.getElementById('empName').value = name;
+    document.getElementById('empPass').value = data.password || '';
+    document.getElementById('empRole').value = data.role || 'RM';
+    
+    const perms = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
+    document.querySelectorAll('#permissionsCheckboxes input').forEach(cb => {
+        cb.checked = perms.includes(cb.value);
+    });
+};
+
+window.addOrUpdateEmployee = async function() {
+    const name = document.getElementById('empName').value.trim();
+    const pass = document.getElementById('empPass').value.trim();
+    const role = document.getElementById('empRole').value;
+    const perms = Array.from(document.querySelectorAll('#permissionsCheckboxes input:checked')).map(cb => cb.value);
+    
+    if (!name || !pass) {
+        showToast('Enter name and password', false);
+        return;
+    }
+    
+    const existingWatched = allEmployeesData[name]?.watched || {};
+    const existingActivity = allEmployeesData[name]?.lastActivity || new Date().toLocaleDateString();
+    
+    await db.collection('employees').doc(name).set({
+        password: pass,
+        role,
+        permissions: perms,
+        watched: existingWatched,
+        lastActivity: existingActivity
+    });
+    
+    await loadAllEmployeesData();
+    renderEmployeeList();
+    loadAdminData();
+    renderModuleInsights();
+    renderDistribution();
+    renderRecentActive();
+    
+    document.getElementById('empName').value = '';
+    document.getElementById('empPass').value = '';
+    
+    showToast('Employee saved');
+};
+
+window.deleteEmployee = async function(name) {
+    if (confirm(`Delete ${name}?`)) {
+        await db.collection('employees').doc(name).delete();
+        delete allEmployeesData[name];
+        renderEmployeeList();
+        loadAdminData();
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+        showToast('Deleted');
+    }
+};
+
+// Resources admin
+window.addResource = async function() {
+    const title = document.getElementById('resTitle').value;
+    const link = document.getElementById('resLink').value;
+    const type = document.getElementById('resType').value;
+    
+    if (!title || !link) {
+        showToast('Enter title and link', false);
+        return;
+    }
+    
+    await db.collection('resources').add({ title, link, type });
+    document.getElementById('resTitle').value = '';
+    document.getElementById('resLink').value = '';
+    loadResourcesAdmin();
+    if (currentUser) loadResources();
+    showToast('Resource added');
+};
+
+async function loadResourcesAdmin() {
+    const snap = await db.collection('resources').get();
+    const list = document.getElementById('resourceAdminList');
+    list.innerHTML = '';
+    
+    snap.forEach(d => {
+        list.innerHTML += `<div class="employee-item"><span>${d.data().title} (${d.data().type})</span><button onclick="deleteResource('${d.id}')">Delete</button></div>`;
+    });
+}
+
+window.deleteResource = async function(id) {
+    await db.collection('resources').doc(id).delete();
+    loadResourcesAdmin();
+    if (currentUser) loadResources();
+};
+
+// Quiz admin
+window.addQuizQuestion = async function() {
+    const module = document.getElementById('quizModule').value;
+    const question = document.getElementById('quizQuestion').value;
+    const opt1 = document.getElementById('quizOpt1').value;
+    const opt2 = document.getElementById('quizOpt2').value;
+    const opt3 = document.getElementById('quizOpt3').value;
+    const opt4 = document.getElementById('quizOpt4').value;
+    const correct = parseInt(document.getElementById('quizCorrect').value);
+    
+    if (!question || !opt1 || !opt2 || !opt3 || !opt4 || !correct) {
+        showToast('Fill all fields', false);
+        return;
+    }
+    
+    await db.collection('quizzes').doc(module).collection('questions').add({ 
+        question, opt1, opt2, opt3, opt4, correct 
+    });
+    
+    loadQuizAdmin();
+    showToast('Question added');
+};
+
+async function loadQuizAdmin() {
+    const select = document.getElementById('quizModule');
+    select.innerHTML = '';
+    
+    for (let i = 1; i <= MODULE_TITLES.length; i++) {
+        select.innerHTML += `<option value="module${i}">${MODULE_TITLES[i-1]}</option>`;
+    }
+    
+    const list = document.getElementById('quizAdminList');
+    list.innerHTML = '';
+    
+    for (let i = 1; i <= MODULE_TITLES.length; i++) {
+        const qsnap = await db.collection('quizzes').doc(`module${i}`).collection('questions').get();
+        qsnap.forEach(d => {
+            list.innerHTML += `<div class="employee-item"><span>${MODULE_TITLES[i-1]}: ${d.data().question}</span><button onclick="deleteQuestion('module${i}','${d.id}')">Delete</button></div>`;
+        });
+    }
+}
+
+window.deleteQuestion = async function(module, id) {
+    await db.collection('quizzes').doc(module).collection('questions').doc(id).delete();
+    loadQuizAdmin();
+};
+
+// Feedback admin
+async function loadFeedbackAdmin() {
+    const list = document.getElementById('feedbackAdminList');
+    list.innerHTML = '';
+    
+    const snap = await db.collection('feedback').get();
+    snap.forEach(d => {
+        const f = d.data();
+        list.innerHTML += `<div class="employee-item"><span>${f.employee} - Module ${f.module} - Rating: ${f.rating} - ${f.comment}</span></div>`;
+    });
+}
+
+// Reports
+window.generatePDFReport = function(type) {
+    const win = window.open('', '_blank');
+    if (!win) {
+        showToast('Popup blocked', false);
+        return;
+    }
+    
+    let content = '';
+    const total = Object.keys(allEmployeesData).length;
+    
+    let tProg = 0;
+    for (let u in allEmployeesData) {
+        const data = allEmployeesData[u];
+        let sum = 0;
+        for (let i = 1; i <= MODULE_TITLES.length; i++) {
+            sum += data.watched?.[`video${i}`] || 0;
+        }
+        tProg += MODULE_TITLES.length ? Math.round(sum / MODULE_TITLES.length) : 0;
+    }
+    const avgProg = total ? Math.round(tProg / total) + '%' : '0%';
+    
+    let top = { name: '', prog: 0 };
+    for (let u in allEmployeesData) {
+        const data = allEmployeesData[u];
+        let sum = 0;
+        for (let i = 1; i <= MODULE_TITLES.length; i++) {
+            sum += data.watched?.[`video${i}`] || 0;
+        }
+        const perc = MODULE_TITLES.length ? Math.round(sum / MODULE_TITLES.length) : 0;
+        if (perc > top.prog) top = { name: u, prog: perc };
+    }
+    
+    if (type === 'summary') {
+        content = `
+            <h1>Training Summary Report</h1>
+            <p>Total Employees: ${total}</p>
+            <p>Average Progress: ${avgProg}</p>
+            <p>Top Performer: ${top.name || '-'}</p>
+        `;
+    } else {
+        content = `
+            <h1>Detailed Employee Report</h1>
+            <table border="1" cellpadding="5" style="border-collapse:collapse; width:100%">
+            <thead><tr><th>Employee</th><th>Role</th><th>Watched</th><th>Progress</th><th>Last Activity</th></tr></thead>
+            <tbody>
+        `;
+        const totalV = MODULE_TITLES.length;
+        for (let u in allEmployeesData) {
+            const data = allEmployeesData[u];
+            let sum = 0, comp = 0;
+            for (let i = 1; i <= totalV; i++) {
+                const p = data.watched?.[`video${i}`] || 0;
+                sum += p;
+                if (p >= 90) comp++;
+            }
+            const perc = totalV ? Math.round(sum / totalV) : 0;
+            content += `<tr><td>${u}</td><td>${data.role || 'RM'}</td><td>${comp}/${totalV}</td><td>${perc}%</td><td>${data.lastActivity || 'N/A'}</td></tr>`;
+        }
+        content += `</tbody></table>`;
+    }
+    
+    win.document.write(`
+        <html><head><title>Report</title><style>body{font-family:Arial;padding:20px;}</style></head>
+        <body>${content}</body></html>
+    `);
+    win.document.close();
+    win.print();
+};
+
+window.exportCSV = function() {
+    let csv = 'Name,Role,Completed Videos,Total Videos,Progress%,Last Activity\n';
+    const totalV = MODULE_TITLES.length;
+    
+    for (let u in allEmployeesData) {
+        const data = allEmployeesData[u];
+        const watched = data.watched || {};
+        let comp = 0, sum = 0;
+        
+        for (let i = 1; i <= totalV; i++) {
+            const p = watched[`video${i}`] || 0;
+            sum += p;
+            if (p >= 90) comp++;
+        }
+        
+        const perc = totalV ? Math.round(sum / totalV) : 0;
+        const safeName = `"${u.replace(/"/g, '""')}"`;
+        csv += `${safeName},${data.role || 'RM'},${comp},${totalV},${perc},${data.lastActivity || 'N/A'}\n`;
+    }
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'report.csv';
+    a.click();
+    showToast('CSV exported');
+};
+
+// Settings
+window.saveSettings = async function() {
+    const name = document.getElementById('authName').value;
+    await db.collection('admin').doc('config').update({ authName: name });
+    showToast('Settings saved');
+};
+
+// Admin insights
+function renderModuleInsights() {
+    const cont = document.getElementById('moduleStats');
+    if (!cont) return;
+    
+    const total = Object.keys(allEmployeesData).length;
+    let html = '';
+    
+    MODULE_TITLES.forEach((title, i) => {
+        const vid = `video${i+1}`;
+        let completed = 0;
+        
+        for (let u in allEmployeesData) {
+            const p = allEmployeesData[u].watched?.[vid] || 0;
+            if (p >= 90) completed++;
+        }
+        
+        const pct = total ? Math.round((completed / total) * 100) : 0;
+        html += `
+            <div class="module-row">
+                <span class="module-name">${title}</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width:${pct}%;"></div>
+                </div>
+                <span class="module-percent">${pct}% (${completed}/${total})</span>
+            </div>
+        `;
+    });
+    
+    cont.innerHTML = html || '<p>No employees</p>';
+}
+
+function renderDistribution() {
+    const cont = document.getElementById('distContainer');
+    if (!cont) return;
+    
+    const total = Object.keys(allEmployeesData).length;
+    if (total === 0) {
+        cont.innerHTML = '<p>No employees</p>';
+        return;
+    }
+    
     const counts = [0, 0, 0, 0];
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      const totalVideos = MODULE_TITLES.length;
-      let totalProgress = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        totalProgress += watchedData[user]?.watched?.[`video${i}`] || 0;
-      }
-      const percent = totalVideos ? Math.round(totalProgress / totalVideos) : 0;
-      if (percent <= 25) counts[0]++;
-      else if (percent <= 50) counts[1]++;
-      else if (percent <= 75) counts[2]++;
-      else counts[3]++;
+    for (let u in allEmployeesData) {
+        const data = allEmployeesData[u];
+        let sum = 0;
+        for (let i = 1; i <= MODULE_TITLES.length; i++) {
+            sum += data.watched?.[`video${i}`] || 0;
+        }
+        const p = MODULE_TITLES.length ? Math.round(sum / MODULE_TITLES.length) : 0;
+        
+        if (p <= 25) counts[0]++;
+        else if (p <= 50) counts[1]++;
+        else if (p <= 75) counts[2]++;
+        else counts[3]++;
     }
+    
+    const labels = ['0-25%', '26-50%', '51-75%', '76-100%'];
     let html = '';
-    ranges.forEach((range, idx) => {
-      const percentOfTotal = totalEmployees ? Math.round((counts[idx] / totalEmployees) * 100) : 0;
-      html += `
-        <div class="dist-row">
-          <span class="dist-label">${range.label}</span>
-          <div class="dist-bar-bg">
-            <div class="dist-bar-fill" style="width: ${percentOfTotal}%;"></div>
-          </div>
-          <span class="dist-count">${counts[idx]}</span>
-        </div>
-      `;
+    
+    labels.forEach((l, idx) => {
+        const pct = total ? Math.round((counts[idx] / total) * 100) : 0;
+        html += `
+            <div class="dist-row">
+                <span class="dist-label">${l}</span>
+                <div class="dist-bar-bg">
+                    <div class="dist-bar-fill" style="width:${pct}%;"></div>
+                </div>
+                <span class="dist-count">${counts[idx]}</span>
+            </div>
+        `;
     });
-    container.innerHTML = html;
-  }
+    
+    cont.innerHTML = html;
+}
 
-  function renderRecentActive() {
+function renderRecentActive() {
     const list = document.getElementById('recentActive');
     if (!list) return;
-    const today = new Date();
-    const sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 7);
+    
+    const seven = new Date();
+    seven.setDate(seven.getDate() - 7);
     const active = [];
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      const last = watchedData[user]?.lastActivity;
-      if (!last) continue;
-      const parts = last.split('/');
-      if (parts.length === 3) {
-        const lastDate = new Date(parts[2], parts[1]-1, parts[0]);
-        if (lastDate >= sevenDaysAgo) {
-          active.push({ name: user, last: last });
+    
+    for (let u in allEmployeesData) {
+        const last = allEmployeesData[u].lastActivity;
+        if (!last) continue;
+        
+        const parts = last.split('/');
+        if (parts.length === 3) {
+            const d = new Date(parts[2], parts[1] - 1, parts[0]);
+            if (d >= seven) active.push({ name: u, last });
         }
-      }
     }
-    if (active.length === 0) {
-      list.innerHTML = '<li>No recent activity</li>';
-    } else {
-      list.innerHTML = active.map(a => `<li><span>${a.name}</span><span>${a.last}</span></li>`).join('');
-    }
-  }
+    
+    list.innerHTML = active.length 
+        ? active.map(a => `<li><span>${a.name}</span><span>${a.last}</span></li>`).join('') 
+        : '<li>No recent activity</li>';
+}
 
-  // ===== ADMIN DASHBOARD (stats and table) =====
-  function loadAdminData() {
+function loadAdminData() {
     const tbody = document.getElementById('admin-table-body');
     tbody.innerHTML = '';
-    const totalVideos = MODULE_TITLES.length;
-    let totalEmployees = 0;
-    let totalProgressSum = 0;
-    let totalCompletedAll = 0;
-    let topPerformer = { name: '', progress: 0 };
-
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      totalEmployees++;
-      let userProgressSum = 0;
-      let completed = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
-        userProgressSum += p;
-        if (p >= 90) completed++;
-      }
-      const percent = totalVideos ? Math.round(userProgressSum / totalVideos) : 0;
-      totalProgressSum += percent;
-      totalCompletedAll += completed;
-      if (percent > topPerformer.progress) {
-        topPerformer = { name: user, progress: percent };
-      }
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${user}</td>
-        <td>${completed}/${totalVideos} videos</td>
-        <td>${percent}%</td>
-        <td>${watchedData[user]?.lastActivity || 'N/A'}</td>
-        <td>
-          <button onclick="resetUser('${user}')">Reset</button>
-          <button class="delete-btn" onclick="deleteUser('${user}')">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
+    
+    const totalV = MODULE_TITLES.length;
+    let tEmp = 0, tProg = 0, tComp = 0, top = { name: '', prog: 0 };
+    
+    for (let u in allEmployeesData) {
+        const data = allEmployeesData[u];
+        tEmp++;
+        
+        let sum = 0, comp = 0;
+        for (let i = 1; i <= totalV; i++) {
+            const p = data.watched?.[`video${i}`] || 0;
+            sum += p;
+            if (p >= 90) comp++;
+        }
+        
+        const perc = totalV ? Math.round(sum / totalV) : 0;
+        tProg += perc;
+        tComp += comp;
+        
+        if (perc > top.prog) top = { name: u, prog: perc };
+        
+        tbody.innerHTML += `<tr>
+            <td>${u}</td>
+            <td>${data.role || 'RM'}</td>
+            <td>${comp}/${totalV}</td>
+            <td>${perc}%</td>
+            <td>${data.lastActivity || 'N/A'}</td>
+            <td>
+                <button onclick="resetUser('${u}')">Reset</button>
+                <button class="delete-btn" onclick="deleteUser('${u}')">Delete</button>
+            </td>
+        </tr>`;
     }
-
-    document.getElementById('total-employees').innerText = totalEmployees;
-    document.getElementById('avg-progress').innerText = totalEmployees ? Math.round(totalProgressSum / totalEmployees) + '%' : '0%';
-    document.getElementById('total-completed').innerText = totalCompletedAll;
-    document.getElementById('top-performer').innerText = topPerformer.name || '-';
-
-    if (totalEmployees === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No employee data available</td></tr>';
+    
+    document.getElementById('total-employees').innerText = tEmp;
+    document.getElementById('avg-progress').innerText = tEmp ? Math.round(tProg / tEmp) + '%' : '0%';
+    document.getElementById('total-completed').innerText = tComp;
+    document.getElementById('top-performer').innerText = top.name || '-';
+    
+    if (tEmp === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No data</td></tr>';
     }
-  }
+}
 
-  window.resetUser = async function(user) {
-    if (confirm(`Reset progress for ${user}?`)) {
-      await db.collection('employees').doc(user).update({
-        watched: {},
-        lastActivity: new Date().toLocaleDateString()
-      });
-      // Update local copy
-      if (watchedData[user]) watchedData[user].watched = {};
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      if (currentUser === user) {
-        watchedData = { watched: {} };
-        renderModules();
-        updateProgress();
-        populateWatchedLog();
-      }
-      showToast(`Progress reset for ${user}`);
+window.resetUser = async function(u) {
+    if (confirm(`Reset progress for ${u}?`)) {
+        await db.collection('employees').doc(u).update({ 
+            watched: {}, 
+            lastActivity: new Date().toLocaleDateString() 
+        });
+        
+        if (allEmployeesData[u]) {
+            allEmployeesData[u].watched = {};
+            allEmployeesData[u].lastActivity = new Date().toLocaleDateString();
+        }
+        
+        loadAdminData();
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+        
+        if (currentUser === u) {
+            watchedData.watched = {};
+            renderModules();
+            updateProgress();
+            populateWatchedLog();
+        }
+        
+        showToast('Progress reset');
     }
-  };
+};
 
-  window.deleteUser = async function(user) {
-    if (confirm(`Delete employee ${user}? This will also remove them from credentials and delete all progress.`)) {
-      await db.collection('employees').doc(user).delete();
-      delete employeeCredentials[user];
-      delete watchedData[user];
-      renderEmployeeList();
-      loadAdminData();
-      renderModuleInsights();
-      renderDistribution();
-      renderRecentActive();
-      if (currentUser === user) signOut();
-      showToast(`User ${user} deleted`);
+window.deleteUser = async function(u) {
+    if (confirm(`Delete employee ${u}?`)) {
+        await db.collection('employees').doc(u).delete();
+        delete allEmployeesData[u];
+        
+        renderEmployeeList();
+        loadAdminData();
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+        
+        if (currentUser === u) {
+            signOut();
+        }
+        
+        showToast('User deleted');
     }
-  };
+};
 
-  window.exportCSV = function() {
-    let csv = 'Name,Completed Videos,Total Videos,Progress%,Last Activity\n';
-    const totalVideos = MODULE_TITLES.length;
-    for (let user in watchedData) {
-      if (!employeeCredentials[user]) continue;
-      let completed = 0;
-      let progressSum = 0;
-      for (let i = 1; i <= totalVideos; i++) {
-        const p = watchedData[user]?.watched?.[`video${i}`] || 0;
-        progressSum += p;
-        if (p >= 90) completed++;
-      }
-      const percent = totalVideos ? Math.round(progressSum / totalVideos) : 0;
-      csv += `${user},${completed},${totalVideos},${percent},${watchedData[user]?.lastActivity || 'N/A'}\n`;
+window.showAdminTab = function(tab, event) {
+    if (event) event.preventDefault();
+    
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+    
+    document.getElementById(`admin-${tab}`).classList.add('active');
+    
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        const btn = document.querySelector(`.admin-tab-btn[onclick*="'${tab}'"]`);
+        if (btn) btn.classList.add('active');
     }
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'SARVP_Training_Report.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('CSV exported');
-  }
+    
+    if (tab === 'resources') loadResourcesAdmin();
+    if (tab === 'quizzes') loadQuizAdmin();
+    if (tab === 'feedback') loadFeedbackAdmin();
+    if (tab === 'insights') {
+        renderModuleInsights();
+        renderDistribution();
+        renderRecentActive();
+    }
+};
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', async function() {
+    const restored = await restoreSession();
+    
+    if (!restored) {
+        showLandingPage();
+    }
+    
+    document.getElementById('employeeBtn').addEventListener('click', () => {
+        hideAllSections();
+        document.getElementById('employee-login').style.display = 'block';
+    });
+    
+    document.getElementById('companyEmployeeBtn').addEventListener('click', () => {
+        hideAllSections();
+        document.getElementById('employee-login').style.display = 'block';
+    });
+    
+    document.getElementById('adminBtn').addEventListener('click', () => {
+        hideAllSections();
+        document.getElementById('admin-box').style.display = 'block';
+    });
+    
+    document.getElementById('signOutBtn').addEventListener('click', signOut);
+    
+    const searchBox = document.getElementById('searchBox');
+    if (searchBox) {
+        searchBox.addEventListener('input', filterModules);
+    }
+    
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('video-modal').style.display = 'none';
+        document.getElementById('youtube-frame').src = '';
+    });
+    
+    window.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('video-modal')) {
+            document.getElementById('video-modal').style.display = 'none';
+            document.getElementById('youtube-frame').src = '';
+        }
+    });
+    
+    document.querySelector('.quiz-close').addEventListener('click', function() {
+        document.getElementById('quiz-modal').style.display = 'none';
+    });
+    
+    window.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('quiz-modal')) {
+            document.getElementById('quiz-modal').style.display = 'none';
+        }
+    });
+});
 </script>
 </body>
 </html>
-
