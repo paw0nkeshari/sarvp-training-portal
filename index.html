@@ -1099,16 +1099,16 @@ footer {
             <select id="empRole">
                 <option value="Loan Officer">Loan Officer</option>
                 <option value="Collection Officer">Collection Officer</option>
-                <option value="Collection Officer">Collection Manager</option>
+                <option value="Collection Manager">Collection Manager</option>
                 <option value="Credit Officer">Credit Officer</option>
-                <option value="Loan Officer">Relationship Manager</option>
+                <option value="Relationship Manager">Relationship Manager</option>
                 <option value="Branch Manager">Branch Manager</option>
                 <option value="Operation Executive">Operation Executive</option>
-                <option value="Operation Executive">Operation Head</option>
-                <option value="Operation Executive">IT Executive</option>
-                <option value="Operation Executive">Human Resource</option>
-                <option value="Operation Executive">CPA</option>
-                <option value="Operation Executive">Disbursement Officer</option>
+                <option value="Operation Head">Operation Head</option>
+                <option value="IT Executive">IT Executive</option>
+                <option value="Human Resource">Human Resource</option>
+                <option value="CPA">CPA</option>
+                <option value="Disbursement Officer">Disbursement Officer</option>
             </select>
             <div class="permissions-group" id="permissionsCheckboxes">
                 <label><input type="checkbox" value="videos" checked> Videos</label>
@@ -1295,6 +1295,22 @@ const YOUTUBE_IDS = {
     video16: 'dQw4w9WgXcQ'
 };
 
+// [ROLE-BASED] Map roles to module indices (0-based). If role not listed, employee sees all modules.
+const ROLE_MODULES = {
+    "Relationship Manager": [0, 1, 2, 3, 4, 5],
+    "Loan Officer": [6, 7, 8, 9, 10, 11],
+    "Collection Officer": [12, 13, 14, 15],
+    "Collection Manager": [12, 13, 14, 15],
+    "Credit Officer": [0, 1, 2, 6, 7, 8],
+    "Branch Manager": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    "Operation Executive": [0, 1, 2, 3, 4, 5],
+    "Operation Head": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    "IT Executive": [0, 1, 2, 3, 4, 5],
+    "Human Resource": [0, 1, 2, 3, 4, 5],
+    "CPA": [6, 7, 8, 9, 10, 11],
+    "Disbursement Officer": [6, 7, 8, 9, 10, 11]
+};
+
 // ===== GLOBALS =====
 let currentUser = null;
 let currentUserRole = null;
@@ -1304,6 +1320,8 @@ let allEmployeesData = {};
 let inactivityTimer = null;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const SESSION_KEY = 'sarvp_session';
+// [ROLE-BASED] Which modules (indices) the current employee can access
+let allowedModules = [];
 
 // ===== TOAST =====
 function showToast(msg, isSuccess = true) {
@@ -1385,6 +1403,8 @@ async function restoreSession() {
             currentUserRole = data.role || 'RM';
             currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
             watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
+            // [ROLE-BASED] Set allowed modules based on role
+            allowedModules = ROLE_MODULES[currentUserRole] || MODULE_TITLES.map((_, idx) => idx);
             
             showEmployeeView();
             renderModules();
@@ -1510,6 +1530,8 @@ window.employeeLogin = async function() {
         currentUserRole = data.role || 'RM';
         currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
         watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
+        // [ROLE-BASED] Set allowed modules based on role
+        allowedModules = ROLE_MODULES[currentUserRole] || MODULE_TITLES.map((_, idx) => idx);
         
         showEmployeeView();
         renderModules();
@@ -1605,6 +1627,7 @@ function signOut() {
     currentUserPermissions = [];
     watchedData = {};
     allEmployeesData = {};
+    allowedModules = [];
     
     clearSession();
     stopActivityTracking();
@@ -1671,12 +1694,19 @@ window.showTab = function(tab) {
 };
 
 // ===== VIDEO MODULES =====
+// [ROLE-BASED] Modified to use allowedModules
 function renderModules() {
     const grid = document.getElementById('videoGrid');
     grid.innerHTML = '';
-    
-    MODULE_TITLES.forEach((title, i) => {
-        const vid = `video${i+1}`;
+
+    if (allowedModules.length === 0) {
+        grid.innerHTML = '<p style="text-align:center; padding:2rem;">No modules assigned to your role.</p>';
+        return;
+    }
+
+    allowedModules.forEach(idx => {
+        const title = MODULE_TITLES[idx];
+        const vid = `video${idx+1}`;
         const prog = watchedData.watched?.[vid] || 0;
         const watchedClass = prog >= 90 ? 'watched' : '';
         
@@ -1739,16 +1769,25 @@ document.getElementById('mark-complete-btn').addEventListener('click', function(
     }
 });
 
+// [ROLE-BASED] Modified to use allowedModules
 function updateProgress() {
-    const total = MODULE_TITLES.length;
+    const total = allowedModules.length;
+    if (total === 0) {
+        document.getElementById('progress-fill').style.width = '0%';
+        document.getElementById('progress-text').innerText = '0% Completed';
+        document.getElementById('enhanced-progress-fill').style.width = '0%';
+        document.getElementById('module-percentage').innerText = '0%';
+        document.getElementById('circle-text').innerText = '0%';
+        return;
+    }
     let sum = 0;
     
-    for (let i = 1; i <= total; i++) {
-        const p = watchedData.watched?.[`video${i}`] || 0;
+    allowedModules.forEach(idx => {
+        const p = watchedData.watched?.[`video${idx+1}`] || 0;
         sum += p;
-    }
+    });
     
-    const avg = total > 0 ? sum / total : 0;
+    const avg = sum / total;
     
     document.getElementById('progress-fill').style.width = avg + '%';
     document.getElementById('progress-text').innerText = Math.round(avg) + '% Completed';
@@ -1760,16 +1799,18 @@ function updateProgress() {
     document.getElementById('circle-text').innerText = Math.round(avg) + '%';
 }
 
+// [ROLE-BASED] Modified to use allowedModules
 function populateWatchedLog() {
     const log = document.getElementById('watched-list');
     log.innerHTML = '';
     
     let has = false;
-    for (let i = 1; i <= MODULE_TITLES.length; i++) {
-        const p = watchedData.watched?.[`video${i}`] || 0;
+    allowedModules.forEach(idx => {
+        const vid = `video${idx+1}`;
+        const p = watchedData.watched?.[vid] || 0;
         if (p > 5) {
             has = true;
-            const title = MODULE_TITLES[i-1];
+            const title = MODULE_TITLES[idx];
             const badge = document.createElement('div');
             badge.className = p >= 90 ? 'watched-badge' : 'progress-badge';
             badge.innerHTML = p >= 90 
@@ -1777,7 +1818,7 @@ function populateWatchedLog() {
                 : `<i class="fas fa-play-circle"></i> ${title} (${Math.round(p)}%)`;
             log.appendChild(badge);
         }
-    }
+    });
     
     if (!has) log.innerHTML = '<p>No progress yet</p>';
 }
@@ -1812,23 +1853,25 @@ async function loadResources() {
 let currentQuizModule = null;
 let currentQuizQuestions = [];
 
+// [ROLE-BASED] Modified to use allowedModules
 async function loadQuizList() {
     const list = document.getElementById('quizList');
     list.innerHTML = '';
-    
+
     const allResultsSnap = await db.collection('quizResults').where('employee', '==', currentUser).get();
     const resultsMap = {};
     allResultsSnap.forEach(d => {
         const data = d.data();
         resultsMap[data.module] = data.score;
     });
-    
-    for (let i = 1; i <= MODULE_TITLES.length; i++) {
-        const moduleName = MODULE_TITLES[i-1];
-        const quizSnap = await db.collection('quizzes').doc(`module${i}`).collection('questions').get();
+
+    for (let idx of allowedModules) {
+        const moduleName = MODULE_TITLES[idx];
+        const moduleId = `module${idx+1}`;
+        const quizSnap = await db.collection('quizzes').doc(moduleId).collection('questions').get();
         const qCount = quizSnap.size;
-        const score = resultsMap[`module${i}`] !== undefined ? resultsMap[`module${i}`] : null;
-        
+        const score = resultsMap[moduleId] !== undefined ? resultsMap[moduleId] : null;
+
         list.innerHTML += `
             <div class="quiz-card">
                 <div class="quiz-info">
@@ -1836,7 +1879,7 @@ async function loadQuizList() {
                     <p>${qCount} questions</p>
                     ${score !== null ? `<p class="quiz-score">Score: ${score}/${qCount}</p>` : ''}
                 </div>
-                <button class="quiz-btn" onclick="startQuiz('module${i}')">${score !== null ? 'Retake' : 'Start'}</button>
+                <button class="quiz-btn" onclick="startQuiz('${moduleId}')">${score !== null ? 'Retake' : 'Start'}</button>
             </div>
         `;
     }
@@ -1900,38 +1943,39 @@ window.submitQuiz = async function() {
 };
 
 // ===== FEEDBACK =====
+// [ROLE-BASED] Modified to use allowedModules
 async function loadFeedbackForms() {
     const cont = document.getElementById('feedbackList');
     cont.innerHTML = '';
-    
+
     const allFeedbackSnap = await db.collection('feedback').where('employee', '==', currentUser).get();
     const feedbackMap = {};
     allFeedbackSnap.forEach(d => {
         const data = d.data();
         feedbackMap[data.module] = true;
     });
-    
-    for (let i = 1; i <= MODULE_TITLES.length; i++) {
-        const moduleName = MODULE_TITLES[i-1];
-        const hasFeedback = feedbackMap[`module${i}`];
-        
+
+    for (let idx of allowedModules) {
+        const moduleName = MODULE_TITLES[idx];
+        const hasFeedback = feedbackMap[`module${idx+1}`];
+
         cont.innerHTML += `
-            <div class="feedback-card" id="feedback-${i}">
+            <div class="feedback-card" id="feedback-${idx+1}">
                 <h3>${moduleName}</h3>
                 ${hasFeedback 
                     ? '<p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Feedback submitted</p>' 
                     : `
-                <div class="rating" id="rating-${i}">
+                <div class="rating" id="rating-${idx+1}">
                     <i class="far fa-star" data-val="1"></i><i class="far fa-star" data-val="2"></i><i class="far fa-star" data-val="3"></i><i class="far fa-star" data-val="4"></i><i class="far fa-star" data-val="5"></i>
                 </div>
-                <textarea id="comment-${i}" placeholder="Your comments..."></textarea>
-                <button class="submit-feedback" onclick="submitFeedback('${i}')">Submit</button>
+                <textarea id="comment-${idx+1}" placeholder="Your comments..."></textarea>
+                <button class="submit-feedback" onclick="submitFeedback('${idx+1}')">Submit</button>
                 `}
             </div>
         `;
-        
+
         if (!hasFeedback) {
-            const stars = document.querySelectorAll(`#rating-${i} i`);
+            const stars = document.querySelectorAll(`#rating-${idx+1} i`);
             stars.forEach(s => s.addEventListener('click', function() {
                 const val = this.dataset.val;
                 stars.forEach(ss => ss.classList.remove('selected', 'fas'));
@@ -1997,17 +2041,18 @@ async function loadLeaderboard() {
 }
 
 // ===== CERTIFICATE =====
+// [ROLE-BASED] Modified to use allowedModules
 function checkCertificate() {
-    const total = MODULE_TITLES.length;
+    const total = allowedModules.length;
     let completed = 0;
-    
-    for (let i = 1; i <= total; i++) {
-        if ((watchedData.watched?.[`video${i}`] || 0) >= 90) completed++;
-    }
-    
+
+    allowedModules.forEach(idx => {
+        if ((watchedData.watched?.[`video${idx+1}`] || 0) >= 90) completed++;
+    });
+
     const certSection = document.querySelector('#certificate-tab .certificate-section');
     if (!certSection) return;
-    
+
     if (completed === total) {
         certSection.style.display = 'block';
     } else {
@@ -2625,6 +2670,3 @@ document.addEventListener('DOMContentLoaded', async function() {
 </script>
 </body>
 </html>
-
-
-
