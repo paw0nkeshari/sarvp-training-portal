@@ -3627,13 +3627,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 window.viewEmployeeDetails = function(name) {
   const d = allEmployeesData[name];
+  if (!d) {
+    showToast('Employee data not found', false);
+    return;
+  }
+  
+  const fullName = d.fullName || d.name || 'Not set';
+  const phone = d.phone || 'Not set';
+  const email = d.email || 'Not set';
+  const department = d.department || d.dept || 'Not set';
+  const doj = d.dateOfJoining || d.doj || 'Not set';
+  const profileCompleted = (d.profileCompleted || d.detailsFilled) ? 'Yes' : 'No';
+  
   alert(`
-    Name: ${d.fullName || 'Not set'}
-    Phone: ${d.phone || 'Not set'}
-    Email: ${d.email || 'Not set'}
-    Department: ${d.department || 'Not set'}
-    DOJ: ${d.dateOfJoining || 'Not set'}
-    Profile Completed: ${d.profileCompleted ? 'Yes' : 'No'}
+    Name: ${fullName}
+    Phone: ${phone}
+    Email: ${email}
+    Department: ${department}
+    DOJ: ${doj}
+    Profile Completed: ${profileCompleted}
+    Role: ${d.role || 'Not set'}
   `);
 };
 </script>
