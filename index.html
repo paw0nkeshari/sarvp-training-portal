@@ -35,6 +35,7 @@ body {
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
 }
 body::before {
     content: "";
@@ -45,6 +46,43 @@ body::before {
     z-index: -1;
 }
 a { text-decoration: none; color: inherit; }
+
+/* ===== DARK MODE ===== */
+body.dark-mode {
+    --primary: #ff8c5a;
+    --secondary: #9b6b9e;
+    --card-bg: #2d2d2d;
+    --text: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --light-bg: #3a3a3a;
+    --border-color: #555;
+    --toast-bg: #222;
+    background: #1e1e1e;
+}
+body.dark-mode header {
+    background: rgba(30,30,30,0.98);
+    border-bottom-color: var(--primary);
+}
+body.dark-mode .video-card,
+body.dark-mode .resource-card,
+body.dark-mode .quiz-card,
+body.dark-mode .feedback-card,
+body.dark-mode .sidebar,
+body.dark-mode .welcome-section,
+body.dark-mode .admin-card,
+body.dark-mode .insights-card,
+body.dark-mode .distribution-card,
+body.dark-mode .active-card,
+body.dark-mode .role-access-container,
+body.dark-mode .module-settings-container,
+body.dark-mode .company-section .feature-card,
+body.dark-mode .login-section {
+    background: #2a2a2a;
+    border-color: var(--primary);
+}
+body.dark-mode .company-section {
+    background: transparent;
+}
 
 /* ===== HEADER ===== */
 header {
@@ -122,6 +160,9 @@ header button:hover {
 }
 .sign-out-btn:hover {
     box-shadow: 0 6px 15px rgba(255,77,77,0.5) !important;
+}
+.dark-mode-btn {
+    background: var(--secondary) !important;
 }
 
 /* ===== COMPANY INFO SECTION ===== */
@@ -255,6 +296,32 @@ header button:hover {
 }
 #toast.error {
     border-left-color: var(--toast-error);
+}
+
+/* ===== PROFILE MODAL ===== */
+#profile-modal .modal-content {
+    max-width: 500px;
+    background: var(--card-bg);
+    border: 3px solid var(--primary);
+}
+#profile-modal input,
+#profile-modal textarea {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--light-bg);
+    color: var(--text);
+}
+#profile-modal button {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
 /* ===== MAIN CONTAINER (employee view) ===== */
@@ -480,6 +547,10 @@ header button:hover {
     color: #ffffff;
     cursor: pointer;
 }
+.quiz-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
 
 /* Feedback form */
 .feedback-card {
@@ -585,6 +656,12 @@ textarea {
     padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
     display: flex; align-items: center; gap: 0.3rem;
 }
+.expired-badge {
+    background: #ff4d4d; color: #ffffff;
+    padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    margin-left: 0.5rem;
+}
 
 /* ===== ADMIN DASHBOARD ===== */
 #admin-dashboard { display: none; padding: 2rem; animation: fadeIn 0.5s ease-out; }
@@ -635,12 +712,12 @@ textarea {
     margin-bottom: 2rem;
 }
 .admin-card h3 { color: var(--primary); margin-bottom: 1rem; }
-.admin-card input, .admin-card select {
+.admin-card input, .admin-card select, .admin-card textarea {
     width: calc(33% - 0.5rem); padding: 0.6rem; margin-right: 0.5rem; margin-bottom: 1rem;
     border-radius: 6px; border: 1px solid var(--border-color);
     background: #f9f9f9; color: var(--text);
 }
-.admin-card input:focus, .admin-card select:focus {
+.admin-card input:focus, .admin-card select:focus, .admin-card textarea:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(204,98,56,0.2);
@@ -802,6 +879,124 @@ textarea {
 .report-btn { background: linear-gradient(135deg, var(--secondary), var(--primary)); }
 .export-btn:hover, .report-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(87,43,103,0.4); }
 
+/* ===== ROLE ACCESS MANAGEMENT (extended) ===== */
+.role-access-container {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 15px rgba(204,98,56,0.1);
+    margin-bottom: 2rem;
+}
+.role-access-container h3 {
+    color: var(--secondary);
+    margin-bottom: 1rem;
+}
+.role-selector {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+.role-selector select {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #f9f9f9;
+    color: var(--text);
+    flex: 1;
+    min-width: 200px;
+}
+.section-title {
+    color: var(--primary);
+    margin: 1.5rem 0 0.5rem;
+    font-weight: 500;
+}
+.module-checkbox-grid, .resource-checkbox-grid, .tab-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 0.8rem;
+    margin: 0.5rem 0 1.5rem;
+    padding: 1rem;
+    background: var(--light-bg);
+    border-radius: 8px;
+}
+.module-checkbox-item, .resource-checkbox-item, .tab-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.module-checkbox-item input[type="checkbox"], .resource-checkbox-item input[type="checkbox"], .tab-checkbox-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+.save-role-btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-right: 1rem;
+}
+.save-role-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(87,43,103,0.4);
+}
+.import-export-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #f0f0f0;
+    border-radius: 8px;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ===== MODULE SETTINGS TAB ===== */
+.module-settings-container {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 4px 15px rgba(87,43,103,0.1);
+    margin-bottom: 2rem;
+}
+.module-settings-container h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+.module-settings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.module-settings-table th, .module-settings-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+.module-settings-table th {
+    background: var(--light-bg);
+    color: var(--secondary);
+}
+.module-settings-table input[type="number"] {
+    width: 80px;
+    padding: 0.3rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+.module-settings-table select {
+    width: 150px;
+    padding: 0.3rem;
+}
+.prereq-select {
+    width: 200px;
+}
+
 /* ===== VIDEO MODAL ===== */
 .modal {
     display: none; position: fixed; z-index: 3000; left: 0; top: 0;
@@ -911,6 +1106,7 @@ footer {
             <button id="employeeBtn"><i class="fas fa-user"></i> Employee Login</button>
             <button id="adminBtn"><i class="fas fa-cog"></i> Admin Login</button>
         </div>
+        <button class="dark-mode-btn" id="darkModeToggle"><i class="fas fa-moon"></i> Dark</button>
         <button class="sign-out-btn" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
     </div>
 </header>
@@ -967,6 +1163,19 @@ footer {
     <button id="admin-login-btn" onclick="checkAdmin()">Login to Dashboard</button>
 </div>
 
+<!-- ===== PROFILE COMPLETION MODAL ===== -->
+<div id="profile-modal" class="modal" style="display: none; z-index: 5000;">
+    <div class="modal-content">
+        <h2 style="color: var(--secondary);">Complete Your Profile</h2>
+        <p>Please fill in your details to continue.</p>
+        <input type="email" id="profile-email" placeholder="Email">
+        <input type="text" id="profile-phone" placeholder="Phone">
+        <input type="text" id="profile-dept" placeholder="Department">
+        <textarea id="profile-address" placeholder="Address" rows="3"></textarea>
+        <button id="save-profile-btn" class="video-complete-btn">Save & Continue</button>
+    </div>
+</div>
+
 <!-- ===== MAIN CONTAINER (employee view) ===== -->
 <div class="container">
     <!-- Sidebar -->
@@ -1010,7 +1219,7 @@ footer {
             <p>Complete modules, take quizzes, access resources, and track your performance.</p>
         </div>
         <div class="tabs" id="employeeTabs">
-            <!-- Tabs will be populated by JS based on permissions -->
+            <!-- Tabs will be populated by JS based on role settings + permissions -->
         </div>
         <!-- Videos Tab -->
         <div id="videos-tab" class="tab-content">
@@ -1089,6 +1298,9 @@ footer {
         <button class="admin-tab-btn" onclick="showAdminTab('reports', event)">Reports</button>
         <button class="admin-tab-btn" onclick="showAdminTab('insights', event)">Insights</button>
         <button class="admin-tab-btn" onclick="showAdminTab('settings', event)">Settings</button>
+        <button class="admin-tab-btn" onclick="showAdminTab('roleaccess', event)">Role Access</button>
+        <!-- NEW: Module Settings Tab -->
+        <button class="admin-tab-btn" onclick="showAdminTab('modulesettings', event)">Module Settings</button>
     </div>
     <!-- Employees Tab -->
     <div id="admin-employees" class="admin-tab-content active">
@@ -1194,6 +1406,72 @@ footer {
             <button onclick="saveSettings()">Save</button>
         </div>
     </div>
+    <!-- Role Access Tab (extended) -->
+    <div id="admin-roleaccess" class="admin-tab-content">
+        <div class="role-access-container">
+            <h3><i class="fas fa-users-cog"></i> Assign Access by Role</h3>
+            <div class="role-selector">
+                <select id="roleSelect">
+                    <!-- options will be populated by JS -->
+                </select>
+                <button class="save-role-btn" onclick="loadRoleAccess()">Load</button>
+            </div>
+
+            <div class="section-title"><i class="fas fa-play-circle"></i> Modules (Videos & Quizzes)</div>
+            <div id="moduleCheckboxes" class="module-checkbox-grid"></div>
+
+            <div class="section-title"><i class="fas fa-file-alt"></i> Resources</div>
+            <div id="resourceCheckboxes" class="resource-checkbox-grid"></div>
+
+            <div class="section-title"><i class="fas fa-eye"></i> Tab Visibility</div>
+            <div id="tabCheckboxes" class="tab-checkbox-grid"></div>
+
+            <div class="section-title"><i class="fas fa-trophy"></i> Leaderboard Visibility</div>
+            <label><input type="checkbox" id="leaderboardVisible"> Show Leaderboard to this role</label>
+
+            <div class="section-title"><i class="fas fa-certificate"></i> Certificate Customisation</div>
+            <input type="text" id="certificateSignatory" placeholder="Authorised Signatory Name" style="width:300px;">
+
+            <div class="section-title"><i class="fas fa-filter"></i> Allowed Resource Types</div>
+            <label><input type="checkbox" id="resTypePDF" value="PDF"> PDF</label>
+            <label><input type="checkbox" id="resTypeVideo" value="Video"> Video</label>
+            <label><input type="checkbox" id="resTypeArticle" value="Article"> Article</label>
+
+            <button class="save-role-btn" onclick="saveRoleAccess()">Save All Role Settings</button>
+
+            <!-- Bulk Import/Export -->
+            <div class="import-export-section">
+                <button class="export-btn" onclick="exportRoleAssignments()">Export Role Assignments (CSV)</button>
+                <input type="file" id="importRoleFile" accept=".csv" style="display:none;">
+                <button class="report-btn" onclick="document.getElementById('importRoleFile').click()">Import Role Assignments</button>
+            </div>
+        </div>
+    </div>
+    <!-- NEW: Module Settings Tab -->
+    <div id="admin-modulesettings" class="admin-tab-content">
+        <div class="module-settings-container">
+            <h3><i class="fas fa-cog"></i> Module Settings (Passing Score, Prerequisites, Expiry)</h3>
+            <table class="module-settings-table" id="moduleSettingsTable">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Passing Score (%)</th>
+                        <th>Expiry (days, 0 = never)</th>
+                        <th>Prerequisites (select multiple)</th>
+                    </tr>
+                </thead>
+                <tbody id="moduleSettingsBody">
+                    <!-- populated by JS -->
+                </tbody>
+            </table>
+            <button class="save-role-btn" onclick="saveModuleSettings()">Save Module Settings</button>
+            <div class="import-export-section">
+                <button class="export-btn" onclick="exportModuleSettings()">Export Module Settings (CSV)</button>
+                <input type="file" id="importModuleFile" accept=".csv" style="display:none;">
+                <button class="report-btn" onclick="document.getElementById('importModuleFile').click()">Import Module Settings</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ===== VIDEO MODAL (YouTube) ===== -->
@@ -1250,7 +1528,6 @@ const firebaseConfig = {
     measurementId: "G-R9W7FBXGPP"
 };
 
-// Initialize Firebase safely
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -1295,8 +1572,8 @@ const YOUTUBE_IDS = {
     video16: 'dQw4w9WgXcQ'
 };
 
-// [ROLE-BASED] Map roles to module indices (0-based). If role not listed, employee sees all modules.
-const ROLE_MODULES = {
+// Hardcoded fallback mapping for modules (used only if no Firestore assignments exist)
+const FALLBACK_ROLE_MODULES = {
     "Relationship Manager": [0, 1, 2, 3, 4, 5],
     "Loan Officer": [6, 7, 8, 9, 10, 11],
     "Collection Officer": [12, 13, 14, 15],
@@ -1311,6 +1588,17 @@ const ROLE_MODULES = {
     "Disbursement Officer": [6, 7, 8, 9, 10, 11]
 };
 
+// All possible tabs
+const ALL_TABS = ['videos', 'resources', 'quizzes', 'feedback', 'leaderboard', 'certificate'];
+const TAB_NAMES = {
+    videos: 'Videos',
+    resources: 'Resources',
+    quizzes: 'Quizzes',
+    feedback: 'Feedback',
+    leaderboard: 'Leaderboard',
+    certificate: 'Certificate'
+};
+
 // ===== GLOBALS =====
 let currentUser = null;
 let currentUserRole = null;
@@ -1320,8 +1608,9 @@ let allEmployeesData = {};
 let inactivityTimer = null;
 const INACTIVITY_LIMIT = 5 * 60 * 1000;
 const SESSION_KEY = 'sarvp_session';
-// [ROLE-BASED] Which modules (indices) the current employee can access
 let allowedModules = [];
+let roleSettings = null; // will hold role settings object for current employee
+let moduleSettings = {}; // key: module index, value: { passingScore, expiryDays, prerequisites }
 
 // ===== TOAST =====
 function showToast(msg, isSuccess = true) {
@@ -1381,6 +1670,90 @@ function startInactivityTimer() {
     }, 10000);
 }
 
+// ===== FETCH ROLE MODULES FROM FIRESTORE =====
+async function getRoleModules(role) {
+    try {
+        const doc = await db.collection('roleModules').doc(role).get();
+        if (doc.exists) {
+            return doc.data().modules || [];
+        }
+    } catch (e) {
+        console.warn('Error fetching role modules, using fallback', e);
+    }
+    return FALLBACK_ROLE_MODULES[role] || MODULE_TITLES.map((_, idx) => idx);
+}
+
+// ===== FETCH ROLE RESOURCES FROM FIRESTORE =====
+async function getRoleResources(role) {
+    try {
+        const doc = await db.collection('roleResources').doc(role).get();
+        if (doc.exists) {
+            return doc.data().resources || [];
+        }
+    } catch (e) {
+        console.warn('Error fetching role resources', e);
+    }
+    return null; // null means show all resources
+}
+
+// ===== FETCH ROLE SETTINGS =====
+async function getRoleSettings(role) {
+    try {
+        const doc = await db.collection('roleSettings').doc(role).get();
+        if (doc.exists) {
+            return doc.data();
+        }
+    } catch (e) {
+        console.warn('Error fetching role settings', e);
+    }
+    // Default settings
+    return {
+        tabs: ALL_TABS,
+        leaderboardVisible: true,
+        certificateSignatory: 'Authorised Signatory',
+        allowedResourceTypes: ['PDF', 'Video', 'Article']
+    };
+}
+
+// ===== FETCH MODULE SETTINGS =====
+async function loadAllModuleSettings() {
+    const snap = await db.collection('moduleSettings').get();
+    const settings = {};
+    snap.forEach(doc => {
+        settings[parseInt(doc.id)] = doc.data(); // doc id is module index as string
+    });
+    // Fill defaults for missing modules
+    for (let i = 0; i < MODULE_TITLES.length; i++) {
+        if (!settings[i]) {
+            settings[i] = { passingScore: 70, expiryDays: 0, prerequisites: [] };
+        }
+    }
+    moduleSettings = settings;
+    return settings;
+}
+
+// ===== CHECK IF MODULE IS ACCESSIBLE (prerequisites met) =====
+function isModuleAccessible(moduleIdx) {
+    if (!moduleSettings[moduleIdx]) return true; // no settings = accessible
+    const prereqs = moduleSettings[moduleIdx].prerequisites || [];
+    for (let p of prereqs) {
+        // Check if prerequisite module is completed (watched >= 90)
+        const watched = watchedData.watched?.[`video${p+1}`] || 0;
+        if (watched < 90) return false;
+    }
+    return true;
+}
+
+// ===== CHECK IF MODULE IS EXPIRED =====
+function isModuleExpired(moduleIdx) {
+    if (!moduleSettings[moduleIdx] || moduleSettings[moduleIdx].expiryDays === 0) return false;
+    const lastCompletion = watchedData.lastCompletion?.[`video${moduleIdx+1}`];
+    if (!lastCompletion) return false; // not completed, so not expired
+    const expiryDate = new Date(lastCompletion);
+    expiryDate.setDate(expiryDate.getDate() + moduleSettings[moduleIdx].expiryDays);
+    return new Date() > expiryDate;
+}
+
 // ===== RESTORE SESSION ON PAGE LOAD =====
 async function restoreSession() {
     const s = getSession();
@@ -1402,19 +1775,34 @@ async function restoreSession() {
             currentUser = s.user;
             currentUserRole = data.role || 'RM';
             currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
-            watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
-            // [ROLE-BASED] Set allowed modules based on role
-            allowedModules = ROLE_MODULES[currentUserRole] || MODULE_TITLES.map((_, idx) => idx);
+            watchedData = { 
+                watched: data.watched || {}, 
+                lastActivity: data.lastActivity || new Date().toLocaleDateString(),
+                lastCompletion: data.lastCompletion || {} // store completion dates for expiry
+            };
+            allowedModules = await getRoleModules(currentUserRole);
+            roleSettings = await getRoleSettings(currentUserRole);
+            await loadAllModuleSettings();
+
+            // Check if profile details are filled
+            if (!data.detailsFilled) {
+                // Show profile modal
+                setTimeout(() => {
+                    document.querySelector('.container').style.display = 'none';
+                    document.getElementById('profile-modal').style.display = 'flex';
+                }, 100);
+                return true; // session restored but profile pending
+            }
             
             showEmployeeView();
             renderModules();
             updateProgress();
             populateWatchedLog();
-            loadResources();
+            loadResources(); // will filter by role
             loadQuizList();
             loadFeedbackForms();
             loadLeaderboard();
-            renderTabs();
+            renderTabs(); // uses roleSettings + permissions
             document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
             
             startActivityTracking();
@@ -1433,6 +1821,7 @@ async function restoreSession() {
                 return false;
             }
             await loadAllEmployeesData();
+            await loadAllModuleSettings();
             currentUser = 'Admin';
             
             showAdminView();
@@ -1471,6 +1860,7 @@ function hideAllSections() {
     document.getElementById('admin-box').style.display = 'none';
     document.querySelector('.container').style.display = 'none';
     document.getElementById('admin-dashboard').style.display = 'none';
+    document.getElementById('profile-modal').style.display = 'none';
 }
 
 function showEmployeeView() {
@@ -1529,9 +1919,24 @@ window.employeeLogin = async function() {
         currentUser = name;
         currentUserRole = data.role || 'RM';
         currentUserPermissions = data.permissions || ['videos','resources','quizzes','feedback','leaderboard','certificate'];
-        watchedData = { watched: data.watched || {}, lastActivity: data.lastActivity || new Date().toLocaleDateString() };
-        // [ROLE-BASED] Set allowed modules based on role
-        allowedModules = ROLE_MODULES[currentUserRole] || MODULE_TITLES.map((_, idx) => idx);
+        watchedData = { 
+            watched: data.watched || {}, 
+            lastActivity: data.lastActivity || new Date().toLocaleDateString(),
+            lastCompletion: data.lastCompletion || {}
+        };
+        allowedModules = await getRoleModules(currentUserRole);
+        roleSettings = await getRoleSettings(currentUserRole);
+        await loadAllModuleSettings();
+
+        // Check if profile details are filled
+        if (!data.detailsFilled) {
+            // Show profile modal, hide main container
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('profile-modal').style.display = 'flex';
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login';
+            return; // don't proceed to employee view yet
+        }
         
         showEmployeeView();
         renderModules();
@@ -1558,6 +1963,47 @@ window.employeeLogin = async function() {
         loginBtn.textContent = 'Login';
     }
 };
+
+// ===== SAVE PROFILE DETAILS =====
+document.getElementById('save-profile-btn').addEventListener('click', async function() {
+    const email = document.getElementById('profile-email').value.trim();
+    const phone = document.getElementById('profile-phone').value.trim();
+    const dept = document.getElementById('profile-dept').value.trim();
+    const address = document.getElementById('profile-address').value.trim();
+
+    if (!email || !phone || !dept || !address) {
+        showToast('All fields are required', false);
+        return;
+    }
+
+    try {
+        await db.collection('employees').doc(currentUser).update({
+            details: { email, phone, dept, address },
+            detailsFilled: true
+        });
+
+        document.getElementById('profile-modal').style.display = 'none';
+        showEmployeeView();
+        renderModules();
+        updateProgress();
+        populateWatchedLog();
+        loadResources();
+        loadQuizList();
+        loadFeedbackForms();
+        loadLeaderboard();
+        renderTabs();
+        document.getElementById('welcome-msg').innerText = `Welcome, ${currentUser}!`;
+
+        saveSession(currentUser, 'employee');
+        startActivityTracking();
+        startInactivityTimer();
+
+        showToast('Profile saved!');
+    } catch(e) {
+        console.error('Profile save error:', e);
+        showToast('Error saving profile', false);
+    }
+});
 
 // ===== ADMIN LOGIN =====
 window.checkAdmin = async function() {
@@ -1596,6 +2042,7 @@ window.checkAdmin = async function() {
         }
         
         await loadAllEmployeesData();
+        await loadAllModuleSettings();
         currentUser = 'Admin';
         
         showAdminView();
@@ -1628,6 +2075,7 @@ function signOut() {
     watchedData = {};
     allEmployeesData = {};
     allowedModules = [];
+    roleSettings = null;
     
     clearSession();
     stopActivityTracking();
@@ -1650,30 +2098,23 @@ function signOut() {
     showToast('Signed out successfully');
 }
 
-// ===== RENDER TABS BASED ON PERMISSIONS =====
+// ===== RENDER TABS BASED ON ROLE SETTINGS + PERMISSIONS =====
 function renderTabs() {
     const tabsContainer = document.getElementById('employeeTabs');
-    const perms = currentUserPermissions;
-    const tabMap = {
-        videos: 'Videos',
-        resources: 'Resources',
-        quizzes: 'Quizzes',
-        feedback: 'Feedback',
-        leaderboard: 'Leaderboard',
-        certificate: 'Certificate'
-    };
+    // Start with role allowed tabs
+    let allowedTabs = roleSettings?.tabs || ALL_TABS;
+    // Intersect with employee permissions (if any tab not in permissions, remove it)
+    allowedTabs = allowedTabs.filter(tab => currentUserPermissions.includes(tab));
     
     let html = '';
-    perms.forEach(p => {
-        if (tabMap[p]) {
-            html += `<button class="tab-btn" data-tab="${p}" onclick="showTab('${p}')">${tabMap[p]}</button>`;
-        }
+    allowedTabs.forEach(tab => {
+        html += `<button class="tab-btn" data-tab="${tab}" onclick="showTab('${tab}')">${TAB_NAMES[tab]}</button>`;
     });
     
     tabsContainer.innerHTML = html;
     
-    if (perms.length > 0) {
-        showTab(perms[0]);
+    if (allowedTabs.length > 0) {
+        showTab(allowedTabs[0]);
     }
 }
 
@@ -1689,12 +2130,11 @@ window.showTab = function(tab) {
     if (tab === 'resources') loadResources();
     if (tab === 'quizzes') loadQuizList();
     if (tab === 'feedback') loadFeedbackForms();
-    if (tab === 'leaderboard') loadLeaderboard();
+    if (tab === 'leaderboard' && roleSettings?.leaderboardVisible !== false) loadLeaderboard();
     if (tab === 'certificate') checkCertificate();
 };
 
 // ===== VIDEO MODULES =====
-// [ROLE-BASED] Modified to use allowedModules
 function renderModules() {
     const grid = document.getElementById('videoGrid');
     grid.innerHTML = '';
@@ -1707,22 +2147,40 @@ function renderModules() {
     allowedModules.forEach(idx => {
         const title = MODULE_TITLES[idx];
         const vid = `video${idx+1}`;
-        const prog = watchedData.watched?.[vid] || 0;
+        let prog = watchedData.watched?.[vid] || 0;
+        const expired = isModuleExpired(idx);
+        if (expired) {
+            prog = 0;
+        }
+        const accessible = isModuleAccessible(idx);
         const watchedClass = prog >= 90 ? 'watched' : '';
         
         const card = document.createElement('div');
         card.className = `video-card ${watchedClass}`;
         card.dataset.id = vid;
+        card.dataset.index = idx;
         
         const encodedTitle = encodeURIComponent(title.length > 20 ? title.substring(0,20)+'...' : title);
+        let badgeHtml = '';
+        if (expired) {
+            badgeHtml = '<span class="expired-badge"><i class="fas fa-exclamation-triangle"></i> Expired</span>';
+        }
         card.innerHTML = `
             <img src="https://via.placeholder.com/400x200/cc6238/ffffff?text=${encodedTitle}" alt="${title}">
             <div class="watch-indicator"><i class="fas fa-check"></i></div>
             <div class="video-progress"><div class="video-progress-fill" id="progress-${vid}" style="width:${prog}%;"></div></div>
-            <div class="video-card-content"><h2>${title}</h2><p>Click to watch</p></div>
+            <div class="video-card-content">
+                <h2>${title} ${badgeHtml}</h2>
+                <p>${accessible ? 'Click to watch' : 'Locked (prerequisites not met)'}</p>
+            </div>
         `;
         
-        card.addEventListener('click', () => openVideo(vid, title));
+        if (accessible) {
+            card.addEventListener('click', () => openVideo(vid, title));
+        } else {
+            card.style.opacity = '0.6';
+            card.style.cursor = 'not-allowed';
+        }
         grid.appendChild(card);
     });
 }
@@ -1741,10 +2199,13 @@ window.markVideoCompleted = async function(vid) {
     if (!watchedData.watched) watchedData.watched = {};
     watchedData.watched[vid] = 100;
     watchedData.lastActivity = new Date().toLocaleDateString();
+    if (!watchedData.lastCompletion) watchedData.lastCompletion = {};
+    watchedData.lastCompletion[vid] = new Date().toISOString(); // store completion date for expiry
     
     await db.collection('employees').doc(currentUser).update({
         [`watched.${vid}`]: 100,
-        lastActivity: watchedData.lastActivity
+        lastActivity: watchedData.lastActivity,
+        [`lastCompletion.${vid}`]: watchedData.lastCompletion[vid]
     });
     
     updateProgress();
@@ -1769,7 +2230,6 @@ document.getElementById('mark-complete-btn').addEventListener('click', function(
     }
 });
 
-// [ROLE-BASED] Modified to use allowedModules
 function updateProgress() {
     const total = allowedModules.length;
     if (total === 0) {
@@ -1784,7 +2244,12 @@ function updateProgress() {
     
     allowedModules.forEach(idx => {
         const p = watchedData.watched?.[`video${idx+1}`] || 0;
-        sum += p;
+        // If expired, treat as 0 for progress?
+        if (isModuleExpired(idx)) {
+            // don't count expired as completed
+        } else {
+            sum += p;
+        }
     });
     
     const avg = sum / total;
@@ -1799,7 +2264,6 @@ function updateProgress() {
     document.getElementById('circle-text').innerText = Math.round(avg) + '%';
 }
 
-// [ROLE-BASED] Modified to use allowedModules
 function populateWatchedLog() {
     const log = document.getElementById('watched-list');
     log.innerHTML = '';
@@ -1808,14 +2272,21 @@ function populateWatchedLog() {
     allowedModules.forEach(idx => {
         const vid = `video${idx+1}`;
         const p = watchedData.watched?.[vid] || 0;
-        if (p > 5) {
+        const expired = isModuleExpired(idx);
+        if (p > 5 || expired) {
             has = true;
             const title = MODULE_TITLES[idx];
             const badge = document.createElement('div');
-            badge.className = p >= 90 ? 'watched-badge' : 'progress-badge';
-            badge.innerHTML = p >= 90 
-                ? `<i class="fas fa-check"></i> ${title} (Completed)` 
-                : `<i class="fas fa-play-circle"></i> ${title} (${Math.round(p)}%)`;
+            if (expired) {
+                badge.className = 'expired-badge';
+                badge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${title} (Expired)`;
+            } else if (p >= 90) {
+                badge.className = 'watched-badge';
+                badge.innerHTML = `<i class="fas fa-check"></i> ${title} (Completed)`;
+            } else {
+                badge.className = 'progress-badge';
+                badge.innerHTML = `<i class="fas fa-play-circle"></i> ${title} (${Math.round(p)}%)`;
+            }
             log.appendChild(badge);
         }
     });
@@ -1830,14 +2301,26 @@ window.filterModules = function() {
     });
 };
 
-// ===== RESOURCES =====
+// ===== RESOURCES (role-filtered and type-restricted) =====
 async function loadResources() {
     const snap = await db.collection('resources').get();
+    const allResources = [];
+    snap.forEach(doc => {
+        allResources.push({ id: doc.id, ...doc.data() });
+    });
+
+    let allowedResourceIds = null;
+    if (currentUserRole) {
+        allowedResourceIds = await getRoleResources(currentUserRole);
+    }
+    const allowedTypes = roleSettings?.allowedResourceTypes || ['PDF', 'Video', 'Article'];
+
     const grid = document.getElementById('resourceGrid');
     grid.innerHTML = '';
-    
-    snap.forEach(doc => {
-        const r = doc.data();
+
+    allResources.forEach(r => {
+        if (allowedResourceIds !== null && !allowedResourceIds.includes(r.id)) return;
+        if (!allowedTypes.includes(r.type)) return;
         const icon = r.type === 'PDF' ? 'file-pdf' : r.type === 'Video' ? 'video' : 'file-alt';
         grid.innerHTML += `
             <div class="resource-card">
@@ -1847,13 +2330,16 @@ async function loadResources() {
             </div>
         `;
     });
+
+    if (grid.innerHTML === '') {
+        grid.innerHTML = '<p style="text-align:center; padding:2rem;">No resources assigned to your role.</p>';
+    }
 }
 
 // ===== QUIZZES =====
 let currentQuizModule = null;
 let currentQuizQuestions = [];
 
-// [ROLE-BASED] Modified to use allowedModules
 async function loadQuizList() {
     const list = document.getElementById('quizList');
     list.innerHTML = '';
@@ -1871,15 +2357,18 @@ async function loadQuizList() {
         const quizSnap = await db.collection('quizzes').doc(moduleId).collection('questions').get();
         const qCount = quizSnap.size;
         const score = resultsMap[moduleId] !== undefined ? resultsMap[moduleId] : null;
+        const accessible = isModuleAccessible(idx);
+        const passingScore = moduleSettings[idx]?.passingScore || 70;
+        const passed = score !== null && score >= passingScore;
 
         list.innerHTML += `
             <div class="quiz-card">
                 <div class="quiz-info">
                     <h3>${moduleName}</h3>
                     <p>${qCount} questions</p>
-                    ${score !== null ? `<p class="quiz-score">Score: ${score}/${qCount}</p>` : ''}
+                    ${score !== null ? `<p class="quiz-score">Score: ${score}/${qCount} (${passed ? 'Passed' : 'Failed'})</p>` : ''}
                 </div>
-                <button class="quiz-btn" onclick="startQuiz('${moduleId}')">${score !== null ? 'Retake' : 'Start'}</button>
+                <button class="quiz-btn" onclick="startQuiz('${moduleId}')" ${!accessible ? 'disabled' : ''}>${score !== null ? 'Retake' : 'Start'}</button>
             </div>
         `;
     }
@@ -1919,6 +2408,10 @@ window.submitQuiz = async function() {
     });
     
     const total = currentQuizQuestions.length;
+    const moduleIdx = parseInt(currentQuizModule.replace('module', '')) - 1;
+    const passingScore = moduleSettings[moduleIdx]?.passingScore || 70;
+    const passed = (correct / total) * 100 >= passingScore;
+
     const existing = await db.collection('quizResults').where('employee', '==', currentUser).where('module', '==', currentQuizModule).get();
     
     if (!existing.empty) {
@@ -1936,14 +2429,13 @@ window.submitQuiz = async function() {
         });
     }
     
-    showToast(`Quiz submitted! Score: ${correct}/${total}`);
+    showToast(`Quiz submitted! Score: ${correct}/${total} - ${passed ? 'Passed' : 'Failed'}`);
     document.getElementById('quiz-modal').style.display = 'none';
     loadQuizList();
     loadLeaderboard();
 };
 
-// ===== FEEDBACK =====
-// [ROLE-BASED] Modified to use allowedModules
+// ===== FEEDBACK (FIXED) =====
 async function loadFeedbackForms() {
     const cont = document.getElementById('feedbackList');
     cont.innerHTML = '';
@@ -1955,33 +2447,64 @@ async function loadFeedbackForms() {
         feedbackMap[data.module] = true;
     });
 
+    let html = '';
     for (let idx of allowedModules) {
         const moduleName = MODULE_TITLES[idx];
         const hasFeedback = feedbackMap[`module${idx+1}`];
+        const accessible = isModuleAccessible(idx);
 
-        cont.innerHTML += `
-            <div class="feedback-card" id="feedback-${idx+1}">
-                <h3>${moduleName}</h3>
-                ${hasFeedback 
-                    ? '<p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Feedback submitted</p>' 
-                    : `
-                <div class="rating" id="rating-${idx+1}">
-                    <i class="far fa-star" data-val="1"></i><i class="far fa-star" data-val="2"></i><i class="far fa-star" data-val="3"></i><i class="far fa-star" data-val="4"></i><i class="far fa-star" data-val="5"></i>
+        if (hasFeedback) {
+            html += `
+                <div class="feedback-card" id="feedback-${idx+1}">
+                    <h3>${moduleName}</h3>
+                    <p><i class="fas fa-check-circle" style="color: var(--primary);"></i> Feedback submitted</p>
                 </div>
-                <textarea id="comment-${idx+1}" placeholder="Your comments..."></textarea>
-                <button class="submit-feedback" onclick="submitFeedback('${idx+1}')">Submit</button>
-                `}
-            </div>
-        `;
+            `;
+        } else if (accessible) {
+            html += `
+                <div class="feedback-card" id="feedback-${idx+1}">
+                    <h3>${moduleName}</h3>
+                    <div class="rating" id="rating-${idx+1}">
+                        <i class="far fa-star" data-val="1"></i>
+                        <i class="far fa-star" data-val="2"></i>
+                        <i class="far fa-star" data-val="3"></i>
+                        <i class="far fa-star" data-val="4"></i>
+                        <i class="far fa-star" data-val="5"></i>
+                    </div>
+                    <textarea id="comment-${idx+1}" placeholder="Your comments..."></textarea>
+                    <button class="submit-feedback" onclick="submitFeedback('${idx+1}')">Submit</button>
+                </div>
+            `;
+        } else {
+            html += `
+                <div class="feedback-card" id="feedback-${idx+1}">
+                    <h3>${moduleName}</h3>
+                    <p>Complete prerequisites to give feedback.</p>
+                </div>
+            `;
+        }
+    }
+    cont.innerHTML = html;
 
-        if (!hasFeedback) {
+    // Attach star click listeners
+    for (let idx of allowedModules) {
+        const hasFeedback = feedbackMap[`module${idx+1}`];
+        const accessible = isModuleAccessible(idx);
+        if (!hasFeedback && accessible) {
             const stars = document.querySelectorAll(`#rating-${idx+1} i`);
-            stars.forEach(s => s.addEventListener('click', function() {
-                const val = this.dataset.val;
-                stars.forEach(ss => ss.classList.remove('selected', 'fas'));
-                for (let j = 0; j < val; j++) stars[j].classList.add('selected', 'fas');
-                for (let j = val; j < 5; j++) stars[j].classList.remove('selected', 'fas');
-            }));
+            stars.forEach(s => {
+                s.addEventListener('click', function() {
+                    const val = parseInt(this.dataset.val);
+                    stars.forEach(ss => {
+                        ss.classList.remove('selected', 'fas');
+                        ss.classList.add('far');
+                    });
+                    for (let j = 0; j < val; j++) {
+                        stars[j].classList.remove('far');
+                        stars[j].classList.add('selected', 'fas');
+                    }
+                });
+            });
         }
     }
 }
@@ -2008,6 +2531,10 @@ window.submitFeedback = async function(moduleIndex) {
 
 // ===== LEADERBOARD =====
 async function loadLeaderboard() {
+    if (!roleSettings?.leaderboardVisible) {
+        document.getElementById('leaderboard-body').innerHTML = '<tr><td colspan="5">Leaderboard hidden for your role.</td></tr>';
+        return;
+    }
     const users = await db.collection('employees').get();
     const leaderboard = [];
     
@@ -2041,13 +2568,12 @@ async function loadLeaderboard() {
 }
 
 // ===== CERTIFICATE =====
-// [ROLE-BASED] Modified to use allowedModules
 function checkCertificate() {
     const total = allowedModules.length;
     let completed = 0;
 
     allowedModules.forEach(idx => {
-        if ((watchedData.watched?.[`video${idx+1}`] || 0) >= 90) completed++;
+        if ((watchedData.watched?.[`video${idx+1}`] || 0) >= 90 && !isModuleExpired(idx)) completed++;
     });
 
     const certSection = document.querySelector('#certificate-tab .certificate-section');
@@ -2063,57 +2589,223 @@ function checkCertificate() {
 window.generateCertificate = function() {
     const name = currentUser;
     const date = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-    const signatory = 'Authorised Signatory';
-    
+    const signatory = roleSettings?.certificateSignatory || 'Authorised Signatory';
+
     const win = window.open('', '_blank');
     if (!win) {
         showToast('Popup blocked! Please allow popups.', false);
         return;
     }
-    
+
     win.document.write(`
         <!DOCTYPE html>
         <html>
-        <head><title>Certificate of Completion</title>
-        <style>
-            body { margin:0; background:#fff; font-family:Arial; display:flex; justify-content:center; align-items:center; min-height:100vh; }
-            .cert { width:21cm; min-height:29.7cm; background:white; box-shadow:0 0 10px #aaa; position:relative; overflow:hidden; border: 5px solid #cc6238; }
-            .stripe-top { height:15px; background:linear-gradient(90deg,#cc6238,#572b67); }
-            .stripe-bottom { height:15px; background:linear-gradient(90deg,#572b67,#cc6238); position:absolute; bottom:0; width:100%; }
-            .content { padding:2cm; text-align:center; }
-            .logo { font-size:3rem; font-weight:700; background:linear-gradient(135deg,#cc6238,#572b67); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-            h1 { color:#572b67; }
-            .subtitle { color:#cc6238; border-bottom:2px solid #572b67; display:inline-block; padding-bottom:0.5rem; margin-bottom:2rem; }
-            .employee-name { font-size:3rem; color:#cc6238; border-bottom:3px solid #572b67; display:inline-block; padding-bottom:0.5rem; margin:1rem 0; }
-            .date { margin-top:2rem; color:#572b67; }
-            .signature { margin-top:3rem; display:flex; justify-content:space-around; }
-            .signature .line { width:200px; border-bottom:2px solid #cc6238; margin-bottom:0.3rem; }
-        </style>
+        <head>
+            <title>Certificate of Completion</title>
+            <style>
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+                body {
+                    margin: 0;
+                    background: #e6e6e6;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-height: 100vh;
+                    font-family: 'Palatino', 'Palatino Linotype', 'Georgia', serif;
+                }
+                .certificate-wrapper {
+                    width: 21cm;
+                    height: 29.7cm;
+                    background: white;
+                    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+                    position: relative;
+                }
+                .certificate {
+                    width: 100%;
+                    height: 100%;
+                    padding: 1.5cm 2cm;
+                    box-sizing: border-box;
+                    background: white;
+                    border: 15px solid #cc6238;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    position: relative;
+                }
+                /* Decorative inner border */
+                .certificate::before {
+                    content: '';
+                    position: absolute;
+                    top: 30px;
+                    left: 30px;
+                    right: 30px;
+                    bottom: 30px;
+                    border: 2px solid #572b67;
+                    pointer-events: none;
+                }
+                /* Header section */
+                .header {
+                    text-align: center;
+                    margin-top: 20px;
+                }
+                .logo {
+                    font-size: 3.2rem;
+                    font-weight: 800;
+                    background: linear-gradient(135deg, #cc6238, #572b67);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    letter-spacing: 2px;
+                    margin-bottom: 5px;
+                }
+                .subhead {
+                    font-size: 1.8rem;
+                    color: #572b67;
+                    border-bottom: 3px solid #cc6238;
+                    display: inline-block;
+                    padding-bottom: 8px;
+                    margin-bottom: 25px;
+                }
+                /* Main content */
+                .content {
+                    text-align: center;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+                .cert-title {
+                    font-size: 3rem;
+                    color: #cc6238;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 4px;
+                    margin: 15px 0 10px;
+                    text-shadow: 2px 2px 0 rgba(87,43,103,0.2);
+                }
+                .presented {
+                    font-size: 1.3rem;
+                    color: #444;
+                    margin: 10px 0 5px;
+                }
+                .recipient {
+                    font-size: 3.8rem;
+                    color: #cc6238;
+                    font-weight: 700;
+                    border-bottom: 3px solid #572b67;
+                    display: inline-block;
+                    padding: 0 30px 15px;
+                    margin: 10px 0 20px;
+                    font-family: 'Brush Script MT', cursive;
+                }
+                .description {
+                    font-size: 1.4rem;
+                    color: #333;
+                    max-width: 700px;
+                    margin: 0 auto 20px;
+                    line-height: 1.5;
+                }
+                .date {
+                    font-size: 1.3rem;
+                    color: #572b67;
+                    margin: 20px 0 10px;
+                }
+                /* Seal and signatures */
+                .footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-end;
+                    margin-top: 30px;
+                }
+                .seal {
+                    width: 110px;
+                    height: 110px;
+                    border-radius: 50%;
+                    background: radial-gradient(circle, #cc6238 30%, #572b67 80%);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 3rem;
+                    border: 4px double gold;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    margin: 0 auto;
+                }
+                .signature-box {
+                    text-align: center;
+                    width: 200px;
+                }
+                .signature-line {
+                    width: 180px;
+                    border-bottom: 2px solid #cc6238;
+                    margin: 0 auto 8px;
+                }
+                .signature-name {
+                    font-weight: bold;
+                    color: #572b67;
+                    font-size: 1.1rem;
+                }
+                .signature-title {
+                    color: #666;
+                    font-size: 0.9rem;
+                }
+                .footer-note {
+                    text-align: center;
+                    font-size: 0.8rem;
+                    color: #888;
+                    margin-top: 20px;
+                }
+            </style>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         </head>
         <body>
-        <div class="cert">
-            <div class="stripe-top"></div>
-            <div class="content">
-                <div class="logo">Calm</div>
-                <h1>Financial Services</h1>
-                <div class="subtitle">TRAINING COMPLETION CERTIFICATE</div>
-                <p>This is proudly presented to</p>
-                <div class="employee-name">${name}</div>
-                <p>for successfully completing all training modules.</p>
-                <div class="date">Date: ${date}</div>
-                <div class="signature">
-                    <div><div class="line"></div><p>${signatory}</p><p>Authorised Signatory</p></div>
+            <div class="certificate-wrapper">
+                <div class="certificate">
+                    <div class="header">
+                        <div class="logo">Calm</div>
+                        <div class="subhead">Financial Services</div>
+                    </div>
+                    <div class="content">
+                        <div class="cert-title">Certificate of Completion</div>
+                        <div class="presented">This is proudly presented to</div>
+                        <div class="recipient">${name}</div>
+                        <div class="description">
+                            for successfully completing all training modules<br>
+                            and demonstrating excellence in professional development.
+                        </div>
+                        <div class="date">Date: ${date}</div>
+                    </div>
+                    <div class="footer">
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <div class="signature-name">${signatory}</div>
+                            <div class="signature-title">Authorised Signatory</div>
+                        </div>
+                        <div class="seal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="signature-box">
+                            <div class="signature-line"></div>
+                            <div class="signature-name">HR Manager</div>
+                            <div class="signature-title">Human Resources</div>
+                        </div>
+                    </div>
+                    <div class="footer-note">This certificate is electronically generated. Use print to PDF for a digital copy.</div>
                 </div>
             </div>
-            <div class="stripe-bottom"></div>
-        </div>
-        <script>window.onload=()=>window.print();<\/script>
-        </body></html>
+            <script>
+                window.onload = () => {
+                    setTimeout(() => window.print(), 500);
+                };
+            <\/script>
+        </body>
+        </html>
     `);
     win.document.close();
-    showToast('🎉 Certificate generated!');
+    showToast('🎉 Certificate generated! Use print to save as PDF.');
 };
-
 // ===== ADMIN FUNCTIONS =====
 async function renderEmployeeList() {
     const list = document.getElementById('employee-list');
@@ -2161,6 +2853,7 @@ window.addOrUpdateEmployee = async function() {
     }
     
     const existingWatched = allEmployeesData[name]?.watched || {};
+    const existingLastCompletion = allEmployeesData[name]?.lastCompletion || {};
     const existingActivity = allEmployeesData[name]?.lastActivity || new Date().toLocaleDateString();
     
     await db.collection('employees').doc(name).set({
@@ -2168,6 +2861,7 @@ window.addOrUpdateEmployee = async function() {
         role,
         permissions: perms,
         watched: existingWatched,
+        lastCompletion: existingLastCompletion,
         lastActivity: existingActivity
     });
     
@@ -2547,11 +3241,13 @@ window.resetUser = async function(u) {
     if (confirm(`Reset progress for ${u}?`)) {
         await db.collection('employees').doc(u).update({ 
             watched: {}, 
+            lastCompletion: {},
             lastActivity: new Date().toLocaleDateString() 
         });
         
         if (allEmployeesData[u]) {
             allEmployeesData[u].watched = {};
+            allEmployeesData[u].lastCompletion = {};
             allEmployeesData[u].lastActivity = new Date().toLocaleDateString();
         }
         
@@ -2562,6 +3258,7 @@ window.resetUser = async function(u) {
         
         if (currentUser === u) {
             watchedData.watched = {};
+            watchedData.lastCompletion = {};
             renderModules();
             updateProgress();
             populateWatchedLog();
@@ -2613,7 +3310,267 @@ window.showAdminTab = function(tab, event) {
         renderDistribution();
         renderRecentActive();
     }
+    if (tab === 'roleaccess') {
+        populateRoleAccessTab();
+    }
+    if (tab === 'modulesettings') {
+        renderModuleSettingsTab();
+    }
 };
+
+// ===== ROLE ACCESS MANAGEMENT (extended) =====
+const ALL_ROLES = [
+    "Loan Officer",
+    "Collection Officer",
+    "Collection Manager",
+    "Credit Officer",
+    "Relationship Manager",
+    "Branch Manager",
+    "Operation Executive",
+    "Operation Head",
+    "IT Executive",
+    "Human Resource",
+    "CPA",
+    "Disbursement Officer"
+];
+
+async function populateRoleAccessTab() {
+    const select = document.getElementById('roleSelect');
+    select.innerHTML = '';
+    ALL_ROLES.forEach(role => {
+        const option = document.createElement('option');
+        option.value = role;
+        option.textContent = role;
+        select.appendChild(option);
+    });
+    await loadRoleAccess();
+}
+
+window.loadRoleAccess = async function() {
+    const role = document.getElementById('roleSelect').value;
+    if (!role) return;
+
+    // Load module assignments
+    let moduleIndices = [];
+    try {
+        const doc = await db.collection('roleModules').doc(role).get();
+        if (doc.exists) {
+            moduleIndices = doc.data().modules || [];
+        }
+    } catch (e) {
+        console.warn('Error loading role modules', e);
+    }
+
+    // Generate module checkboxes
+    const moduleContainer = document.getElementById('moduleCheckboxes');
+    moduleContainer.innerHTML = '';
+    MODULE_TITLES.forEach((title, idx) => {
+        const div = document.createElement('div');
+        div.className = 'module-checkbox-item';
+        div.innerHTML = `
+            <input type="checkbox" id="mod_${idx}" value="${idx}" ${moduleIndices.includes(idx) ? 'checked' : ''}>
+            <label for="mod_${idx}">${title}</label>
+        `;
+        moduleContainer.appendChild(div);
+    });
+
+    // Load resource assignments
+    let resourceIds = [];
+    try {
+        const doc = await db.collection('roleResources').doc(role).get();
+        if (doc.exists) {
+            resourceIds = doc.data().resources || [];
+        }
+    } catch (e) {
+        console.warn('Error loading role resources', e);
+    }
+
+    const snap = await db.collection('resources').get();
+    const allResources = [];
+    snap.forEach(doc => {
+        allResources.push({ id: doc.id, title: doc.data().title });
+    });
+
+    const resourceContainer = document.getElementById('resourceCheckboxes');
+    resourceContainer.innerHTML = '';
+    if (allResources.length === 0) {
+        resourceContainer.innerHTML = '<p>No resources created yet.</p>';
+    } else {
+        allResources.forEach(res => {
+            const div = document.createElement('div');
+            div.className = 'resource-checkbox-item';
+            div.innerHTML = `
+                <input type="checkbox" id="res_${res.id}" value="${res.id}" ${resourceIds.includes(res.id) ? 'checked' : ''}>
+                <label for="res_${res.id}">${res.title}</label>
+            `;
+            resourceContainer.appendChild(div);
+        });
+    }
+
+    // Load role settings
+    let settings = {};
+    try {
+        const doc = await db.collection('roleSettings').doc(role).get();
+        if (doc.exists) {
+            settings = doc.data();
+        }
+    } catch (e) {
+        console.warn('Error loading role settings', e);
+    }
+
+    // Tab visibility
+    const tabContainer = document.getElementById('tabCheckboxes');
+    tabContainer.innerHTML = '';
+    ALL_TABS.forEach(tab => {
+        const div = document.createElement('div');
+        div.className = 'tab-checkbox-item';
+        div.innerHTML = `
+            <input type="checkbox" id="tab_${tab}" value="${tab}" ${(settings.tabs || ALL_TABS).includes(tab) ? 'checked' : ''}>
+            <label for="tab_${tab}">${TAB_NAMES[tab]}</label>
+        `;
+        tabContainer.appendChild(div);
+    });
+
+    // Leaderboard visible
+    document.getElementById('leaderboardVisible').checked = settings.leaderboardVisible !== false;
+
+    // Certificate signatory
+    document.getElementById('certificateSignatory').value = settings.certificateSignatory || 'Authorised Signatory';
+
+    // Resource types
+    const allowedTypes = settings.allowedResourceTypes || ['PDF', 'Video', 'Article'];
+    document.getElementById('resTypePDF').checked = allowedTypes.includes('PDF');
+    document.getElementById('resTypeVideo').checked = allowedTypes.includes('Video');
+    document.getElementById('resTypeArticle').checked = allowedTypes.includes('Article');
+};
+
+window.saveRoleAccess = async function() {
+    const role = document.getElementById('roleSelect').value;
+    if (!role) return;
+
+    // Save modules
+    const moduleCheckboxes = document.querySelectorAll('#moduleCheckboxes input[type="checkbox"]');
+    const selectedModules = [];
+    moduleCheckboxes.forEach(cb => {
+        if (cb.checked) {
+            selectedModules.push(parseInt(cb.value));
+        }
+    });
+    await db.collection('roleModules').doc(role).set({ modules: selectedModules });
+
+    // Save resources
+    const resourceCheckboxes = document.querySelectorAll('#resourceCheckboxes input[type="checkbox"]');
+    const selectedResources = [];
+    resourceCheckboxes.forEach(cb => {
+        if (cb.checked) {
+            selectedResources.push(cb.value);
+        }
+    });
+    await db.collection('roleResources').doc(role).set({ resources: selectedResources });
+
+    // Save role settings
+    const tabCheckboxes = document.querySelectorAll('#tabCheckboxes input[type="checkbox"]');
+    const selectedTabs = [];
+    tabCheckboxes.forEach(cb => {
+        if (cb.checked) {
+            selectedTabs.push(cb.value);
+        }
+    });
+
+    const leaderboardVisible = document.getElementById('leaderboardVisible').checked;
+    const certificateSignatory = document.getElementById('certificateSignatory').value;
+    const allowedTypes = [];
+    if (document.getElementById('resTypePDF').checked) allowedTypes.push('PDF');
+    if (document.getElementById('resTypeVideo').checked) allowedTypes.push('Video');
+    if (document.getElementById('resTypeArticle').checked) allowedTypes.push('Article');
+
+    await db.collection('roleSettings').doc(role).set({
+        tabs: selectedTabs,
+        leaderboardVisible,
+        certificateSignatory,
+        allowedResourceTypes: allowedTypes
+    });
+
+    showToast(`Access settings saved for ${role}`);
+};
+
+// ===== MODULE SETTINGS TAB =====
+async function renderModuleSettingsTab() {
+    await loadAllModuleSettings(); // refresh
+    const tbody = document.getElementById('moduleSettingsBody');
+    tbody.innerHTML = '';
+    for (let i = 0; i < MODULE_TITLES.length; i++) {
+        const title = MODULE_TITLES[i];
+        const settings = moduleSettings[i] || { passingScore: 70, expiryDays: 0, prerequisites: [] };
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${title}</td>
+            <td><input type="number" id="pass_${i}" value="${settings.passingScore}" min="0" max="100" step="1"></td>
+            <td><input type="number" id="expiry_${i}" value="${settings.expiryDays}" min="0" step="1"></td>
+            <td>
+                <select id="prereq_${i}" multiple size="3" style="width:200px;">
+                    ${MODULE_TITLES.map((t, idx) => `<option value="${idx}" ${settings.prerequisites.includes(idx) ? 'selected' : ''}>${t}</option>`).join('')}
+                </select>
+            </td>
+        `;
+        tbody.appendChild(row);
+    }
+}
+
+window.saveModuleSettings = async function() {
+    for (let i = 0; i < MODULE_TITLES.length; i++) {
+        const passingScore = parseInt(document.getElementById(`pass_${i}`).value);
+        const expiryDays = parseInt(document.getElementById(`expiry_${i}`).value);
+        const select = document.getElementById(`prereq_${i}`);
+        const prerequisites = Array.from(select.selectedOptions).map(opt => parseInt(opt.value));
+        await db.collection('moduleSettings').doc(i.toString()).set({
+            passingScore,
+            expiryDays,
+            prerequisites
+        });
+    }
+    await loadAllModuleSettings();
+    showToast('Module settings saved');
+};
+
+// ===== BULK IMPORT/EXPORT =====
+window.exportRoleAssignments = function() {
+    showToast('Export not fully implemented in this demo');
+};
+
+// ===== IMPORT (file input handlers) =====
+document.getElementById('importRoleFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async function(ev) {
+        showToast('Import feature requires server-side parsing; demo only.');
+    };
+    reader.readAsText(file);
+});
+
+document.getElementById('importModuleFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async function(ev) {
+        showToast('Import feature requires server-side parsing; demo only.');
+    };
+    reader.readAsText(file);
+});
+
+// ===== DARK MODE TOGGLE =====
+document.getElementById('darkModeToggle').addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    const icon = this.querySelector('i');
+    if (document.body.classList.contains('dark-mode')) {
+        icon.className = 'fas fa-sun';
+        this.innerHTML = '<i class="fas fa-sun"></i> Light';
+    } else {
+        icon.className = 'fas fa-moon';
+        this.innerHTML = '<i class="fas fa-moon"></i> Dark';
+    }
+});
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async function() {
