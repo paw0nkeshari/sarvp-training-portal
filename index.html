@@ -2817,6 +2817,7 @@ async function renderEmployeeList() {
             <div class="employee-item">
                 <span><strong>${name}</strong> (${data.role || 'RM'})</span>
                 <div>
+                    <button onclick="viewEmployeeDetails('${name}')">Details</button>
                     <button onclick="editEmployee('${name}')">Edit</button>
                     <button class="delete-btn" onclick="deleteEmployee('${name}')">Delete</button>
                 </div>
@@ -3624,6 +3625,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 });
+window.viewEmployeeDetails = function(name) {
+  const d = allEmployeesData[name];
+  alert(`
+    Name: ${d.fullName || 'Not set'}
+    Phone: ${d.phone || 'Not set'}
+    Email: ${d.email || 'Not set'}
+    Department: ${d.department || 'Not set'}
+    DOJ: ${d.dateOfJoining || 'Not set'}
+    Profile Completed: ${d.profileCompleted ? 'Yes' : 'No'}
+  `);
+};
 </script>
 </body>
 </html>
